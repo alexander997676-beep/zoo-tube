@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Creator Edition</title>
+    <title>Zootube | Full Video Player</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -139,7 +139,14 @@
 
         /* --- 11. FULL PLAYER --- */
         .player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 6000; flex-direction: column; overflow-y: auto; }
-        .vid-frame-box { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 100; }
+        /* Adjusted Video Frame to be responsive and full width */
+        .vid-frame-box { 
+            width: 100%; 
+            position: sticky; top: 0; z-index: 100;
+            background: black;
+            /* Default aspect ratio, can be overridden by specific video needs */
+            aspect-ratio: 16/9; 
+        }
         .p-content { padding: 15px; padding-bottom: 80px; }
         .p-actions { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; border-bottom: 1px solid #222; }
         .pill-btn { background: #222; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer; }
