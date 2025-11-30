@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Channel Edition</title>
+    <title>Zootube | Real Shorts Edition</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -49,9 +49,9 @@
         .bottom-nav {
             display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
             background: var(--bg-body); border-top: 1px solid var(--border);
-            z-index: 999; justify-content: space-around; align-items: center;
+            z-index: 2000; justify-content: space-around; align-items: center;
         }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sec); background: none; border: none; width: 100%; padding: 5px; }
+        .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sec); background: none; border: none; width: 100%; padding: 5px; cursor: pointer; }
         .nav-btn.active { color: white; }
         .nav-btn i { font-size: 22px; } .nav-btn span { font-size: 10px; }
 
@@ -66,64 +66,80 @@
         .tag.active { background: white; color: black; }
 
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px 16px; }
-        .video-grid.shorts-mode { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 
-        /* --- 5. CARDS --- */
+        /* --- 5. CARDS (Standard) --- */
         .card { cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
         .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #222; }
-        .card.short .thumb-box { aspect-ratio: 9/16; }
         .thumb-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         .time-label { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: white; font-size: 11px; padding: 2px 4px; border-radius: 4px; font-weight: 700; }
-        
         .meta-info { display: flex; gap: 12px; }
         .chn-avatar { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; display: grid; place-items: center; font-size: 14px; z-index: 2; }
-        /* Add hover effect to indicate clickable channel */
-        .chn-avatar:hover { transform: scale(1.1); border: 2px solid white; }
-        
         .text-info { display: flex; flex-direction: column; }
         .vid-title { font-size: 15px; font-weight: 600; line-height: 1.3; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
         .vid-stats { font-size: 13px; color: var(--text-sec); }
-        .chn-name-link { color: var(--text-sec); font-size: 13px; cursor: pointer; display: inline-block; }
-        .chn-name-link:hover { color: white; text-decoration: underline; }
 
-        /* --- 6. CHANNEL PAGE (New Feature) --- */
-        .channel-page {
+        /* --- 6. SHORTS CONTAINER (TIKTOK STYLE) --- */
+        .shorts-container {
             display: none; /* Hidden by default */
-            flex-direction: column;
-            width: 100%;
+            position: fixed; top: 56px; left: 0; width: 100%; 
+            height: calc(100vh - 116px); /* Header + Bottom Nav Space */
+            background: #000;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; /* Snap Scrolling */
+            z-index: 50;
         }
-        .channel-header {
-            display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid #333; margin-bottom: 20px;
+        
+        /* Individual Short Item */
+        .short-item {
+            width: 100%; height: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            background: #000;
+            border-bottom: 1px solid #222;
         }
-        .banner-area {
-            width: 100%; height: 15vw; min-height: 100px; background: linear-gradient(45deg, #111, #333); border-radius: 15px;
+
+        .short-iframe {
+            width: 100%; height: 100%;
+            border: none;
+            /* Making it behave like a full video */
+            object-fit: cover;
         }
+        
+        /* Overlay Controls (Right Side) */
+        .short-actions {
+            position: absolute; right: 10px; bottom: 100px;
+            display: flex; flex-direction: column; gap: 20px; align-items: center;
+            z-index: 100;
+        }
+        .action-icon {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; color: white; cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .action-icon i { font-size: 28px; background: rgba(0,0,0,0.4); width: 45px; height: 45px; display: grid; place-items: center; border-radius: 50%; }
+        .action-icon span { font-size: 12px; font-weight: bold; }
+
+        /* Short Info (Bottom Left) */
+        .short-info {
+            position: absolute; left: 15px; bottom: 30px;
+            z-index: 100; color: white; width: 70%;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+        .short-chn { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .short-chn img { width: 32px; height: 32px; border-radius: 50%; background: #555; }
+        .short-chn span { font-weight: bold; font-size: 14px; }
+        .short-sub-btn { background: white; color: black; border: none; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 12px; cursor: pointer; }
+        .short-title { font-size: 14px; line-height: 1.3; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* --- 7. CHANNEL PAGE --- */
+        .channel-page { display: none; flex-direction: column; width: 100%; }
+        .channel-header { display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid #333; margin-bottom: 20px; }
+        .banner-area { width: 100%; height: 15vw; min-height: 100px; background: linear-gradient(45deg, #111, #333); border-radius: 15px; }
         .profile-row { display: flex; align-items: center; gap: 20px; padding: 0 10px; }
         .profile-pic-lg { width: 80px; height: 80px; border-radius: 50%; background: purple; display: grid; place-items: center; font-size: 30px; border: 4px solid #0f0f0f; margin-top: -40px; }
         .chn-details-lg h2 { font-size: 24px; margin: 0; }
         .chn-details-lg p { color: #aaa; font-size: 14px; margin-top: 5px; }
         .subscribe-btn-lg { background: white; color: black; border: none; padding: 10px 24px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .back-home-btn { 
-            display: inline-flex; align-items: center; gap: 5px; background: #222; color: white; 
-            padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; width: fit-content; margin-bottom: 10px;
-        }
-
-        /* --- 7. OVERLAYS (Voice, Search, Player) --- */
-        .voice-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; justify-content: center; align-items: center; }
-        .mic-pulse { width: 80px; height: 80px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; color: white; animation: pulse-red 1.5s infinite; cursor: pointer; }
-        @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
-
-        .mob-search-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 3000; display: none; flex-direction: column; }
-        .ms-head { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; gap: 10px; }
-        .ms-inp { flex: 1; background: #222; border: none; padding: 10px 15px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
-
-        .player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 4000; flex-direction: column; overflow-y: auto; }
-        .video-frame { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 100; }
-        .player-content { padding: 15px; }
-        .p-title { font-size: 18px; font-weight: bold; margin-bottom: 8px; line-height: 1.3; }
-        .p-meta { font-size: 12px; color: #aaa; margin-bottom: 15px; }
-        .channel-row-p { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .close-float-btn { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 25px; border-radius: 30px; border: 1px solid #555; z-index: 5000; font-weight: bold; cursor: pointer; }
+        .back-home-btn { display: inline-flex; align-items: center; gap: 5px; background: #222; color: white; padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; width: fit-content; margin-bottom: 10px; }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
@@ -135,13 +151,28 @@
             .logo-img { height: 20px; }
             .maker-tag { font-size: 7px; margin-top: 1px; }
             .video-grid { grid-template-columns: 1fr; gap: 20px; }
-            .video-grid.shorts-mode { grid-template-columns: 1fr 1fr; gap: 10px; }
             .mob-search-btn { display: block !important; }
             
-            /* Channel Page Mobile */
-            .profile-pic-lg { width: 60px; height: 60px; font-size: 24px; margin-top: -30px; }
-            .chn-details-lg h2 { font-size: 20px; }
+            /* Adjust Shorts Container for Mobile */
+            .shorts-container {
+                top: 50px; 
+                height: calc(100vh - 110px); /* 50px Header + 60px Bottom Nav */
+            }
         }
+        
+        /* OVERLAYS & MODALS */
+        .voice-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; justify-content: center; align-items: center; }
+        .mic-pulse { width: 80px; height: 80px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; color: white; animation: pulse-red 1.5s infinite; cursor: pointer; }
+        @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
+
+        .mob-search-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 3000; display: none; flex-direction: column; }
+        .ms-head { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; gap: 10px; }
+        .ms-inp { flex: 1; background: #222; border: none; padding: 10px 15px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
+
+        .player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); z-index: 4000; flex-direction: column; overflow-y: auto; }
+        .video-frame { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 100; }
+        .player-content { padding: 15px; }
+        .close-float-btn { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 25px; border-radius: 30px; border: 1px solid #555; z-index: 5000; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -164,7 +195,6 @@
         </div>
         <div class="right-sec">
             <button class="mob-search-btn" onclick="openMobSearch()"><i class="fas fa-search"></i></button>
-            <button class="icon-btn" onclick="alert('Create')"><i class="fas fa-video"></i></button>
             <div class="user-pic">F</div>
         </div>
     </header>
@@ -172,7 +202,7 @@
     <!-- BOTTOM NAV -->
     <nav class="bottom-nav">
         <button class="nav-btn active" onclick="goHome()"><i class="fas fa-home"></i> <span>Home</span></button>
-        <button class="nav-btn" onclick="loadCat('Shorts', this)"><i class="fas fa-bolt"></i> <span>Shorts</span></button>
+        <button class="nav-btn" onclick="openShortsMode()"><i class="fas fa-bolt"></i> <span>Shorts</span></button>
         <button class="nav-btn" onclick="alert('Create')"><i class="fas fa-plus-circle" style="font-size:32px;"></i></button>
         <button class="nav-btn" onclick="loadCat('Subscriptions', this)"><i class="fas fa-photo-video"></i> <span>Subs</span></button>
         <button class="nav-btn"><i class="fas fa-user"></i> <span>You</span></button>
@@ -181,14 +211,14 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <a href="#" class="side-link active" onclick="goHome()"><i class="fas fa-home"></i> Home</a>
-        <a href="#" class="side-link" onclick="loadCat('Shorts')"><i class="fas fa-bolt"></i> Shorts</a>
+        <a href="#" class="side-link" onclick="openShortsMode()"><i class="fas fa-bolt"></i> Shorts</a>
         <a href="#" class="side-link" onclick="loadCat('History')"><i class="fas fa-history"></i> History</a>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
         
-        <!-- HOME VIEW (Tags + Grid) -->
+        <!-- HOME VIEW -->
         <div id="homeView">
             <div class="tags-bar">
                 <button class="tag active" onclick="loadCat('Trending Videos', this)">All</button>
@@ -198,6 +228,12 @@
                 <button class="tag" onclick="loadCat('Cricket', this)">Sports</button>
             </div>
             <div class="video-grid" id="grid"></div>
+        </div>
+
+        <!-- SHORTS VIEW (TikTok Style) -->
+        <div id="shortsView" class="shorts-container">
+            <!-- Shorts will be injected here -->
+            <p style="color:white; text-align:center; padding-top:50%;">Loading Shorts...</p>
         </div>
 
         <!-- CHANNEL PAGE VIEW -->
@@ -244,16 +280,10 @@
         <div class="player-content">
             <div class="p-title" id="pTitle">Video Title</div>
             <div class="p-meta">1.5M Views • 2 days ago</div>
-            <div class="channel-row-p">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="chn-avatar" id="pAvatar" style="background:#555;">Z</div>
-                    <div style="font-weight:bold; font-size:14px;" id="pChannel">Channel</div>
-                </div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                <div class="chn-avatar" id="pAvatar" style="background:#555;">Z</div>
+                <div style="font-weight:bold; font-size:14px;" id="pChannel">Channel</div>
                 <button style="background:white; color:black; border:none; padding:8px 16px; border-radius:20px; font-weight:bold;">Subscribe</button>
-            </div>
-            <div style="background:#1e1e1e; padding:12px; border-radius:10px; margin-top:10px;">
-                <strong>Comments</strong>
-                <div style="margin-top:5px; font-size:13px;">This video is amazing! Best platform ever.</div>
             </div>
         </div>
         <button class="close-float-btn" onclick="closePlayer()">Close Player</button>
@@ -263,78 +293,115 @@
         const API = "https://api.xyro.site/search/youtube?q=";
         const grid = document.getElementById('grid');
         const chnGrid = document.getElementById('chnGrid');
+        const shortsContainer = document.getElementById('shortsView');
         let recognition;
 
         window.onload = () => loadCat('Trending Videos');
 
-        /* --- 1. NAVIGATION & CHANNEL LOGIC --- */
+        /* --- NAVIGATION --- */
         function goHome() {
-            document.getElementById('channelView').style.display = 'none';
+            hideAllViews();
             document.getElementById('homeView').style.display = 'block';
-            loadCat('Trending Videos', document.querySelector('.tag'));
+            document.body.style.overflow = 'auto'; // Enable body scroll
+            // Reset Active Nav
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.nav-btn:first-child').classList.add('active');
         }
 
-        async function openChannel(chnName) {
-            // Switch Views
+        function hideAllViews() {
             document.getElementById('homeView').style.display = 'none';
-            document.getElementById('channelView').style.display = 'flex';
-            window.scrollTo(0,0);
+            document.getElementById('channelView').style.display = 'none';
+            document.getElementById('shortsView').style.display = 'none';
+        }
 
-            // Set Header Info
-            document.getElementById('chnNameLg').innerText = chnName;
-            document.getElementById('chnPicLg').innerText = chnName.charAt(0);
-            
-            // Generate Random Subs
-            const subs = (Math.random() * 10 + 0.1).toFixed(1) + "M";
-            document.getElementById('chnSubCount').innerText = `${subs} Subscribers • 100+ Videos`;
+        /* --- SHORTS MODE LOGIC --- */
+        async function openShortsMode() {
+            hideAllViews();
+            shortsContainer.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Disable body scroll for Snap Scroll
 
-            // Load Channel Videos (Fake by searching channel name)
-            chnGrid.innerHTML = '<p style="padding:20px; color:#aaa;">Loading Channel Videos...</p>';
+            // Update Nav
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav-btn')[1].classList.add('active'); // Shorts button
+
+            // Load Shorts Data
+            shortsContainer.innerHTML = '<p style="color:white;text-align:center;padding-top:50%;">Loading Shorts...</p>';
             
             try {
-                const res = await fetch(API + encodeURIComponent(chnName));
+                // Fetch vertical videos specifically
+                const res = await fetch(API + encodeURIComponent('Youtube Shorts Funny Viral'));
                 const json = await res.json();
                 const videos = json.result || json.data || [];
-                
-                renderGrid(videos, chnGrid); // Render in Channel Grid
+                renderShorts(videos);
             } catch(e) {
-                chnGrid.innerHTML = '<p>Error loading channel.</p>';
+                shortsContainer.innerHTML = '<p style="color:white;text-align:center;">Error loading shorts.</p>';
             }
         }
 
-        /* --- 2. DATA LOADING --- */
-        async function loadCat(query, btn) {
-            if(btn) {
-                document.querySelectorAll('.tag, .nav-btn, .side-link').forEach(e => e.classList.remove('active'));
-                btn.classList.add('active');
-            }
+        function renderShorts(videos) {
+            shortsContainer.innerHTML = '';
             
-            const isShorts = query.toLowerCase().includes('shorts');
-            if(isShorts) grid.classList.add('shorts-mode'); else grid.classList.remove('shorts-mode');
-
-            // Skeleton
-            grid.innerHTML = '';
-            for(let i=0; i<8; i++) {
-                grid.innerHTML += `<div class="card"><div class="thumb-box" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
-            }
-
-            try {
-                const res = await fetch(API + encodeURIComponent(query));
-                const json = await res.json();
-                const videos = json.result || json.data || [];
-                renderGrid(videos, grid, isShorts); // Render in Main Grid
-            } catch(e) { grid.innerHTML = '<p style="padding:20px;">Error.</p>'; }
-        }
-
-        /* --- 3. RENDER FUNCTION (Handles Click Logic) --- */
-        function renderGrid(videos, container, isShorts = false) {
-            container.innerHTML = '';
-            if(!videos.length) { container.innerHTML = '<p style="padding:20px;">No Results.</p>'; return; }
-
             videos.forEach(v => {
                 let vidId = null;
                 if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
                 
+                if(vidId) {
+                    const title = v.title || "Shorts Video";
+                    const chn = v.channel || "Channel";
+                    
+                    const shortDiv = document.createElement('div');
+                    shortDiv.className = 'short-item';
+                    
+                    // Note: YouTube Embeds prevent direct removal of controls, but we use parameters to minimize them
+                    // controls=0, autoplay=1, loop=1, modestbranding=1
+                    const embedUrl = `https://www.youtube.com/embed/${vidId}?autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${vidId}&rel=0`;
+
+                    shortDiv.innerHTML = `
+                        <iframe class="short-iframe" src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        
+                        <!-- Overlay Icons -->
+                        <div class="short-actions">
+                            <div class="action-icon"><i class="fas fa-thumbs-up"></i><span>Like</span></div>
+                            <div class="action-icon"><i class="fas fa-comment-dots"></i><span>345</span></div>
+                            <div class="action-icon"><i class="fas fa-share"></i><span>Share</span></div>
+                        </div>
+
+                        <!-- Overlay Info -->
+                        <div class="short-info">
+                            <div class="short-chn">
+                                <div style="width:32px;height:32px;border-radius:50%;background:#555;display:grid;place-items:center;">${chn.charAt(0)}</div>
+                                <span>${chn}</span>
+                                <button class="short-sub-btn">Subscribe</button>
+                            </div>
+                            <div class="short-title">${title}</div>
+                        </div>
+                    `;
+                    shortsContainer.appendChild(shortDiv);
+                }
+            });
+        }
+
+        /* --- NORMAL VIDEO LOADING --- */
+        async function loadCat(query, btn) {
+            goHome(); // Ensure we are in home view
+            if(btn) {
+                document.querySelectorAll('.tag, .nav-btn, .side-link').forEach(e => e.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            grid.innerHTML = '<p style="padding:20px; color:#aaa;">Loading...</p>';
+            try {
+                const res = await fetch(API + encodeURIComponent(query));
+                const json = await res.json();
+                const videos = json.result || json.data || [];
+                renderGrid(videos, grid);
+            } catch(e) { grid.innerHTML = '<p style="padding:20px;">Error.</p>'; }
+        }
+
+        function renderGrid(videos, container) {
+            container.innerHTML = '';
+            videos.forEach(v => {
+                let vidId = null;
+                if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
                 if(vidId) {
                     const title = v.title || "Video";
                     const chn = v.channel || "Channel";
@@ -342,48 +409,42 @@
                     const views = (Math.random() * 5).toFixed(1) + "M views";
 
                     const card = document.createElement('div');
-                    card.className = isShorts ? 'card short' : 'card';
-                    
-                    // CARD CLICK -> PLAY VIDEO
+                    card.className = 'card';
                     card.onclick = () => playVideo(vidId, title, chn);
-
                     card.innerHTML = `
-                        <div class="thumb-box">
-                            <img src="${thumb}" class="thumb-img">
-                            ${!isShorts ? '<div class="time-label">10:00</div>' : ''}
-                        </div>
+                        <div class="thumb-box"><img src="${thumb}" class="thumb-img"><div class="time-label">10:00</div></div>
                         <div class="meta-info">
-                            <div class="chn-avatar" title="Visit Channel">${chn.charAt(0)}</div>
+                            <div class="chn-avatar">${chn.charAt(0)}</div>
                             <div class="text-info">
                                 <div class="vid-title">${title}</div>
-                                <div class="vid-stats">
-                                    <span class="chn-name-link">${chn}</span> • ${views}
-                                </div>
+                                <div class="vid-stats"><span class="chn-name-link">${chn}</span> • ${views}</div>
                             </div>
                         </div>
                     `;
-
-                    // CLICK EVENT HANDLERS
-                    // 1. Channel Avatar Click -> Open Channel
-                    const avatarBtn = card.querySelector('.chn-avatar');
-                    avatarBtn.onclick = (e) => {
-                        e.stopPropagation(); // Stop video play
-                        openChannel(chn);
-                    };
-
-                    // 2. Channel Name Click -> Open Channel
-                    const nameBtn = card.querySelector('.chn-name-link');
-                    nameBtn.onclick = (e) => {
-                        e.stopPropagation(); // Stop video play
-                        openChannel(chn);
-                    };
-
+                    // Click Channel Logic
+                    card.querySelector('.chn-avatar').onclick = (e) => { e.stopPropagation(); openChannel(chn); };
+                    card.querySelector('.chn-name-link').onclick = (e) => { e.stopPropagation(); openChannel(chn); };
                     container.appendChild(card);
                 }
             });
         }
 
-        /* --- 4. PLAYER --- */
+        async function openChannel(chnName) {
+            hideAllViews();
+            document.getElementById('channelView').style.display = 'flex';
+            window.scrollTo(0,0);
+            document.getElementById('chnNameLg').innerText = chnName;
+            document.getElementById('chnPicLg').innerText = chnName.charAt(0);
+            
+            chnGrid.innerHTML = '<p style="padding:20px; color:#aaa;">Loading Channel Videos...</p>';
+            try {
+                const res = await fetch(API + encodeURIComponent(chnName));
+                const json = await res.json();
+                const videos = json.result || json.data || [];
+                renderGrid(videos, chnGrid);
+            } catch(e) { chnGrid.innerHTML = '<p>Error loading.</p>'; }
+        }
+
         function playVideo(id, title, chn) {
             document.getElementById('vidFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
             document.getElementById('pTitle').innerText = title || "Video";
@@ -396,11 +457,9 @@
             document.getElementById('vidFrame').src = "";
         }
 
-        /* --- 5. VOICE & SEARCH --- */
+        /* --- VOICE & SEARCH --- */
         function openVoiceSearch(targetId) {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Voice not supported."); return;
-            }
+            if (!('webkitSpeechRecognition' in window)) { alert("Voice not supported."); return; }
             document.getElementById('voiceOverlay').style.display = 'flex';
             document.getElementById('voiceText').innerText = "Listening...";
             
@@ -408,7 +467,6 @@
             recognition = new SpeechRecognition();
             recognition.lang = 'en-US';
             recognition.start();
-
             recognition.onresult = (e) => {
                 const txt = e.results[0][0].transcript;
                 document.getElementById('voiceText').innerText = `Searching: "${txt}"`;
@@ -421,10 +479,8 @@
             };
         }
         function closeVoice() { document.getElementById('voiceOverlay').style.display = 'none'; }
-
         function openMobSearch() { document.getElementById('mobSearch').style.display = 'flex'; document.getElementById('mSearch').focus(); }
         function closeMobSearch() { document.getElementById('mobSearch').style.display = 'none'; }
-        
         function execSearch(id) {
             const val = document.getElementById(id).value;
             if(val) { if(id==='mSearch') closeMobSearch(); loadCat(val); }
