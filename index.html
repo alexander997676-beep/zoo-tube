@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zootube | Enhanced Edition</title>
+    <style>
+        /* --- 1. CORE VARIABLES & RESET --- */
+        :root {
+            --bg-body: #050505;
+            --bg-card: #141414;
+            --bg-card-hover: #1f1f1f;
+            --primary: #00ff41; /* Hacker Green */
+            --secondary: #008F11;
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            --shadow: 0 4px 15px rgba(0, 255, 65, 0.1);
+            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+        }
+
+        /* --- 2. HEADER (Glassmorphism) --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #333;
+            padding: 15px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .brand span {
+            color: var(--bg-body);
+            background: var(--primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+            text-shadow: none;
+        }
+
+        /* --- 3. SEARCH BAR --- */
+        .search-wrapper {
+            flex: 0 1 600px;
+            display: flex;
+            position: relative;
+        }
+
+        input#searchBox {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 2px solid #333;
+            background: #000;
+            color: var(--primary);
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s all;
+        }
+
+        input#searchBox:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+        }
+
+        button#searchBtn {
+            position: absolute;
+            right: 5px;
+            top: 3px;
+            height: 40px;
+            width: 60px;
+            border-radius: 40px;
+            border: none;
+            background: var(--bg-card);
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button#searchBtn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* --- 4. MAIN CONTENT GRID --- */
+        main {
+            padding: 30px 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* --- 5. VIDEO CARD --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--secondary);
+            background: var(--bg-card-hover);
+        }
+
+        .thumb-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+        }
+
+        .thumb-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .card:hover .thumb-img {
+            opacity: 1;
+        }
+
+        .details {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-title {
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #fff;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .channel-name {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: auto; /* Push to bottom */
+            display: flex;
+            align-items: center;
+        }
+        
+        .channel-name::before {
+            content: '●';
+            color: var(--primary);
+            font-size: 10px;
+            margin-right: 6px;
+        }
+
+        /* --- 6. SKELETON LOADING ANIMATION --- */
+        .skeleton {
+            background: linear-gradient(90deg, #141414 25%, #1f1f1f 50%, #141414 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        .sk-card { height: 260px; border-radius: 12px; }
+
+        /* --- 7. VIDEO PLAYER MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .close-modal {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        
+        .close-modal:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* --- MOBILE TWEAKS --- */
+        @media (max-width: 600px) {
+            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .search-wrapper { width: 100%; }
+            main { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand" onclick="window.location.reload()">ZOO<span>TUBE</span></div>
+        <div class="search-wrapper">
+            <input type="text" id="searchBox" placeholder="Paste API Query or Search Topic...">
+            <button id="searchBtn">🔍</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="grid" class="grid">
+            <!-- Videos will be injected here -->
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="player-container">
+            <iframe id="player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <button class="close-modal" onclick="closeVideo()">CLOSE PLAYER</button>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const API_BASE = "https://api.xyro.site/search/youtube?q=";
+        
+        // --- DOM ELEMENTS ---
+        const grid = document.getElementById('grid');
+        const searchBox = document.getElementById('searchBox');
+        const searchBtn = document.getElementById('searchBtn');
+        const modal = document.getElementById('modal');
+        const player = document.getElementById('player');
+
+        // --- INIT ---
+        // Load some default content on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchVideos("coding lofi"); 
+        });
+
+        // --- EVENT LISTENERS ---
+        searchBtn.addEventListener('click', () => {
+            const query = searchBox.value.trim();
+            if(query) fetchVideos(query);
+        });
+
+        searchBox.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchBox.value.trim();
+                if(query) fetchVideos(query);
+            }
+        });
+
+        // --- FUNCTIONS ---
+
+        async function fetchVideos(query) {
+            // 1. Show Skeleton Loading
+            renderSkeletons();
+
+            try {
+                // 2. Fetch Data
+                const response = await fetch(API_BASE + encodeURIComponent(query));
+                const json = await response.json();
+                
+                // 3. Debug Response (Check Console F12 if issues)
+                console.log("Zootube API Response:", json);
+
+                // 4. Parse Data (Handle various wrapper formats)
+                let videos = [];
+                if (Array.isArray(json)) videos = json;
+                else if (json.data) videos = json.data;
+                else if (json.results) videos = json.results;
+
+                // 5. Clear Grid & Render
+                grid.innerHTML = '';
+
+                if (!videos || videos.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 50px;"><h2>No results found in the wild.</h2></div>';
+                    return;
+                }
+
+                videos.forEach(video => {
+                    // Extract Data Safely
+                    const title = video.title || video.videoTitle || "Unknown Video";
+                    const thumbnail = video.thumbnail || video.image || "https://via.placeholder.com/640x360/000000/00ff41?text=No+Preview";
+                    const channel = video.author?.name || video.channelTitle || "Zootube User";
+                    
+                    // Extract ID
+                    let videoId = null;
+                    if(video.id) videoId = video.id;
+                    if(video.videoId) videoId = video.videoId;
+                    if(!videoId && video.url) {
+                         // Fallback: try regex on URL
+                         const match = video.url.match(/v=([^&]+)/);
+                         if(match) videoId = match[1];
+                    }
+
+                    if(videoId) {
+                        createCard(title, thumbnail, channel, videoId);
+                    }
+                });
+
+            } catch (error) {
+                console.error(error);
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color: #ff4444;">
+                    <h2>API Error</h2>
+                    <p>The signal was lost. Try again later.</p>
+                </div>`;
+            }
+        }
+
+        function createCard(title, thumb, channel, id) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.onclick = () => playVideo(id);
+
+            card.innerHTML = `
+                <div class="thumb-container">
+                    <img src="${thumb}" class="thumb-img" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/640x360/111/fff?text=Image+Error'">
+                </div>
+                <div class="details">
+                    <div class="video-title">${title}</div>
+                    <div class="channel-name">${channel}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        }
+
+        function renderSkeletons() {
+            grid.innerHTML = '';
+            // Create 8 skeleton cards
+            for(let i=0; i<8; i++) {
+                const sk = document.createElement('div');
+                sk.className = 'skeleton sk-card';
+                grid.appendChild(sk);
+            }
+        }
+
+        // --- VIDEO PLAYER LOGIC ---
+        function playVideo(id) {
+            // Using youtube-nocookie for better privacy/speed
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+            player.src = embedUrl;
+            modal.classList.add('active');
+        }
+
+        function closeVideo() {
+            modal.classList.remove('active');
+            // Clear src to stop audio immediately
+            setTimeout(() => { player.src = ''; }, 300); 
+        }
+
+        // Close modal on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeVideo();
+        });
+
+    </script>
+</body>
+</html>
