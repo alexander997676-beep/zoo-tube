@@ -3,399 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zootube | The Dark Side of Video</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <title>Zootube | Home & Music</title>
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- THEME SETTINGS --- */
+        /* --- 1. YOUTUBE DARK THEME --- */
         :root {
-            --bg-main: #050505;       /* Pitch Black */
-            --bg-card: #111111;       /* Dark Grey */
-            --primary: #00ff88;       /* Neon Green */
-            --secondary: #00bcd4;     /* Cyan */
-            --text-color: #ffffff;
-            --text-muted: #a0a0a0;
-            --glass: rgba(20, 20, 20, 0.8);
+            --bg-body: #0f0f0f;
+            --bg-header: #0f0f0f;
+            --bg-chip: #272727;
+            --bg-chip-hover: #3f3f3f;
+            --bg-active: #f1f1f1;
+            --text-active: #000;
+            --text-main: #fff;
+            --text-gray: #aaa;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background-color: var(--bg-main);
-            color: var(--text-color);
-            font-family: 'Roboto', sans-serif;
+            margin: 0; padding: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: Roboto, Arial, sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- GLOWING HEADER --- */
+        /* --- 2. HEADER --- */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid #333;
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 30px rgba(0, 255, 136, 0.1);
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg-header);
+            padding: 10px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #222;
         }
 
-        .logo {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-color);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .logo { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .logo i { color: red; font-size: 26px; }
+
+        .search-bar { display: flex; flex: 1; max-width: 600px; margin: 0 20px; }
+        input {
+            width: 100%; padding: 10px 15px;
+            background: #121212; border: 1px solid #333;
+            color: #fff; border-radius: 20px 0 0 20px; outline: none; font-size: 16px;
+        }
+        button.search-btn {
+            background: #222; border: 1px solid #333; border-left: none;
+            padding: 0 20px; border-radius: 0 20px 20px 0; color: #fff; cursor: pointer;
+        }
+
+        /* --- 3. CATEGORY PILLS (Home, Music, etc.) --- */
+        .tags-container {
+            position: sticky; top: 60px; z-index: 90;
+            background: var(--bg-body);
+            padding: 10px 20px;
+            display: flex; gap: 10px;
+            overflow-x: auto;
+            border-bottom: 1px solid #222;
+        }
+        
+        .tags-container::-webkit-scrollbar { height: 0px; } /* Hide Scrollbar */
+
+        .chip {
+            background: var(--bg-chip);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            text-shadow: 0 0 10px var(--primary);
-        }
-
-        .logo span { color: var(--primary); }
-
-        /* --- SEARCH BAR --- */
-        .search-box {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            border-radius: 50px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            color: var(--primary);
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--primary);
+            white-space: nowrap;
+            transition: 0.2s;
             border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
         }
 
-        .search-btn:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 0 15px var(--primary);
+        .chip:hover { background: var(--bg-chip-hover); }
+
+        /* Active State (White button) */
+        .chip.active {
+            background: var(--bg-active);
+            color: var(--text-active);
         }
 
-        /* --- VIDEO GRID --- */
-        .container {
-            padding: 30px 5%;
-            min-height: 80vh;
-        }
-
+        /* --- 4. VIDEO GRID --- */
+        .main-content { padding: 20px; }
+        
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
+            gap: 20px;
         }
 
-        /* --- VIDEO CARD --- */
+        /* --- 5. VIDEO CARD --- */
         .card {
-            background: var(--bg-card);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
-            border: 1px solid transparent;
-            display: flex;
-            flex-direction: column;
+            transition: 0.2s;
         }
+        .card:hover { transform: scale(1.02); }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border-color: var(--primary);
-        }
-
-        .thumbnail-wrapper {
+        .thumbnail-box {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            background: #000;
-        }
-
-        .thumbnail {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0.8;
-            transition: 0.3s;
-        }
-
-        .card:hover .thumbnail { opacity: 1; }
-
-        .info {
-            padding: 15px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 1.4;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .channel {
-            font-size: 13px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .channel::before {
-            content: '●';
-            color: var(--primary);
-            font-size: 8px;
-        }
-
-        /* --- LOADING SPINNER --- */
-        .loader {
-            display: none;
-            border: 4px solid #333;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 50px auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* --- VIDEO PLAYER MODAL --- */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            backdrop-filter: blur(10px);
-        }
-
-        .player-box {
-            width: 90%;
-            max-width: 900px;
             aspect-ratio: 16/9;
-            background: #000;
-            border: 2px solid var(--primary);
-            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
+            background: #000;
         }
 
+        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .duration {
+            position: absolute; bottom: 8px; right: 8px;
+            background: rgba(0,0,0,0.8); color: #fff;
+            font-size: 12px; padding: 2px 5px; border-radius: 4px; font-weight: bold;
+        }
+
+        .details { display: flex; gap: 10px; margin-top: 10px; }
+        
+        .avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #333; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+
+        .meta { display: flex; flex-direction: column; }
+        
+        .title {
+            font-size: 16px; font-weight: 600; line-height: 1.3;
+            color: #fff; margin-bottom: 4px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+
+        .channel-name { font-size: 13px; color: var(--text-gray); }
+
+        /* --- 6. PLAYER OVERLAY --- */
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            justify-content: center; align-items: center; flex-direction: column;
+        }
+        .player-wrapper { width: 90%; max-width: 900px; aspect-ratio: 16/9; background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
-
         .close-btn {
-            margin-top: 20px;
-            padding: 10px 25px;
-            background: transparent;
-            border: 2px solid var(--secondary);
-            color: var(--secondary);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
+            margin-top: 15px; padding: 10px 20px;
+            background: #272727; color: white; border: none;
+            border-radius: 20px; cursor: pointer; font-weight: bold;
         }
+        .close-btn:hover { background: #3f3f3f; }
 
-        .close-btn:hover { background: var(--secondary); color: #000; }
+        /* Loading */
+        #loader { text-align: center; width: 100%; margin-top: 50px; display: none; }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 15px; }
-            .search-box { width: 100%; }
-        }
     </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header>
-        <div class="logo" onclick="window.location.reload()">ZOO<span>TUBE</span></div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search whatever you want...">
-            <button class="search-btn" id="searchBtn">➜</button>
+        <div class="logo" onclick="loadCategory('Home', this)"><i class="fab fa-youtube"></i> YouTube</div>
+        <div class="search-bar">
+            <input type="text" id="searchInp" placeholder="Search">
+            <button class="search-btn" onclick="manualSearch()"><i class="fas fa-search"></i></button>
         </div>
+        <div style="width: 40px;"></div> <!-- Spacer -->
     </header>
 
-    <div class="container">
-        <!-- Status Messages -->
-        <h2 id="statusMsg" style="text-align: center; color: var(--text-muted); font-weight: 300;">Ready to search the unknown...</h2>
-        <div class="loader" id="loader"></div>
-        
-        <!-- Video Grid -->
+    <!-- Category Section (Home, Music, etc) -->
+    <div class="tags-container">
+        <button class="chip active" onclick="loadCategory('Trending Videos', this)">All</button>
+        <button class="chip" onclick="loadCategory('Latest Music 2024', this)">Music</button>
+        <button class="chip" onclick="loadCategory('Gaming Highlights', this)">Gaming</button>
+        <button class="chip" onclick="loadCategory('News Pakistan', this)">News</button>
+        <button class="chip" onclick="loadCategory('Cricket Live', this)">Sports</button>
+        <button class="chip" onclick="loadCategory('Coding Tutorials', this)">Coding</button>
+        <button class="chip" onclick="loadCategory('Funny Vines', this)">Comedy</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h3 id="statusMsg" style="color:white; margin-bottom:15px;">Home</h3>
+        <div id="loader" style="color:#aaa;">Loading...</div>
         <div class="grid" id="videoGrid"></div>
     </div>
 
-    <!-- Video Player Overlay -->
-    <div class="modal" id="videoModal">
-        <div class="player-box">
+    <!-- Player -->
+    <div class="overlay" id="vidModal">
+        <div class="player-wrapper">
             <iframe id="playerFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <button class="close-btn" onclick="closePlayer()">CLOSE PLAYER</button>
+        <button class="close-btn" onclick="closeVideo()">Close Player</button>
     </div>
 
     <script>
-        // API URL Definition
         const API_URL = "https://api.xyro.site/search/youtube?q=";
 
-        // Elements
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const videoGrid = document.getElementById('videoGrid');
-        const statusMsg = document.getElementById('statusMsg');
-        const loader = document.getElementById('loader');
-        const modal = document.getElementById('videoModal');
-        const playerFrame = document.getElementById('playerFrame');
-
-        // Initial Load (Auto search for something cool)
-        window.onload = () => {
-            searchInput.value = "NCS Music";
-            fetchVideos();
+        // Start par "Home" load karega
+        window.onload = function() {
+            loadCategory("Trending Videos", document.querySelector('.chip'));
         };
 
-        // Event Listeners
-        searchBtn.addEventListener('click', fetchVideos);
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') fetchVideos();
-        });
+        // --- 1. CATEGORY SWITCH LOGIC ---
+        function loadCategory(query, btnElement) {
+            // Update Active Button Style
+            if(btnElement) {
+                document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
 
-        // Main Fetch Function
-        async function fetchVideos() {
-            const query = searchInput.value.trim();
-            if (!query) return;
+            // Update Heading
+            const displayTitle = (query === 'Trending Videos') ? 'Home' : query.replace('Latest', '').replace('2024', '');
+            document.getElementById('statusMsg').innerText = displayTitle;
 
-            // UI Updates
-            videoGrid.innerHTML = '';
-            statusMsg.style.display = 'none';
-            loader.style.display = 'block';
+            // Call API
+            fetchData(query);
+        }
 
-            try {
-                // Fetching Data
-                const response = await fetch(API_URL + encodeURIComponent(query));
-                const data = await response.json();
-
-                console.log("API Data:", data); // Debugging ke liye
-
-                // Data Parsing logic (Handle variations in API)
-                let videos = [];
-                if (data.data && Array.isArray(data.data)) {
-                    videos = data.data;
-                } else if (Array.isArray(data)) {
-                    videos = data;
-                } else if (data.results) {
-                    videos = data.results;
-                }
-
-                // Check if videos exist
-                if (!videos || videos.length === 0) {
-                    loader.style.display = 'none';
-                    statusMsg.innerText = "No results found. Try a different keyword.";
-                    statusMsg.style.display = 'block';
-                    return;
-                }
-
-                loader.style.display = 'none';
-
-                // Render Videos
-                videos.forEach(video => {
-                    // Extracting ID securely
-                    let videoId = video.id || video.videoId;
-                    if (!videoId && video.url) {
-                        const urlParts = video.url.split('v=');
-                        if (urlParts.length > 1) videoId = urlParts[1].split('&')[0];
-                    }
-
-                    // Fallback images and titles
-                    const title = video.title || video.videoTitle || "Untitled Video";
-                    const thumbnail = video.thumbnail || video.image || "https://via.placeholder.com/600x340/111/00ff88?text=No+Preview";
-                    const channel = video.author?.name || video.channelTitle || "Unknown Channel";
-
-                    if (videoId) {
-                        createVideoCard(title, thumbnail, channel, videoId);
-                    }
-                });
-
-            } catch (error) {
-                console.error("Error:", error);
-                loader.style.display = 'none';
-                statusMsg.innerText = "Connection Error. Please try again.";
-                statusMsg.style.display = 'block';
+        // --- 2. MANUAL SEARCH ---
+        function manualSearch() {
+            const val = document.getElementById('searchInp').value;
+            if(val) {
+                document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active')); // Remove active tag
+                document.getElementById('statusMsg').innerText = "Search: " + val;
+                fetchData(val);
             }
         }
 
-        // Create HTML Card
-        function createVideoCard(title, thumb, channel, id) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.onclick = () => openPlayer(id);
+        // --- 3. FETCH & RENDER LOGIC ---
+        async function fetchData(query) {
+            const grid = document.getElementById('videoGrid');
+            const loader = document.getElementById('loader');
 
-            card.innerHTML = `
-                <div class="thumbnail-wrapper">
-                    <img src="${thumb}" class="thumbnail" alt="Thumb" onerror="this.src='https://via.placeholder.com/600x340?text=Error'">
-                </div>
-                <div class="info">
-                    <div class="title">${title}</div>
-                    <div class="channel">${channel}</div>
-                </div>
-            `;
-            videoGrid.appendChild(card);
+            grid.innerHTML = '';
+            loader.style.display = 'block';
+
+            try {
+                // Fetch from API
+                const res = await fetch(API_URL + encodeURIComponent(query));
+                const json = await res.json();
+
+                loader.style.display = 'none';
+
+                // Check Data Structure (Based on your Imran Khan example)
+                let videos = [];
+                if(json.result) videos = json.result; // For xyro.site API
+                else if(json.data) videos = json.data;
+                else if(Array.isArray(json)) videos = json;
+
+                if(videos.length === 0) {
+                    grid.innerHTML = '<p>No content found.</p>';
+                    return;
+                }
+
+                // Loop through videos
+                videos.forEach(vid => {
+                    // ID Extraction from Link
+                    let videoId = null;
+                    if(vid.link) {
+                        const parts = vid.link.split('v=');
+                        if(parts.length > 1) videoId = parts[1].split('&')[0];
+                    }
+
+                    if(videoId) {
+                        const title = vid.title || "Untitled";
+                        const thumb = vid.imageUrl || `https://i.ytimg.com/vi/${videoId}/hq720.jpg`;
+                        const channel = vid.channel || "Channel";
+                        const duration = vid.duration || "";
+
+                        // Create Card HTML
+                        // NOTICE: onclick="playVideo(ID)" is on the whole card
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.onclick = function() { playVideo(videoId); };
+
+                        const avatarChar = channel.charAt(0).toUpperCase();
+
+                        card.innerHTML = `
+                            <div class="thumbnail-box">
+                                <img src="${thumb}" class="thumb-img">
+                                ${duration ? `<div class="duration">${duration}</div>` : ''}
+                            </div>
+                            <div class="details">
+                                <div class="avatar">${avatarChar}</div>
+                                <div class="meta">
+                                    <div class="title">${title}</div>
+                                    <div class="channel-name">${channel}</div>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    }
+                });
+
+            } catch (err) {
+                console.error(err);
+                loader.style.display = 'none';
+                grid.innerHTML = '<p>Error loading videos.</p>';
+            }
         }
 
-        // Player Functions
-        function openPlayer(id) {
-            // Using No-Cookie domain for better embedding success
-            playerFrame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
-            modal.style.display = 'flex';
+        // --- 4. PLAYER FUNCTIONS ---
+        function playVideo(id) {
+            // Embed Link with Autoplay
+            const embedLink = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            document.getElementById('playerFrame').src = embedLink;
+            document.getElementById('vidModal').style.display = 'flex';
         }
 
-        function closePlayer() {
-            modal.style.display = 'none';
-            playerFrame.src = ""; // Stop Audio
+        function closeVideo() {
+            document.getElementById('vidModal').style.display = 'none';
+            document.getElementById('playerFrame').src = "";
         }
-
-        // Close on background click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closePlayer();
-        });
 
     </script>
 </body>
