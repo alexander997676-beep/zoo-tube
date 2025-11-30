@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Premium Edition</title>
+    <title>Zootube | Voice Search Enabled</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,6 @@
         :root {
             --bg-color: #0f0f0f;
             --surface-color: #1e1e1e;
-            --primary-color: #3ea6ff; /* YouTube Blue */
             --gold-color: #ffd700;
             --text-main: #ffffff;
             --text-secondary: #aaaaaa;
@@ -57,7 +56,16 @@
         .search-btn {
             width: 60px; background: #222; border: none; border-left: 1px solid #303030; color: #aaa; cursor: pointer;
         }
-        .mic-btn { width: 40px; height: 40px; border-radius: 50%; background: #181818; border: none; color: white; margin-left: 10px; cursor: pointer; }
+        
+        /* MIC BUTTON STYLE */
+        .mic-btn { 
+            width: 40px; height: 40px; border-radius: 50%; background: #181818; border: none; color: white; 
+            margin-left: 10px; cursor: pointer; transition: 0.3s;
+        }
+        .mic-btn.listening {
+            background: #ff0000; color: white; animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,0,0,0); } }
 
         /* RIGHT ICONS */
         .right-section { display: flex; align-items: center; gap: 18px; }
@@ -77,7 +85,6 @@
         .nav-btn i { font-size: 20px; transition: 0.2s; }
         .nav-btn span { font-size: 10px; }
         .nav-btn.active { color: white; }
-        .nav-btn.active i { transform: translateY(-2px); }
 
         /* --- 4. SIDEBAR (Desktop) --- */
         .sidebar {
@@ -94,7 +101,6 @@
         /* --- 5. MAIN CONTENT --- */
         .main-content { margin-left: 240px; margin-top: 60px; padding: 20px; }
 
-        /* CHIPS */
         .chips-bar {
             position: sticky; top: 60px; background: rgba(15,15,15,0.98); z-index: 10;
             padding: 10px 0; margin-bottom: 15px; overflow-x: auto; white-space: nowrap;
@@ -107,14 +113,8 @@
         .chip:hover { background: #3f3f3f; }
         .chip.active { background: white; color: black; }
 
-        /* VIDEO GRID */
         .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        /* SHORTS MODE GRID */
-        .grid.shorts-mode {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
         }
 
         /* --- 6. VIDEO CARD --- */
@@ -123,31 +123,23 @@
             position: relative; width: 100%; aspect-ratio: 16/9;
             border-radius: 12px; overflow: hidden; background: #222;
         }
-        /* Shorts Aspect Ratio */
-        .grid.shorts-mode .thumb-box { aspect-ratio: 9/16; }
-        
         .thumb-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .card:hover .thumb-img { transform: scale(1.03); }
-
         .duration {
             position: absolute; bottom: 6px; right: 6px;
             background: rgba(0,0,0,0.8); color: white;
             font-size: 11px; padding: 2px 4px; border-radius: 4px; font-weight: bold;
         }
-        
         .meta { display: flex; gap: 12px; padding-right: 5px; }
         .avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; flex-shrink: 0; display: grid; place-items: center; font-size: 14px; }
         .info { display: flex; flex-direction: column; }
         .title {
             font-size: 15px; font-weight: 600; line-height: 1.3; color: white;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-            margin-bottom: 4px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px;
         }
         .channel { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
         .stats { font-size: 13px; color: var(--text-secondary); }
 
-        /* --- 7. OVERLAYS --- */
-        /* Search Overlay */
+        /* --- 7. MOBILE SEARCH OVERLAY --- */
         .search-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); z-index: 2000; display: none; flex-direction: column;
@@ -156,7 +148,7 @@
         .so-input { flex: 1; background: #222; border: none; padding: 10px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
         .so-close { background: none; border: none; color: white; font-size: 20px; padding: 10px; }
 
-        /* Player Modal */
+        /* --- 8. PLAYER MODAL --- */
         .player-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 3000; flex-direction: column; overflow-y: auto;
@@ -164,60 +156,62 @@
         .video-container { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 0; }
         .video-details { padding: 15px; background: #0f0f0f; }
         .v-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        .v-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .sub-btn { background: white; color: black; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; border: none; cursor: pointer; }
-        .close-player-btn { margin-top: 20px; padding: 10px; width: 100%; background: #222; color: white; border: none; border-radius: 8px; font-weight: bold; }
+        .close-player-btn { margin-top: 20px; padding: 10px; width: 100%; background: #222; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* --- RESPONSIVE CSS --- */
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             header { padding: 0 10px; height: 55px; }
-            .menu-icon, .search-container, .mic-btn { display: none; } /* Hide Desktop elements */
+            .menu-icon, .search-container, .mic-btn { display: none; } /* Desktop mic hidden */
             .sidebar { display: none; }
             .main-content { margin-left: 0; margin-top: 55px; padding: 10px; }
             .chips-bar { top: 55px; }
             .bottom-nav { display: flex; }
             
-            /* Logo Adjust */
             .logo-img { height: 22px; }
             .signature { font-size: 7px; margin-top: 2px; }
 
-            /* Grid */
             .grid { grid-template-columns: 1fr; gap: 20px; }
-            .grid.shorts-mode { grid-template-columns: 1fr 1fr; gap: 10px; } /* 2 columns for shorts */
-            
             .mobile-search-icon { display: block !important; }
         }
         .mobile-search-icon { display: none; font-size: 18px; color: white; background: none; border: none; padding: 8px; }
 
+        /* Toast Notification for Voice */
+        #voiceStatus {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(255, 0, 0, 0.9); color: white; padding: 10px 20px;
+            border-radius: 20px; display: none; z-index: 5000; font-weight: bold;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Voice Status Toast -->
+    <div id="voiceStatus">Listening... 🎙️</div>
 
     <!-- HEADER -->
     <header>
         <div class="left-section">
             <i class="fas fa-bars menu-icon"></i>
-            <!-- BRANDING -->
             <div class="brand-box" onclick="location.reload()">
                 <img src="https://i.supaimg.com/f25eb9da-5856-46df-acba-182641a77cc9.png" class="logo-img" alt="Logo">
                 <div class="signature">MADE BY FAIZAN AHMED</div>
             </div>
         </div>
 
-        <!-- Desktop Search -->
+        <!-- Desktop Search & Mic -->
         <div class="search-container">
             <div class="search-input-box">
                 <input type="text" id="dSearch" placeholder="Search">
                 <button class="search-btn" onclick="execSearch('dSearch')"><i class="fas fa-search"></i></button>
             </div>
-            <button class="mic-btn"><i class="fas fa-microphone"></i></button>
+            <!-- REAL VOICE BUTTON -->
+            <button class="mic-btn" id="dMic" onclick="startVoiceSearch('dSearch', 'dMic')"><i class="fas fa-microphone"></i></button>
         </div>
 
         <!-- Right Icons -->
         <div class="right-section">
             <button class="mobile-search-icon" onclick="openSearch()"><i class="fas fa-search"></i></button>
             <button class="icon-btn" onclick="alert('Create')"><i class="fas fa-video"></i></button>
-            <button class="icon-btn" onclick="alert('Notifications')"><i class="fas fa-bell"></i></button>
             <div class="user-avatar">F</div>
         </div>
     </header>
@@ -236,74 +230,50 @@
         <button class="nav-btn" onclick="loadCategory('Subscriptions', this)">
             <i class="fas fa-photo-video"></i> <span>Subs</span>
         </button>
-        <button class="nav-btn" onclick="alert('Library')">
-            <i class="fas fa-folder"></i> <span>Library</span>
-        </button>
     </nav>
 
-    <!-- DESKTOP SIDEBAR -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <a href="#" class="side-item active" onclick="loadCategory('Trending')"><i class="fas fa-home"></i> Home</a>
         <a href="#" class="side-item" onclick="loadCategory('Shorts')"><i class="fas fa-bolt"></i> Shorts</a>
-        <a href="#" class="side-item" onclick="loadCategory('Subscriptions')"><i class="fas fa-photo-video"></i> Subscriptions</a>
-        <hr style="border-color: #222; margin: 10px 0;">
-        <a href="#" class="side-item"><i class="fas fa-history"></i> History</a>
-        <a href="#" class="side-item"><i class="fas fa-clock"></i> Watch Later</a>
-        <a href="#" class="side-item"><i class="fas fa-thumbs-up"></i> Liked Videos</a>
+        <a href="#" class="side-item" onclick="loadCategory('History')"><i class="fas fa-history"></i> History</a>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- Categories -->
         <div class="chips-bar">
             <button class="chip active" onclick="loadCategory('Trending', this)">All</button>
             <button class="chip" onclick="loadCategory('Pakistani Dramas', this)">Dramas</button>
             <button class="chip" onclick="loadCategory('New Music', this)">Music</button>
             <button class="chip" onclick="loadCategory('Gaming', this)">Gaming</button>
-            <button class="chip" onclick="loadCategory('Live News Pakistan', this)">News</button>
             <button class="chip" onclick="loadCategory('Cricket', this)">Cricket</button>
             <button class="chip" onclick="loadCategory('Coding', this)">Coding</button>
         </div>
-
-        <!-- Video Grid -->
         <div class="grid" id="videoGrid"></div>
     </main>
 
-    <!-- SEARCH OVERLAY (Mobile) -->
+    <!-- MOBILE SEARCH OVERLAY -->
     <div class="search-overlay" id="searchUI">
         <div class="so-header">
             <button class="so-close" onclick="closeSearch()"><i class="fas fa-arrow-left"></i></button>
-            <input type="text" class="so-input" id="mSearch" placeholder="Search YouTube...">
-            <button class="so-close"><i class="fas fa-microphone"></i></button>
+            <input type="text" class="so-input" id="mSearch" placeholder="Search...">
+            <!-- REAL MOBILE MIC -->
+            <button class="so-close" id="mMic" onclick="startVoiceSearch('mSearch', 'mMic')"><i class="fas fa-microphone"></i></button>
         </div>
         <div style="padding: 20px;">
-            <p style="color:#888; font-size:12px; font-weight:bold; margin-bottom:10px;">TRENDING SEARCHES</p>
-            <div onclick="doSearch('Pakistani Dramas 2024')" style="padding:12px 0; border-bottom:1px solid #222; color:white;">🔥 Pakistani Dramas</div>
-            <div onclick="doSearch('New Songs')" style="padding:12px 0; border-bottom:1px solid #222; color:white;">🎵 New Songs</div>
-            <div onclick="doSearch('Cricket Highlights')" style="padding:12px 0; border-bottom:1px solid #222; color:white;">🏏 Cricket</div>
+            <p style="color:#888; font-size:12px; font-weight:bold; margin-bottom:10px;">SUGGESTIONS</p>
+            <div onclick="doSearch('Pakistani Dramas 2024')" style="padding:12px 0; border-bottom:1px solid #222;">🔥 Pakistani Dramas</div>
+            <div onclick="doSearch('New Songs')" style="padding:12px 0; border-bottom:1px solid #222;">🎵 New Songs</div>
         </div>
     </div>
 
-    <!-- PLAYER MODAL -->
+    <!-- PLAYER -->
     <div class="player-modal" id="playerUI">
         <div class="video-container">
             <iframe id="playerFrame" src="" style="width:100%; height:100%; border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         <div class="video-details">
-            <div class="v-title" id="pTitle">Video Title Loading...</div>
-            <div class="v-actions">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div class="avatar" style="background:purple;">Z</div>
-                    <div>
-                        <div style="font-weight:bold; font-size:14px;">Zootube Channel</div>
-                        <div style="font-size:12px; color:#aaa;">1.5M Subscribers</div>
-                    </div>
-                </div>
-                <button class="sub-btn">Subscribe</button>
-            </div>
-            <div style="color:#ccc; font-size:14px; line-height:1.4;">
-                This is a description area. Watch this video in high quality on Zootube Enhanced Edition.
-            </div>
+            <div class="v-title" id="pTitle">Video Title</div>
             <button class="close-player-btn" onclick="closePlayer()">Close Player</button>
         </div>
     </div>
@@ -311,132 +281,136 @@
     <script>
         const API_URL = "https://api.xyro.site/search/youtube?q=";
         const grid = document.getElementById('videoGrid');
-        let currentCategory = 'Trending';
 
         window.onload = () => loadCategory('Trending Videos');
 
-        /* --- LOGIC --- */
+        /* --- REAL VOICE SEARCH LOGIC --- */
+        function startVoiceSearch(inputId, btnId) {
+            // Check browser support
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Voice search is not supported in this browser. Try Chrome.");
+                return;
+            }
 
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US'; // Default English (Most phones auto-detect mixed Urdu)
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            const btn = document.getElementById(btnId);
+            const statusDiv = document.getElementById('voiceStatus');
+
+            // Start Listening
+            recognition.start();
+
+            // UI Updates
+            recognition.onstart = function() {
+                btn.classList.add('listening'); // Red Pulse
+                btn.style.color = 'red';
+                statusDiv.innerText = "Listening... Speak Now 🎙️";
+                statusDiv.style.display = "block";
+            };
+
+            recognition.onend = function() {
+                btn.classList.remove('listening');
+                btn.style.color = 'white';
+                statusDiv.style.display = "none";
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById(inputId).value = transcript;
+                
+                // Show what was heard then search
+                statusDiv.innerText = "Searching: " + transcript;
+                statusDiv.style.display = "block";
+                setTimeout(() => {
+                    statusDiv.style.display = "none";
+                    if(inputId === 'mSearch') closeSearch();
+                    loadCategory(transcript);
+                }, 1000);
+            };
+
+            recognition.onerror = function(event) {
+                console.error(event.error);
+                statusDiv.innerText = "Error. Try Again.";
+                btn.classList.remove('listening');
+                btn.style.color = 'white';
+            };
+        }
+
+        /* --- DATA FETCHING --- */
         async function loadCategory(query, btn) {
-            currentCategory = query;
-            
-            // Update UI (Chips & Nav)
+            // Update UI
             if(btn) {
-                if(btn.classList.contains('chip')) {
-                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-                } else if (btn.classList.contains('nav-btn')) {
-                    document.querySelectorAll('.nav-btn').forEach(c => c.classList.remove('active'));
-                }
+                document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(c => c.classList.remove('active'));
                 btn.classList.add('active');
             }
-
-            // Handle Shorts Layout
-            if(query.includes('Shorts')) {
-                grid.classList.add('shorts-mode');
-            } else {
-                grid.classList.remove('shorts-mode');
-            }
-
-            // Loading Skeleton
+            
+            // Skeleton Loader
             grid.innerHTML = '';
-            for(let i=0; i<8; i++) {
-                grid.innerHTML += `
-                    <div class="card">
-                        <div class="thumb-box" style="background:#222;"></div>
-                        <div style="display:flex; gap:10px;">
-                            <div class="avatar" style="background:#222;"></div>
-                            <div style="flex:1; display:flex; flex-direction:column; gap:5px;">
-                                <div style="height:14px; background:#222; width:90%; border-radius:4px;"></div>
-                                <div style="height:14px; background:#222; width:60%; border-radius:4px;"></div>
-                            </div>
-                        </div>
-                    </div>`;
+            for(let i=0; i<6; i++) {
+                grid.innerHTML += `<div class="card"><div class="thumb-box" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
             }
 
             try {
                 const res = await fetch(API_URL + encodeURIComponent(query));
                 const json = await res.json();
                 const videos = json.result || json.data || [];
-
                 grid.innerHTML = '';
 
-                if(!videos.length) {
-                    grid.innerHTML = '<p style="padding:20px;">No results found.</p>';
-                    return;
-                }
+                if(!videos.length) { grid.innerHTML = '<p style="padding:20px;">No results.</p>'; return; }
 
                 videos.forEach(vid => {
                     let videoId = null;
                     if(vid.link && vid.link.includes('v=')) videoId = vid.link.split('v=')[1].split('&')[0];
-                    
                     if(videoId) {
-                        const title = vid.title || "Video Title";
-                        const channel = vid.channel || "Channel Name";
+                        const title = vid.title || "Video";
+                        const channel = vid.channel || "Channel";
                         const thumb = vid.imageUrl || `https://i.ytimg.com/vi/${videoId}/hq720.jpg`;
                         
-                        // Fake Stats
-                        const views = Math.floor(Math.random() * 900 + 10) + "K views";
-                        const time = Math.floor(Math.random() * 11 + 1) + " months ago";
-
                         const card = document.createElement('div');
                         card.className = 'card';
                         card.onclick = () => openPlayer(videoId, title);
-
                         card.innerHTML = `
                             <div class="thumb-box">
                                 <img src="${thumb}" class="thumb-img">
-                                <div class="duration">10:05</div>
+                                <div class="duration">12:45</div>
                             </div>
                             <div class="meta">
                                 <div class="avatar">${channel.charAt(0)}</div>
                                 <div class="info">
                                     <div class="title">${title}</div>
-                                    <div class="channel">${channel} <i class="fas fa-check-circle" style="font-size:10px;"></i></div>
-                                    <div class="stats">${views} • ${time}</div>
+                                    <div class="channel">${channel}</div>
+                                    <div class="stats">1M views • 2 days ago</div>
                                 </div>
                             </div>
                         `;
                         grid.appendChild(card);
                     }
                 });
-
-            } catch (err) {
-                console.error(err);
-                grid.innerHTML = '<p style="padding:20px;">Error loading videos.</p>';
-            }
+            } catch (err) { grid.innerHTML = '<p>Error loading.</p>'; }
         }
 
         /* --- PLAYER --- */
         function openPlayer(id, title) {
             document.getElementById('playerFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            document.getElementById('pTitle').innerText = title || "Watching Video";
+            document.getElementById('pTitle').innerText = title;
             document.getElementById('playerUI').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
         }
         function closePlayer() {
             document.getElementById('playerUI').style.display = 'none';
             document.getElementById('playerFrame').src = "";
-            document.body.style.overflow = 'auto';
         }
 
-        /* --- SEARCH --- */
-        function openSearch() {
-            document.getElementById('searchUI').style.display = 'flex';
-            document.getElementById('mSearch').focus();
-        }
-        function closeSearch() {
-            document.getElementById('searchUI').style.display = 'none';
-        }
-        function doSearch(q) {
-            closeSearch();
-            loadCategory(q);
-        }
+        /* --- SEARCH UI --- */
+        function openSearch() { document.getElementById('searchUI').style.display = 'flex'; document.getElementById('mSearch').focus(); }
+        function closeSearch() { document.getElementById('searchUI').style.display = 'none'; }
+        function doSearch(q) { closeSearch(); loadCategory(q); }
         function execSearch(id) {
             const val = document.getElementById(id).value;
             if(val) doSearch(val);
         }
-        
-        // Enter Key Inputs
         document.getElementById('dSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') execSearch('dSearch'); });
         document.getElementById('mSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') execSearch('mSearch'); });
 
