@@ -7,7 +7,7 @@
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- 1. YOUTUBE DARK THEME --- */
+        /* --- 1. ZOOTUBE DARK THEME --- */
         :root {
             --bg-body: #0f0f0f;
             --bg-header: #0f0f0f;
@@ -36,8 +36,18 @@
             border-bottom: 1px solid #222;
         }
 
-        .logo { font-size: 22px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .logo i { color: red; font-size: 26px; }
+        /* LOGO STYLE UPDATE */
+        .logo { 
+            display: flex; 
+            align-items: center; 
+            cursor: pointer; 
+        }
+        
+        .logo img {
+            height: 45px; /* Logo ki height set ki hai */
+            width: auto;
+            object-fit: contain;
+        }
 
         .search-bar { display: flex; flex: 1; max-width: 600px; margin: 0 20px; }
         input {
@@ -159,7 +169,11 @@
 
     <!-- Header -->
     <header>
-        <div class="logo" onclick="loadCategory('Home', this)"><i class="fab fa-youtube"></i> YouTube</div>
+        <!-- IMAGE LOGO ADDED HERE -->
+        <div class="logo" onclick="loadCategory('Home', this)">
+            <img src="https://i.supaimg.com/d3bb1a7c-cd5a-4d53-b9a7-db9e753a0aa6.jpg" alt="Zootube Logo">
+        </div>
+        
         <div class="search-bar">
             <input type="text" id="searchInp" placeholder="Search">
             <button class="search-btn" onclick="manualSearch()"><i class="fas fa-search"></i></button>
