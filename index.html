@@ -3,174 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zootube | Enhanced Edition</title>
+    <title>Zootube | The Dark Side of Video</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. CORE VARIABLES & RESET --- */
+        /* --- THEME SETTINGS --- */
         :root {
-            --bg-body: #050505;
-            --bg-card: #141414;
-            --bg-card-hover: #1f1f1f;
-            --primary: #00ff41; /* Hacker Green */
-            --secondary: #008F11;
-            --text-main: #e0e0e0;
-            --text-muted: #888888;
-            --shadow: 0 4px 15px rgba(0, 255, 65, 0.1);
-            --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --bg-main: #050505;       /* Pitch Black */
+            --bg-card: #111111;       /* Dark Grey */
+            --primary: #00ff88;       /* Neon Green */
+            --secondary: #00bcd4;     /* Cyan */
+            --text-color: #ffffff;
+            --text-muted: #a0a0a0;
+            --glass: rgba(20, 20, 20, 0.8);
         }
 
-        * { box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: var(--font-main);
+            background-color: var(--bg-main);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
             overflow-x: hidden;
         }
 
-        /* --- 2. HEADER (Glassmorphism) --- */
+        /* --- GLOWING HEADER --- */
         header {
             position: sticky;
             top: 0;
-            z-index: 100;
-            background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(12px);
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
             border-bottom: 1px solid #333;
-            padding: 15px 40px;
+            padding: 15px 5%;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
-        }
-
-        .brand {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: #fff;
-            display: flex;
             align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 255, 136, 0.1);
+        }
+
+        .logo {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
-        }
-        
-        .brand span {
-            color: var(--bg-body);
-            background: var(--primary);
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-left: 5px;
-            text-shadow: none;
+            text-shadow: 0 0 10px var(--primary);
         }
 
-        /* --- 3. SEARCH BAR --- */
-        .search-wrapper {
-            flex: 0 1 600px;
-            display: flex;
+        .logo span { color: var(--primary); }
+
+        /* --- SEARCH BAR --- */
+        .search-box {
             position: relative;
+            width: 100%;
+            max-width: 600px;
         }
 
-        input#searchBox {
+        .search-box input {
             width: 100%;
             padding: 12px 20px;
             border-radius: 50px;
+            background: #1a1a1a;
             border: 2px solid #333;
-            background: #000;
             color: var(--primary);
             font-size: 16px;
             outline: none;
-            transition: 0.3s all;
+            transition: all 0.3s ease;
         }
 
-        input#searchBox:focus {
+        .search-box input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
         }
 
-        button#searchBtn {
+        .search-btn {
             position: absolute;
             right: 5px;
-            top: 3px;
-            height: 40px;
-            width: 60px;
-            border-radius: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
             border: none;
-            background: var(--bg-card);
-            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
         }
 
-        button#searchBtn:hover {
-            background: var(--primary);
-            color: #000;
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 15px var(--primary);
         }
 
-        /* --- 4. MAIN CONTENT GRID --- */
-        main {
-            padding: 30px 40px;
-            max-width: 1600px;
-            margin: 0 auto;
+        /* --- VIDEO GRID --- */
+        .container {
+            padding: 30px 5%;
+            min-height: 80vh;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
         }
 
-        /* --- 5. VIDEO CARD --- */
+        /* --- VIDEO CARD --- */
         .card {
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             border: 1px solid transparent;
-            position: relative;
             display: flex;
             flex-direction: column;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-            border-color: var(--secondary);
-            background: var(--bg-card-hover);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary);
         }
 
-        .thumb-container {
+        .thumbnail-wrapper {
             position: relative;
             width: 100%;
             padding-top: 56.25%; /* 16:9 Aspect Ratio */
             background: #000;
         }
 
-        .thumb-img {
+        .thumbnail {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            opacity: 0.9;
+            opacity: 0.8;
+            transition: 0.3s;
         }
 
-        .card:hover .thumb-img {
-            opacity: 1;
-        }
+        .card:hover .thumbnail { opacity: 1; }
 
-        .details {
+        .info {
             padding: 15px;
-            flex-grow: 1;
+            flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
-        .video-title {
-            font-size: 15px;
-            font-weight: 600;
+        .title {
+            font-size: 16px;
+            font-weight: 500;
             line-height: 1.4;
-            color: #fff;
             margin-bottom: 8px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -178,249 +169,232 @@
             overflow: hidden;
         }
 
-        .channel-name {
+        .channel {
             font-size: 13px;
             color: var(--text-muted);
-            margin-top: auto; /* Push to bottom */
             display: flex;
             align-items: center;
+            gap: 5px;
         }
-        
-        .channel-name::before {
+
+        .channel::before {
             content: '●';
             color: var(--primary);
-            font-size: 10px;
-            margin-right: 6px;
+            font-size: 8px;
         }
 
-        /* --- 6. SKELETON LOADING ANIMATION --- */
-        .skeleton {
-            background: linear-gradient(90deg, #141414 25%, #1f1f1f 50%, #141414 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
+        /* --- LOADING SPINNER --- */
+        .loader {
+            display: none;
+            border: 4px solid #333;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 50px auto;
         }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        .sk-card { height: 260px; border-radius: 12px; }
 
-        /* --- 7. VIDEO PLAYER MODAL --- */
-        .modal-overlay {
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- VIDEO PLAYER MODAL --- */
+        .modal {
+            display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            display: none; /* Hidden by default */
+            z-index: 2000;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
+            backdrop-filter: blur(10px);
         }
 
-        .player-container {
+        .player-box {
             width: 90%;
-            max-width: 1000px;
+            max-width: 900px;
             aspect-ratio: 16/9;
             background: #000;
             border: 2px solid var(--primary);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
-            border-radius: 8px;
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.2);
+            border-radius: 10px;
             overflow: hidden;
         }
 
         iframe { width: 100%; height: 100%; border: none; }
 
-        .close-modal {
+        .close-btn {
             margin-top: 20px;
-            padding: 10px 30px;
+            padding: 10px 25px;
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             border-radius: 5px;
             transition: 0.3s;
         }
-        
-        .close-modal:hover {
-            background: var(--primary);
-            color: #000;
-        }
 
-        /* --- MOBILE TWEAKS --- */
-        @media (max-width: 600px) {
-            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
-            .search-wrapper { width: 100%; }
-            main { padding: 20px; }
+        .close-btn:hover { background: var(--secondary); color: #000; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; }
+            .search-box { width: 100%; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand" onclick="window.location.reload()">ZOO<span>TUBE</span></div>
-        <div class="search-wrapper">
-            <input type="text" id="searchBox" placeholder="Paste API Query or Search Topic...">
-            <button id="searchBtn">🔍</button>
+        <div class="logo" onclick="window.location.reload()">ZOO<span>TUBE</span></div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search whatever you want...">
+            <button class="search-btn" id="searchBtn">➜</button>
         </div>
     </header>
 
-    <main>
-        <div id="grid" class="grid">
-            <!-- Videos will be injected here -->
-        </div>
-    </main>
+    <div class="container">
+        <!-- Status Messages -->
+        <h2 id="statusMsg" style="text-align: center; color: var(--text-muted); font-weight: 300;">Ready to search the unknown...</h2>
+        <div class="loader" id="loader"></div>
+        
+        <!-- Video Grid -->
+        <div class="grid" id="videoGrid"></div>
+    </div>
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modal">
-        <div class="player-container">
-            <iframe id="player" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <!-- Video Player Overlay -->
+    <div class="modal" id="videoModal">
+        <div class="player-box">
+            <iframe id="playerFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <button class="close-modal" onclick="closeVideo()">CLOSE PLAYER</button>
+        <button class="close-btn" onclick="closePlayer()">CLOSE PLAYER</button>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const API_BASE = "https://api.xyro.site/search/youtube?q=";
-        
-        // --- DOM ELEMENTS ---
-        const grid = document.getElementById('grid');
-        const searchBox = document.getElementById('searchBox');
+        // API URL Definition
+        const API_URL = "https://api.xyro.site/search/youtube?q=";
+
+        // Elements
+        const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
-        const modal = document.getElementById('modal');
-        const player = document.getElementById('player');
+        const videoGrid = document.getElementById('videoGrid');
+        const statusMsg = document.getElementById('statusMsg');
+        const loader = document.getElementById('loader');
+        const modal = document.getElementById('videoModal');
+        const playerFrame = document.getElementById('playerFrame');
 
-        // --- INIT ---
-        // Load some default content on startup
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchVideos("coding lofi"); 
+        // Initial Load (Auto search for something cool)
+        window.onload = () => {
+            searchInput.value = "NCS Music";
+            fetchVideos();
+        };
+
+        // Event Listeners
+        searchBtn.addEventListener('click', fetchVideos);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fetchVideos();
         });
 
-        // --- EVENT LISTENERS ---
-        searchBtn.addEventListener('click', () => {
-            const query = searchBox.value.trim();
-            if(query) fetchVideos(query);
-        });
+        // Main Fetch Function
+        async function fetchVideos() {
+            const query = searchInput.value.trim();
+            if (!query) return;
 
-        searchBox.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const query = searchBox.value.trim();
-                if(query) fetchVideos(query);
-            }
-        });
-
-        // --- FUNCTIONS ---
-
-        async function fetchVideos(query) {
-            // 1. Show Skeleton Loading
-            renderSkeletons();
+            // UI Updates
+            videoGrid.innerHTML = '';
+            statusMsg.style.display = 'none';
+            loader.style.display = 'block';
 
             try {
-                // 2. Fetch Data
-                const response = await fetch(API_BASE + encodeURIComponent(query));
-                const json = await response.json();
-                
-                // 3. Debug Response (Check Console F12 if issues)
-                console.log("Zootube API Response:", json);
+                // Fetching Data
+                const response = await fetch(API_URL + encodeURIComponent(query));
+                const data = await response.json();
 
-                // 4. Parse Data (Handle various wrapper formats)
+                console.log("API Data:", data); // Debugging ke liye
+
+                // Data Parsing logic (Handle variations in API)
                 let videos = [];
-                if (Array.isArray(json)) videos = json;
-                else if (json.data) videos = json.data;
-                else if (json.results) videos = json.results;
+                if (data.data && Array.isArray(data.data)) {
+                    videos = data.data;
+                } else if (Array.isArray(data)) {
+                    videos = data;
+                } else if (data.results) {
+                    videos = data.results;
+                }
 
-                // 5. Clear Grid & Render
-                grid.innerHTML = '';
-
+                // Check if videos exist
                 if (!videos || videos.length === 0) {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 50px;"><h2>No results found in the wild.</h2></div>';
+                    loader.style.display = 'none';
+                    statusMsg.innerText = "No results found. Try a different keyword.";
+                    statusMsg.style.display = 'block';
                     return;
                 }
 
+                loader.style.display = 'none';
+
+                // Render Videos
                 videos.forEach(video => {
-                    // Extract Data Safely
-                    const title = video.title || video.videoTitle || "Unknown Video";
-                    const thumbnail = video.thumbnail || video.image || "https://via.placeholder.com/640x360/000000/00ff41?text=No+Preview";
-                    const channel = video.author?.name || video.channelTitle || "Zootube User";
-                    
-                    // Extract ID
-                    let videoId = null;
-                    if(video.id) videoId = video.id;
-                    if(video.videoId) videoId = video.videoId;
-                    if(!videoId && video.url) {
-                         // Fallback: try regex on URL
-                         const match = video.url.match(/v=([^&]+)/);
-                         if(match) videoId = match[1];
+                    // Extracting ID securely
+                    let videoId = video.id || video.videoId;
+                    if (!videoId && video.url) {
+                        const urlParts = video.url.split('v=');
+                        if (urlParts.length > 1) videoId = urlParts[1].split('&')[0];
                     }
 
-                    if(videoId) {
-                        createCard(title, thumbnail, channel, videoId);
+                    // Fallback images and titles
+                    const title = video.title || video.videoTitle || "Untitled Video";
+                    const thumbnail = video.thumbnail || video.image || "https://via.placeholder.com/600x340/111/00ff88?text=No+Preview";
+                    const channel = video.author?.name || video.channelTitle || "Unknown Channel";
+
+                    if (videoId) {
+                        createVideoCard(title, thumbnail, channel, videoId);
                     }
                 });
 
             } catch (error) {
-                console.error(error);
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; color: #ff4444;">
-                    <h2>API Error</h2>
-                    <p>The signal was lost. Try again later.</p>
-                </div>`;
+                console.error("Error:", error);
+                loader.style.display = 'none';
+                statusMsg.innerText = "Connection Error. Please try again.";
+                statusMsg.style.display = 'block';
             }
         }
 
-        function createCard(title, thumb, channel, id) {
+        // Create HTML Card
+        function createVideoCard(title, thumb, channel, id) {
             const card = document.createElement('div');
             card.className = 'card';
-            card.onclick = () => playVideo(id);
+            card.onclick = () => openPlayer(id);
 
             card.innerHTML = `
-                <div class="thumb-container">
-                    <img src="${thumb}" class="thumb-img" alt="Thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/640x360/111/fff?text=Image+Error'">
+                <div class="thumbnail-wrapper">
+                    <img src="${thumb}" class="thumbnail" alt="Thumb" onerror="this.src='https://via.placeholder.com/600x340?text=Error'">
                 </div>
-                <div class="details">
-                    <div class="video-title">${title}</div>
-                    <div class="channel-name">${channel}</div>
+                <div class="info">
+                    <div class="title">${title}</div>
+                    <div class="channel">${channel}</div>
                 </div>
             `;
-            grid.appendChild(card);
+            videoGrid.appendChild(card);
         }
 
-        function renderSkeletons() {
-            grid.innerHTML = '';
-            // Create 8 skeleton cards
-            for(let i=0; i<8; i++) {
-                const sk = document.createElement('div');
-                sk.className = 'skeleton sk-card';
-                grid.appendChild(sk);
-            }
+        // Player Functions
+        function openPlayer(id) {
+            // Using No-Cookie domain for better embedding success
+            playerFrame.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+            modal.style.display = 'flex';
         }
 
-        // --- VIDEO PLAYER LOGIC ---
-        function playVideo(id) {
-            // Using youtube-nocookie for better privacy/speed
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
-            player.src = embedUrl;
-            modal.classList.add('active');
+        function closePlayer() {
+            modal.style.display = 'none';
+            playerFrame.src = ""; // Stop Audio
         }
 
-        function closeVideo() {
-            modal.classList.remove('active');
-            // Clear src to stop audio immediately
-            setTimeout(() => { player.src = ''; }, 300); 
-        }
-
-        // Close modal on background click
+        // Close on background click
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeVideo();
+            if (e.target === modal) closePlayer();
         });
 
     </script>
