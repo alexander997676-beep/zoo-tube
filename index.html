@@ -22,7 +22,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg-body); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
 
-        /* Smooth Scroll */
         html { scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
@@ -39,7 +38,6 @@
         .left { display: flex; align-items: center; gap: 15px; }
         .menu-btn { font-size: 18px; color: white; cursor: pointer; }
 
-        /* PREMIUM BRANDING */
         .brand { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
         .logo-img { height: 22px; width: auto; object-fit: contain; }
         .maker-badge {
@@ -48,7 +46,6 @@
             background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* SEARCH (Desktop) */
         .search-wrap { flex: 1; max-width: 600px; margin: 0 20px; display: flex; align-items: center; gap: 10px; }
         .search-box { 
             display: flex; width: 100%; background: #121212; border: 1px solid #303030; 
@@ -64,11 +61,17 @@
             width: 40px; height: 40px; background: #181818; border-radius: 50%; border: none; 
             color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .mic-btn:hover { background: #333; }
 
         .right { display: flex; align-items: center; gap: 15px; }
         .icon-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
-        .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #FF512F, #DD2476); color: white; display: grid; place-items: center; font-weight: bold; font-size:14px; }
+        
+        .avatar { 
+            width: 32px; height: 32px; border-radius: 50%; 
+            background: linear-gradient(135deg, #FF512F, #DD2476); 
+            color: white; display: grid; place-items: center; 
+            font-weight: bold; font-size:14px; cursor: pointer; overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
         /* --- 3. MOBILE NAV --- */
         .bottom-nav {
@@ -99,7 +102,6 @@
         /* --- 5. MAIN AREA --- */
         .main { margin-left: 240px; margin-top: 56px; padding: 20px; }
 
-        /* Chips */
         .chips {
             position: sticky; top: 56px; background: rgba(15,15,15,0.98); z-index: 10;
             padding: 12px 0; margin-bottom: 10px; overflow-x: auto; white-space: nowrap;
@@ -112,7 +114,7 @@
         .chip:hover { background: #3f3f3f; }
         .chip.active { background: white; color: black; }
 
-        /* Shorts Shelf */
+        /* SHORTS SHELF */
         .shorts-shelf {
             display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 20px;
             border-bottom: 4px solid #1e1e1e;
@@ -128,7 +130,6 @@
             text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
 
-        /* Video Grid */
         .grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px 16px;
         }
@@ -155,7 +156,7 @@
         }
         .sub-txt { font-size: 13px; color: var(--text-sec); }
 
-        /* --- PLAYER WATCH PAGE (Full App Feel) --- */
+        /* --- WATCH PAGE --- */
         .watch-page {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-body); z-index: 5000; overflow-y: auto; flex-direction: column;
@@ -175,8 +176,10 @@
         .pill { background: #222; color: white; padding: 8px 16px; border-radius: 18px; font-size: 13px; display: flex; gap: 6px; align-items: center; border: none; white-space: nowrap; }
 
         .recs-title { font-size: 16px; font-weight: bold; margin: 20px 0 10px; }
+        
+        /* UPDATED RECOMMENDED CARD */
         .rec-card { display: flex; gap: 10px; margin-bottom: 15px; cursor: pointer; }
-        .rec-thumb { width: 160px; height: 90px; border-radius: 8px; background: #222; flex-shrink: 0; overflow: hidden; }
+        .rec-thumb { width: 160px; height: 90px; border-radius: 8px; background: #222; flex-shrink: 0; overflow: hidden; position: relative; }
         .rec-thumb img { width: 100%; height: 100%; object-fit: cover; }
         
         .close-wp {
@@ -184,7 +187,7 @@
             color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer;
         }
 
-        /* --- OVERLAYS --- */
+        /* --- VOICE & SEARCH OVERLAYS --- */
         .voice-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 6000; flex-direction: column; justify-content: center; align-items: center;
@@ -222,6 +225,8 @@
 </head>
 <body>
 
+    <input type="file" id="fileUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
+
     <!-- HEADER -->
     <header>
         <div class="left">
@@ -241,7 +246,7 @@
         <div class="right">
             <button class="mob-search-btn" onclick="openMobSearch()"><i class="fas fa-search"></i></button>
             <button class="icon-btn" onclick="alert('Upload')"><i class="fas fa-video"></i></button>
-            <div class="avatar">F</div>
+            <div class="avatar" onclick="triggerUpload()">F</div>
         </div>
     </header>
 
@@ -251,7 +256,7 @@
         <button class="nav-btn" onclick="loadCat('Shorts', this)"><i class="fas fa-bolt"></i><span>Shorts</span></button>
         <button class="nav-btn" onclick="alert('Create')"><i class="fas fa-plus-circle" style="font-size:32px;"></i></button>
         <button class="nav-btn" onclick="loadCat('Subscriptions', this)"><i class="fas fa-photo-video"></i><span>Subs</span></button>
-        <button class="nav-btn"><i class="fas fa-user"></i><span>You</span></button>
+        <button class="nav-btn" onclick="triggerUpload()"><i class="fas fa-user"></i><span>You</span></button>
     </nav>
 
     <!-- SIDEBAR -->
@@ -273,16 +278,11 @@
             <button class="chip" onclick="loadCat('Cricket', this)">Cricket</button>
         </div>
 
-        <!-- SHORTS SHELF (Horizontal) -->
-        <div class="shorts-shelf" id="shortsShelf">
-            <!-- Shorts Injected via JS -->
-        </div>
-
-        <!-- VIDEO GRID -->
+        <div class="shorts-shelf" id="shortsShelf"></div>
         <div class="grid" id="grid"></div>
     </main>
 
-    <!-- WATCH PAGE (Full Overlay) -->
+    <!-- WATCH PAGE -->
     <div class="watch-page" id="watchPage">
         <button class="close-wp" onclick="closeWatch()">✕</button>
         <iframe class="video-frame" id="vidFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -306,13 +306,10 @@
                 <button class="pill"><i class="fas fa-thumbs-up"></i> 52K</button>
                 <button class="pill"><i class="fas fa-share"></i> Share</button>
                 <button class="pill"><i class="fas fa-download"></i> Download</button>
-                <button class="pill"><i class="fas fa-bookmark"></i> Save</button>
             </div>
 
             <div class="recs-title">Up Next</div>
-            <div id="recsGrid">
-                <!-- Recommended Videos Injected Here -->
-            </div>
+            <div id="recsGrid"></div>
         </div>
     </div>
 
@@ -342,16 +339,30 @@
             loadShorts();
         };
 
-        // --- 1. CORE SEARCH & VOICE ---
+        // --- 1. IMAGE UPLOAD ---
+        function triggerUpload() { document.getElementById('fileUpload').click(); }
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatars = document.querySelectorAll('.avatar, .chn-pic');
+                    avatars.forEach(av => {
+                        av.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+                        av.style.background = 'none';
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- 2. SEARCH & VOICE ---
         function openMobSearch() { document.getElementById('mobSearch').style.display='flex'; document.getElementById('mSearch').focus(); }
         function closeMobSearch() { document.getElementById('mobSearch').style.display='none'; }
         
         function execSearch(id) {
             const val = document.getElementById(id).value;
-            if(val) { 
-                if(id==='mSearch') closeMobSearch();
-                loadCat(val); 
-            }
+            if(val) { if(id==='mSearch') closeMobSearch(); loadCat(val); }
         }
 
         function startVoice(targetId) {
@@ -382,7 +393,7 @@
         }
         function stopVoice() { if(recognition) recognition.stop(); document.getElementById('voiceUI').style.display='none'; }
 
-        // --- 2. DATA LOADING (REALISTIC) ---
+        // --- 3. DATA LOADING ---
         function smartViews() {
             return (Math.random() > 0.7) ? (Math.random()*15+1).toFixed(1)+"M views" : Math.floor(Math.random()*900+10)+"K views";
         }
@@ -394,7 +405,6 @@
         async function loadCat(query, btn) {
             if(btn) { document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(e=>e.classList.remove('active')); btn.classList.add('active'); }
             
-            // Skeleton
             grid.innerHTML = '';
             for(let i=0; i<8; i++) grid.innerHTML += `<div class="card"><div class="thumb" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
 
@@ -436,20 +446,21 @@
             } catch(e) { grid.innerHTML = '<p>Error.</p>'; }
         }
 
-        // --- 3. SHORTS SHELF ---
+        // --- 4. SHORTS SHELF ---
         function loadShorts() {
             const shelf = document.getElementById('shortsShelf');
-            // Mock Data for Shorts
+            // Mock Data WITH IDs
             const shortsData = [
-                {t: "Funny Cat Meme", img: "https://i.ytimg.com/vi/1X_IAaNPW7Y/hq720.jpg"},
-                {t: "Cricket Six!", img: "https://i.ytimg.com/vi/W-S3qDkL-3E/hq720.jpg"},
-                {t: "Coding Life", img: "https://i.ytimg.com/vi/C8J2Z130K4M/hq720.jpg"},
-                {t: "Food Vlog", img: "https://i.ytimg.com/vi/8s9_w7f_y6k/hq720.jpg"},
-                {t: "Tech Unboxing", img: "https://i.ytimg.com/vi/6pW2f0z9w4w/hq720.jpg"}
+                {id: "1X_IAaNPW7Y", t: "Funny Cat Meme", img: "https://i.ytimg.com/vi/1X_IAaNPW7Y/hq720.jpg"},
+                {id: "W-S3qDkL-3E", t: "Cricket Six!", img: "https://i.ytimg.com/vi/W-S3qDkL-3E/hq720.jpg"},
+                {id: "C8J2Z130K4M", t: "Coding Life", img: "https://i.ytimg.com/vi/C8J2Z130K4M/hq720.jpg"},
+                {id: "8s9_w7f_y6k", t: "Food Vlog", img: "https://i.ytimg.com/vi/8s9_w7f_y6k/hq720.jpg"},
+                {id: "6pW2f0z9w4w", t: "Tech Unboxing", img: "https://i.ytimg.com/vi/6pW2f0z9w4w/hq720.jpg"}
             ];
+            shelf.innerHTML = '';
             shortsData.forEach(s => {
                 shelf.innerHTML += `
-                    <div class="short-card">
+                    <div class="short-card" onclick="openWatch('${s.id}', '${s.t}')">
                         <img src="${s.img}" class="short-img">
                         <div class="short-title">${s.t}</div>
                     </div>
@@ -457,32 +468,45 @@
             });
         }
 
-        // --- 4. WATCH PAGE LOGIC ---
+        // --- 5. WATCH PAGE (FIXED IMAGES & SUBTITLES) ---
         function openWatch(id, title) {
             const page = document.getElementById('watchPage');
             const frame = document.getElementById('vidFrame');
             const recs = document.getElementById('recsGrid');
             
-            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            // ADDED: &cc_load_policy=1 for Subtitles
+            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&cc_load_policy=1&cc_lang_pref=en`;
             document.getElementById('wpTitle').innerText = title;
             page.style.display = 'flex';
             
-            // Populate Recommended (Simulated)
+            // FIXED RECOMMENDED IMAGES (Using Real Video IDs)
             recs.innerHTML = '';
-            for(let i=0; i<5; i++) {
+            // List of specific video IDs for recommendations to ensure valid thumbnails
+            const recVideos = [
+                {id: "t_jHrUE5IOk", title: "Coke Studio | Pasuri"},
+                {id: "7tqT68L9wH8", title: "Funny Zoo Vlog"},
+                {id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito"},
+                {id: "JGwWNGJdvx8", title: "Ed Sheeran - Shape of You"},
+                {id: "OPf0YbXqDm0", title: "Mark Ronson - Uptown Funk"}
+            ];
+
+            recVideos.forEach(v => {
+                const imgUrl = `https://i.ytimg.com/vi/${v.id}/hq720.jpg`;
                 recs.innerHTML += `
-                    <div class="rec-card" onclick="alert('Playing next video...')">
+                    <div class="rec-card" onclick="openWatch('${v.id}', '${v.title}')">
                         <div class="rec-thumb">
-                             <img src="https://source.unsplash.com/random/300x200?sig=${i}">
+                             <img src="${imgUrl}">
+                             <div class="duration">04:30</div>
                         </div>
                         <div class="info" style="justify-content:center;">
-                            <div class="title" style="font-size:14px;">Recommended Video ${i+1}</div>
+                            <div class="title" style="font-size:14px;">${v.title}</div>
                             <div class="sub-txt">Zootube • ${smartViews()}</div>
                         </div>
                     </div>
                 `;
-            }
+            });
         }
+        
         function closeWatch() {
             document.getElementById('watchPage').style.display = 'none';
             document.getElementById('vidFrame').src = "";
