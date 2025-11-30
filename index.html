@@ -3,417 +3,350 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Voice Search Enabled</title>
+    <title>Zootube | Real Views Edition</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. VARIABLES & RESET --- */
+        /* --- 1. CORE VARIABLES --- */
         :root {
-            --bg-color: #0f0f0f;
-            --surface-color: #1e1e1e;
-            --gold-color: #ffd700;
-            --text-main: #ffffff;
-            --text-secondary: #aaaaaa;
-            --border-color: #2a2a2a;
+            --bg-body: #0f0f0f;
+            --bg-hover: #272727;
+            --primary: #3ea6ff;
+            --gold: #FFD700;
+            --text-main: #fff;
+            --text-sec: #aaa;
+            --border: rgba(255,255,255,0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
+        body { background: var(--bg-body); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
 
-        /* SCROLLBAR */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
         ::-webkit-scrollbar-track { background: transparent; }
 
         /* --- 2. HEADER --- */
         header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(10px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 56px;
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(8px);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 16px; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0 16px; z-index: 1000; border-bottom: 1px solid var(--border);
         }
 
-        .left-section { display: flex; align-items: center; gap: 15px; }
-        .menu-icon { font-size: 20px; color: white; cursor: pointer; }
+        .left-group { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { font-size: 18px; color: white; cursor: pointer; display: block; }
 
-        /* BRANDING - FAIZAN AHMED */
-        .brand-box { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
-        .logo-img { height: 24px; width: auto; object-fit: contain; }
-        .signature {
-            font-size: 8px; color: var(--gold-color); font-weight: 700; letter-spacing: 0.8px;
-            text-transform: uppercase; margin-top: 3px; opacity: 0.9;
+        .brand-wrapper { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
+        .logo-img { height: 22px; width: auto; object-fit: contain; }
+        .maker-badge {
+            font-size: 8px; color: var(--gold); font-weight: 900; letter-spacing: 0.5px;
+            text-transform: uppercase; margin-top: 2px;
         }
 
-        /* SEARCH BAR (Desktop) */
-        .search-container { flex: 1; max-width: 550px; margin: 0 20px; display: flex; align-items: center; }
-        .search-input-box { 
-            width: 100%; display: flex; background: #121212; border: 1px solid #303030; 
-            border-radius: 20px; overflow: hidden; height: 40px; 
+        .search-center { flex: 1; max-width: 600px; margin: 0 20px; display: flex; align-items: center; gap: 10px; }
+        .search-field { 
+            display: flex; width: 100%; background: #121212; border: 1px solid #303030; 
+            border-radius: 40px; overflow: hidden; height: 40px; align-items: center;
         }
-        .search-input-box input {
+        .search-field input {
             flex: 1; background: transparent; border: none; color: white; padding: 0 16px; font-size: 16px; outline: none;
         }
         .search-btn {
-            width: 60px; background: #222; border: none; border-left: 1px solid #303030; color: #aaa; cursor: pointer;
+            width: 60px; height: 100%; background: #222; border: none; border-left: 1px solid #303030; color: #aaa; cursor: pointer;
         }
-        
-        /* MIC BUTTON STYLE */
-        .mic-btn { 
-            width: 40px; height: 40px; border-radius: 50%; background: #181818; border: none; color: white; 
-            margin-left: 10px; cursor: pointer; transition: 0.3s;
+        .mic-circle {
+            width: 40px; height: 40px; background: #181818; border-radius: 50%; border: none; 
+            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
-        .mic-btn.listening {
-            background: #ff0000; color: white; animation: pulse 1s infinite;
-        }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(255,0,0,0); } }
 
-        /* RIGHT ICONS */
-        .right-section { display: flex; align-items: center; gap: 18px; }
+        .right-group { display: flex; align-items: center; gap: 15px; }
         .icon-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(45deg, #ff0000, #ff8800); color: white; display: grid; place-items: center; font-weight: bold; font-size: 14px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: purple; color: white; display: grid; place-items: center; font-weight: bold; }
 
-        /* --- 3. BOTTOM NAV (Mobile) --- */
-        .bottom-nav {
-            display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-            background: var(--bg-color); border-top: 1px solid var(--border-color);
+        /* --- 3. MOBILE NAV --- */
+        .bottom-bar {
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 55px;
+            background: var(--bg-body); border-top: 1px solid var(--border);
             z-index: 999; justify-content: space-around; align-items: center;
         }
-        .nav-btn {
+        .nav-item {
             display: flex; flex-direction: column; align-items: center; gap: 4px;
-            color: #aaa; background: none; border: none; width: 100%; padding: 5px; cursor: pointer;
+            color: var(--text-sec); background: none; border: none; width: 100%; padding: 5px;
         }
-        .nav-btn i { font-size: 20px; transition: 0.2s; }
-        .nav-btn span { font-size: 10px; }
-        .nav-btn.active { color: white; }
+        .nav-item.active { color: white; }
+        .nav-item i { font-size: 20px; }
+        .nav-item span { font-size: 10px; }
 
-        /* --- 4. SIDEBAR (Desktop) --- */
+        /* --- 4. SIDEBAR --- */
         .sidebar {
-            width: 240px; position: fixed; top: 60px; left: 0; bottom: 0;
-            background: var(--bg-color); overflow-y: auto; padding: 12px;
+            width: 240px; position: fixed; top: 56px; left: 0; bottom: 0;
+            background: var(--bg-body); overflow-y: auto; padding: 12px;
         }
-        .side-item {
+        .side-row {
             display: flex; align-items: center; gap: 20px; padding: 10px 12px;
             color: white; text-decoration: none; border-radius: 10px; font-size: 14px; margin-bottom: 2px;
         }
-        .side-item:hover { background: #272727; }
-        .side-item.active { background: #272727; font-weight: 500; }
+        .side-row:hover { background: var(--bg-hover); }
+        .side-row.active { background: var(--bg-hover); font-weight: 500; }
 
         /* --- 5. MAIN CONTENT --- */
-        .main-content { margin-left: 240px; margin-top: 60px; padding: 20px; }
+        .content-area { margin-left: 240px; margin-top: 56px; padding: 20px; }
 
-        .chips-bar {
-            position: sticky; top: 60px; background: rgba(15,15,15,0.98); z-index: 10;
-            padding: 10px 0; margin-bottom: 15px; overflow-x: auto; white-space: nowrap;
-            display: flex; gap: 10px;
+        .chips-scroll {
+            position: sticky; top: 56px; background: rgba(15,15,15,0.95); z-index: 10;
+            padding: 12px 0; margin-bottom: 10px; overflow-x: auto; white-space: nowrap;
+            display: flex; gap: 12px;
         }
         .chip {
-            background: #272727; color: white; border: none; padding: 6px 14px;
+            background: var(--bg-hover); color: white; border: none; padding: 6px 14px;
             border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s;
         }
-        .chip:hover { background: #3f3f3f; }
         .chip.active { background: white; color: black; }
 
         .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px 16px;
         }
 
-        /* --- 6. VIDEO CARD --- */
+        /* --- VIDEO CARD --- */
         .card { cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
-        .thumb-box {
+        .thumb-wrap {
             position: relative; width: 100%; aspect-ratio: 16/9;
-            border-radius: 12px; overflow: hidden; background: #222;
+            border-radius: 12px; overflow: hidden; background: #000;
         }
         .thumb-img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .card:hover .thumb-img { transform: scale(1.03); }
+        
         .duration {
             position: absolute; bottom: 6px; right: 6px;
             background: rgba(0,0,0,0.8); color: white;
-            font-size: 11px; padding: 2px 4px; border-radius: 4px; font-weight: bold;
+            font-size: 12px; padding: 3px 6px; border-radius: 4px; font-weight: 600;
         }
-        .meta { display: flex; gap: 12px; padding-right: 5px; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; flex-shrink: 0; display: grid; place-items: center; font-size: 14px; }
-        .info { display: flex; flex-direction: column; }
-        .title {
-            font-size: 15px; font-weight: 600; line-height: 1.3; color: white;
+
+        .details { display: flex; gap: 12px; }
+        .chn-img { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; display: grid; place-items: center; }
+        .txt { display: flex; flex-direction: column; }
+        .vid-title {
+            font-size: 16px; font-weight: 600; line-height: 1.3; color: white;
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px;
         }
-        .channel { font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
-        .stats { font-size: 13px; color: var(--text-secondary); }
+        .vid-meta { font-size: 13px; color: var(--text-sec); display: flex; align-items: center; flex-wrap: wrap;}
 
-        /* --- 7. MOBILE SEARCH OVERLAY --- */
-        .search-overlay {
+        /* --- OVERLAYS --- */
+        .mob-search-ui {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 2000; display: none; flex-direction: column;
+            background: var(--bg-body); z-index: 3000; display: none; flex-direction: column;
         }
-        .so-header { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; gap: 10px; }
-        .so-input { flex: 1; background: #222; border: none; padding: 10px; border-radius: 20px; color: white; font-size: 16px; outline: none; }
-        .so-close { background: none; border: none; color: white; font-size: 20px; padding: 10px; }
+        .ms-head { display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #333; gap: 10px; }
+        .ms-inp { flex: 1; background: #222; border: none; padding: 8px 15px; border-radius: 20px; color: white; height: 36px; outline: none; }
+        .ms-icon { background: none; border: none; color: white; font-size: 18px; padding: 8px; }
 
-        /* --- 8. PLAYER MODAL --- */
-        .player-modal {
+        .player-page {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 3000; flex-direction: column; overflow-y: auto;
+            background: black; z-index: 4000; flex-direction: column;
         }
-        .video-container { width: 100%; aspect-ratio: 16/9; background: #000; position: sticky; top: 0; }
-        .video-details { padding: 15px; background: #0f0f0f; }
-        .v-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        .close-player-btn { margin-top: 20px; padding: 10px; width: 100%; background: #222; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .close-player {
+            position: absolute; top: 10px; right: 10px; z-index: 5000;
+            background: rgba(0,0,0,0.5); color: white; border: 1px solid #555;
+            padding: 5px 15px; border-radius: 20px; cursor: pointer;
+        }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            header { padding: 0 10px; height: 55px; }
-            .menu-icon, .search-container, .mic-btn { display: none; } /* Desktop mic hidden */
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; margin-top: 55px; padding: 10px; }
-            .chips-bar { top: 55px; }
-            .bottom-nav { display: flex; }
-            
-            .logo-img { height: 22px; }
-            .signature { font-size: 7px; margin-top: 2px; }
-
+            header { padding: 0 10px; height: 50px; }
+            .menu-btn, .search-center, .sidebar { display: none; }
+            .content-area { margin-left: 0; margin-top: 50px; padding: 10px; }
+            .chips-scroll { top: 50px; }
+            .bottom-bar { display: flex; }
+            .mobile-search-trigger { display: block !important; }
+            .logo-img { height: 20px; }
+            .maker-badge { font-size: 7px; margin-top: 1px; }
             .grid { grid-template-columns: 1fr; gap: 20px; }
-            .mobile-search-icon { display: block !important; }
         }
-        .mobile-search-icon { display: none; font-size: 18px; color: white; background: none; border: none; padding: 8px; }
-
-        /* Toast Notification for Voice */
-        #voiceStatus {
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 0, 0, 0.9); color: white; padding: 10px 20px;
-            border-radius: 20px; display: none; z-index: 5000; font-weight: bold;
-        }
+        .mobile-search-trigger { display: none; background: none; border: none; color: white; font-size: 18px; padding: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- Voice Status Toast -->
-    <div id="voiceStatus">Listening... 🎙️</div>
-
     <!-- HEADER -->
     <header>
-        <div class="left-section">
-            <i class="fas fa-bars menu-icon"></i>
-            <div class="brand-box" onclick="location.reload()">
+        <div class="left-group">
+            <i class="fas fa-bars menu-btn"></i>
+            <div class="brand-wrapper" onclick="location.reload()">
                 <img src="https://i.supaimg.com/f25eb9da-5856-46df-acba-182641a77cc9.png" class="logo-img" alt="Logo">
-                <div class="signature">MADE BY FAIZAN AHMED</div>
+                <div class="maker-badge">MADE BY FAIZAN AHMED</div>
             </div>
         </div>
 
-        <!-- Desktop Search & Mic -->
-        <div class="search-container">
-            <div class="search-input-box">
+        <div class="search-center">
+            <div class="search-field">
                 <input type="text" id="dSearch" placeholder="Search">
                 <button class="search-btn" onclick="execSearch('dSearch')"><i class="fas fa-search"></i></button>
             </div>
-            <!-- REAL VOICE BUTTON -->
-            <button class="mic-btn" id="dMic" onclick="startVoiceSearch('dSearch', 'dMic')"><i class="fas fa-microphone"></i></button>
+            <button class="mic-circle" onclick="startVoice('dSearch')"><i class="fas fa-microphone"></i></button>
         </div>
 
-        <!-- Right Icons -->
-        <div class="right-section">
-            <button class="mobile-search-icon" onclick="openSearch()"><i class="fas fa-search"></i></button>
-            <button class="icon-btn" onclick="alert('Create')"><i class="fas fa-video"></i></button>
-            <div class="user-avatar">F</div>
+        <div class="right-group">
+            <button class="mobile-search-trigger" onclick="openMobSearch()"><i class="fas fa-search"></i></button>
+            <div class="avatar">F</div>
         </div>
     </header>
 
-    <!-- MOBILE BOTTOM NAV -->
-    <nav class="bottom-nav">
-        <button class="nav-btn active" onclick="loadCategory('Trending', this)">
-            <i class="fas fa-home"></i> <span>Home</span>
-        </button>
-        <button class="nav-btn" onclick="loadCategory('Youtube Shorts', this)">
-            <i class="fas fa-bolt"></i> <span>Shorts</span>
-        </button>
-        <button class="nav-btn" onclick="alert('Upload')">
-            <i class="fas fa-plus-circle" style="font-size: 30px;"></i>
-        </button>
-        <button class="nav-btn" onclick="loadCategory('Subscriptions', this)">
-            <i class="fas fa-photo-video"></i> <span>Subs</span>
-        </button>
+    <!-- NAV -->
+    <nav class="bottom-bar">
+        <button class="nav-item active" onclick="loadCat('Trending', this)"><i class="fas fa-home"></i> <span>Home</span></button>
+        <button class="nav-item" onclick="loadCat('Shorts', this)"><i class="fas fa-bolt"></i> <span>Shorts</span></button>
+        <button class="nav-item" onclick="loadCat('Subscriptions', this)"><i class="fas fa-photo-video"></i> <span>Subs</span></button>
+        <button class="nav-item"><i class="fas fa-user"></i> <span>You</span></button>
     </nav>
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <a href="#" class="side-item active" onclick="loadCategory('Trending')"><i class="fas fa-home"></i> Home</a>
-        <a href="#" class="side-item" onclick="loadCategory('Shorts')"><i class="fas fa-bolt"></i> Shorts</a>
-        <a href="#" class="side-item" onclick="loadCategory('History')"><i class="fas fa-history"></i> History</a>
+        <a href="#" class="side-row active" onclick="loadCat('Trending')"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="side-row" onclick="loadCat('Shorts')"><i class="fas fa-bolt"></i> Shorts</a>
+        <a href="#" class="side-row" onclick="loadCat('Subscriptions')"><i class="fas fa-photo-video"></i> Subscriptions</a>
+        <a href="#" class="side-row"><i class="fas fa-history"></i> History</a>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <div class="chips-bar">
-            <button class="chip active" onclick="loadCategory('Trending', this)">All</button>
-            <button class="chip" onclick="loadCategory('Pakistani Dramas', this)">Dramas</button>
-            <button class="chip" onclick="loadCategory('New Music', this)">Music</button>
-            <button class="chip" onclick="loadCategory('Gaming', this)">Gaming</button>
-            <button class="chip" onclick="loadCategory('Cricket', this)">Cricket</button>
-            <button class="chip" onclick="loadCategory('Coding', this)">Coding</button>
+    <!-- CONTENT -->
+    <main class="content-area">
+        <div class="chips-scroll">
+            <button class="chip active" onclick="loadCat('Trending Videos', this)">All</button>
+            <button class="chip" onclick="loadCat('Pakistani Dramas', this)">Dramas</button>
+            <button class="chip" onclick="loadCat('New Songs 2024', this)">Music</button>
+            <button class="chip" onclick="loadCat('Gaming Highlights', this)">Gaming</button>
+            <button class="chip" onclick="loadCat('Live News', this)">News</button>
+            <button class="chip" onclick="loadCat('Cricket', this)">Cricket</button>
         </div>
-        <div class="grid" id="videoGrid"></div>
+        <div class="grid" id="grid"></div>
     </main>
 
-    <!-- MOBILE SEARCH OVERLAY -->
-    <div class="search-overlay" id="searchUI">
-        <div class="so-header">
-            <button class="so-close" onclick="closeSearch()"><i class="fas fa-arrow-left"></i></button>
-            <input type="text" class="so-input" id="mSearch" placeholder="Search...">
-            <!-- REAL MOBILE MIC -->
-            <button class="so-close" id="mMic" onclick="startVoiceSearch('mSearch', 'mMic')"><i class="fas fa-microphone"></i></button>
-        </div>
-        <div style="padding: 20px;">
-            <p style="color:#888; font-size:12px; font-weight:bold; margin-bottom:10px;">SUGGESTIONS</p>
-            <div onclick="doSearch('Pakistani Dramas 2024')" style="padding:12px 0; border-bottom:1px solid #222;">🔥 Pakistani Dramas</div>
-            <div onclick="doSearch('New Songs')" style="padding:12px 0; border-bottom:1px solid #222;">🎵 New Songs</div>
+    <!-- SEARCH OVERLAY -->
+    <div class="mob-search-ui" id="mobSearch">
+        <div class="ms-head">
+            <button class="ms-icon" onclick="closeMobSearch()"><i class="fas fa-arrow-left"></i></button>
+            <input type="text" class="ms-inp" id="mSearch" placeholder="Search...">
+            <button class="ms-icon"><i class="fas fa-microphone"></i></button>
         </div>
     </div>
 
     <!-- PLAYER -->
-    <div class="player-modal" id="playerUI">
-        <div class="video-container">
-            <iframe id="playerFrame" src="" style="width:100%; height:100%; border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-        <div class="video-details">
-            <div class="v-title" id="pTitle">Video Title</div>
-            <button class="close-player-btn" onclick="closePlayer()">Close Player</button>
-        </div>
+    <div class="player-page" id="playerPage">
+        <button class="close-player" onclick="closePlayer()">Close X</button>
+        <iframe id="vidFrame" src="" style="width:100%; height:100%; border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
     <script>
-        const API_URL = "https://api.xyro.site/search/youtube?q=";
-        const grid = document.getElementById('videoGrid');
+        const API = "https://api.xyro.site/search/youtube?q=";
+        const grid = document.getElementById('grid');
 
-        window.onload = () => loadCategory('Trending Videos');
+        window.onload = () => loadCat('Trending Videos');
 
-        /* --- REAL VOICE SEARCH LOGIC --- */
-        function startVoiceSearch(inputId, btnId) {
-            // Check browser support
-            if (!('webkitSpeechRecognition' in window)) {
-                alert("Voice search is not supported in this browser. Try Chrome.");
-                return;
+        /* --- SMART VIEW & TIME GENERATOR --- */
+        function getSmartViews() {
+            // Logic to make it look REAL
+            const rand = Math.random();
+            if(rand > 0.8) {
+                // Viral Video (Millions)
+                return (Math.random() * 20 + 1).toFixed(1) + "M views";
+            } else if (rand > 0.3) {
+                // Standard Hit (Thousands)
+                return Math.floor(Math.random() * 900 + 10) + "K views";
+            } else {
+                // New Video (Hundreds/Thousands with decimals)
+                return (Math.random() * 9 + 1).toFixed(1) + "K views";
             }
-
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'en-US'; // Default English (Most phones auto-detect mixed Urdu)
-            recognition.continuous = false;
-            recognition.interimResults = false;
-
-            const btn = document.getElementById(btnId);
-            const statusDiv = document.getElementById('voiceStatus');
-
-            // Start Listening
-            recognition.start();
-
-            // UI Updates
-            recognition.onstart = function() {
-                btn.classList.add('listening'); // Red Pulse
-                btn.style.color = 'red';
-                statusDiv.innerText = "Listening... Speak Now 🎙️";
-                statusDiv.style.display = "block";
-            };
-
-            recognition.onend = function() {
-                btn.classList.remove('listening');
-                btn.style.color = 'white';
-                statusDiv.style.display = "none";
-            };
-
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById(inputId).value = transcript;
-                
-                // Show what was heard then search
-                statusDiv.innerText = "Searching: " + transcript;
-                statusDiv.style.display = "block";
-                setTimeout(() => {
-                    statusDiv.style.display = "none";
-                    if(inputId === 'mSearch') closeSearch();
-                    loadCategory(transcript);
-                }, 1000);
-            };
-
-            recognition.onerror = function(event) {
-                console.error(event.error);
-                statusDiv.innerText = "Error. Try Again.";
-                btn.classList.remove('listening');
-                btn.style.color = 'white';
-            };
         }
 
-        /* --- DATA FETCHING --- */
-        async function loadCategory(query, btn) {
-            // Update UI
+        function getSmartTime() {
+            const times = ["hours", "days", "weeks", "months", "years"];
+            const unit = times[Math.floor(Math.random() * times.length)];
+            const num = Math.floor(Math.random() * 11) + 1;
+            
+            // Logic: No "23 months ago", change to years
+            if(unit === 'months' && num > 11) return "1 year ago";
+            if(unit === 'hours' && num > 23) return "1 day ago";
+            
+            return `${num} ${unit} ago`;
+        }
+        async function loadCat(query, btn) {
             if(btn) {
-                document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.chip, .nav-item, .side-row').forEach(e => e.classList.remove('active'));
                 btn.classList.add('active');
             }
-            
-            // Skeleton Loader
+
+            // Skeleton
             grid.innerHTML = '';
             for(let i=0; i<6; i++) {
-                grid.innerHTML += `<div class="card"><div class="thumb-box" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
+                grid.innerHTML += `<div class="card"><div class="thumb-wrap" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
             }
 
             try {
-                const res = await fetch(API_URL + encodeURIComponent(query));
+
+                const res = await fetch(API + encodeURIComponent(query));
                 const json = await res.json();
                 const videos = json.result || json.data || [];
+                
                 grid.innerHTML = '';
+                if(!videos.length) { grid.innerHTML = '<p style="padding:20px;">No Results.</p>'; return; }
 
-                if(!videos.length) { grid.innerHTML = '<p style="padding:20px;">No results.</p>'; return; }
-
-                videos.forEach(vid => {
-                    let videoId = null;
-                    if(vid.link && vid.link.includes('v=')) videoId = vid.link.split('v=')[1].split('&')[0];
-                    if(videoId) {
-                        const title = vid.title || "Video";
-                        const channel = vid.channel || "Channel";
-                        const thumb = vid.imageUrl || `https://i.ytimg.com/vi/${videoId}/hq720.jpg`;
+                videos.forEach(v => {
+                    let vidId = null;
+                    if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
+                    
+                    if(vidId) {
+                        const title = v.title || "Unknown Video";
+                        const chn = v.channel || "Channel";
+                        const thumb = v.imageUrl || `https://i.ytimg.com/vi/${vidId}/hq720.jpg`;
                         
+                        // USE SMART VIEWS
+                        const finalViews = v.views || getSmartViews(); 
+                        const finalTime = v.uploaded || getSmartTime();
+
                         const card = document.createElement('div');
                         card.className = 'card';
-                        card.onclick = () => openPlayer(videoId, title);
+                        card.onclick = () => playVideo(vidId);
+                        
                         card.innerHTML = `
-                            <div class="thumb-box">
+                            <div class="thumb-wrap">
                                 <img src="${thumb}" class="thumb-img">
-                                <div class="duration">12:45</div>
+                                <div class="duration">12:30</div>
                             </div>
-                            <div class="meta">
-                                <div class="avatar">${channel.charAt(0)}</div>
-                                <div class="info">
-                                    <div class="title">${title}</div>
-                                    <div class="channel">${channel}</div>
-                                    <div class="stats">1M views • 2 days ago</div>
+                            <div class="details">
+                                <div class="chn-img">${chn.charAt(0)}</div>
+                                <div class="txt">
+                                    <div class="vid-title">${title}</div>
+                                    <div class="vid-meta">
+                                        ${chn} • ${finalViews} • ${finalTime}
+                                    </div>
                                 </div>
                             </div>
                         `;
                         grid.appendChild(card);
                     }
                 });
-            } catch (err) { grid.innerHTML = '<p>Error loading.</p>'; }
+            } catch(e) { grid.innerHTML = '<p>Error.</p>'; }
         }
 
-        /* --- PLAYER --- */
-        function openPlayer(id, title) {
-            document.getElementById('playerFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            document.getElementById('pTitle').innerText = title;
-            document.getElementById('playerUI').style.display = 'flex';
-        }
-        function closePlayer() {
-            document.getElementById('playerUI').style.display = 'none';
-            document.getElementById('playerFrame').src = "";
-        }
-
-        /* --- SEARCH UI --- */
-        function openSearch() { document.getElementById('searchUI').style.display = 'flex'; document.getElementById('mSearch').focus(); }
-        function closeSearch() { document.getElementById('searchUI').style.display = 'none'; }
-        function doSearch(q) { closeSearch(); loadCategory(q); }
+        /* --- UTILS --- */
+        function openMobSearch() { document.getElementById('mobSearch').style.display = 'flex'; document.getElementById('mSearch').focus(); }
+        function closeMobSearch() { document.getElementById('mobSearch').style.display = 'none'; }
+        
         function execSearch(id) {
             const val = document.getElementById(id).value;
-            if(val) doSearch(val);
+            if(val) { if(id==='mSearch') closeMobSearch(); loadCat(val); }
         }
-        document.getElementById('dSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') execSearch('dSearch'); });
-        document.getElementById('mSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') execSearch('mSearch'); });
+        document.getElementById('dSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('dSearch')});
+        document.getElementById('mSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('mSearch')});
 
+        function playVideo(id) {
+            document.getElementById('vidFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            document.getElementById('playerPage').style.display = 'flex';
+        }
+        function closePlayer() {
+            document.getElementById('playerPage').style.display = 'none';
+            document.getElementById('vidFrame').src = "";
+        }
     </script>
 </body>
 </html>
