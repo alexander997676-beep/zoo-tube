@@ -3,488 +3,492 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Custom Profile</title>
+    <title>Zootube | Ultimate Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. VARIABLES --- */
+        /* --- 1. VARIABLES & RESET --- */
         :root {
-            --bg-body: #000000;
-            --bg-surface: #121212;
-            --primary: #ff0000;
-            --gold: #FFD700;
-            --text-main: #ffffff;
-            --text-sec: #aaaaaa;
+            --bg-body: #0f0f0f;
+            --bg-surface: #1e1e1e;
+            --bg-hover: #2a2a2a;
+            --primary: #3ea6ff;
+            --gold: linear-gradient(45deg, #FFD700, #FFAA00);
+            --text-main: #fff;
+            --text-sec: #aaa;
             --border: rgba(255,255,255,0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg-body); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
 
         /* --- 2. HEADER --- */
         header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 54px;
-            background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 56px;
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 16px; z-index: 1000; border-bottom: 1px solid var(--border);
         }
-        .left-sec { display: flex; align-items: center; gap: 12px; }
-        .brand-box { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
+
+        .left { display: flex; align-items: center; gap: 15px; }
+        .menu-btn { font-size: 18px; color: white; cursor: pointer; }
+
+        /* PREMIUM BRANDING */
+        .brand { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
         .logo-img { height: 22px; width: auto; object-fit: contain; }
-        .maker-tag { font-size: 7px; color: var(--gold); font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
-
-        .search-bar-container { flex: 1; max-width: 500px; margin: 0 20px; display: flex; align-items: center; gap: 10px; }
-        .search-input-wrapper { display: flex; width: 100%; background: #121212; border: 1px solid #333; border-radius: 40px; overflow: hidden; height: 38px; align-items: center; }
-        .search-input-wrapper input { flex: 1; background: transparent; border: none; color: white; padding: 0 16px; font-size: 15px; outline: none; }
-        .search-btn-desk { width: 50px; height: 100%; background: #222; border: none; border-left: 1px solid #333; color: #aaa; cursor: pointer; }
-        .mic-desk { width: 38px; height: 38px; background: #121212; border-radius: 50%; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        .right-sec { display: flex; align-items: center; gap: 15px; }
-        .mob-search-btn { background: none; border: none; color: white; font-size: 18px; padding: 5px; cursor: pointer; }
-        
-        /* UPDATED PROFILE PIC STYLE */
-        .user-pic { 
-            width: 32px; height: 32px; border-radius: 50%; 
-            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045); 
-            color: white; display: grid; place-items: center; 
-            font-weight: bold; font-size: 14px; cursor: pointer; 
-            border: 2px solid white; object-fit: cover;
-            background-size: cover; background-position: center;
+        .maker-badge {
+            font-size: 8px; font-weight: 900; letter-spacing: 0.5px;
+            text-transform: uppercase; margin-top: 2px;
+            background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* --- 3. NAV --- */
+        /* SEARCH (Desktop) */
+        .search-wrap { flex: 1; max-width: 600px; margin: 0 20px; display: flex; align-items: center; gap: 10px; }
+        .search-box { 
+            display: flex; width: 100%; background: #121212; border: 1px solid #303030; 
+            border-radius: 40px; overflow: hidden; height: 40px; align-items: center;
+        }
+        .search-box input {
+            flex: 1; background: transparent; border: none; color: white; padding: 0 16px; font-size: 16px; outline: none;
+        }
+        .search-btn {
+            width: 60px; height: 100%; background: #222; border: none; border-left: 1px solid #303030; color: #aaa; cursor: pointer;
+        }
+        .mic-btn {
+            width: 40px; height: 40px; background: #181818; border-radius: 50%; border: none; 
+            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
+        .mic-btn:hover { background: #333; }
+
+        .right { display: flex; align-items: center; gap: 15px; }
+        .icon-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #FF512F, #DD2476); color: white; display: grid; place-items: center; font-weight: bold; font-size:14px; }
+
+        /* --- 3. MOBILE NAV --- */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-            background: #000; border-top: 1px solid var(--border);
-            z-index: 2000; display: flex; justify-content: space-around; align-items: center;
+            display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 55px;
+            background: var(--bg-body); border-top: 1px solid var(--border);
+            z-index: 999; justify-content: space-around; align-items: center;
         }
-        .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #888; background: none; border: none; width: 100%; padding: 5px; cursor: pointer; transition: 0.2s; }
+        .nav-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: var(--text-sec); background: none; border: none; width: 100%; padding: 5px;
+        }
         .nav-btn.active { color: white; }
-        .nav-btn i { font-size: 22px; } .nav-btn span { font-size: 10px; }
+        .nav-btn i { font-size: 20px; }
+        .nav-btn span { font-size: 10px; }
 
         /* --- 4. SIDEBAR --- */
-        .sidebar { width: 220px; position: fixed; top: 54px; left: 0; bottom: 0; background: #000; overflow-y: auto; padding: 12px; }
-        .side-link { display: flex; align-items: center; gap: 20px; padding: 10px 12px; color: white; border-radius: 10px; font-size: 14px; margin-bottom: 2px; cursor: pointer; }
-        .side-link.active { background: var(--bg-hover); font-weight: 500; }
+        .sidebar {
+            width: 240px; position: fixed; top: 56px; left: 0; bottom: 0;
+            background: var(--bg-body); overflow-y: auto; padding: 12px;
+        }
+        .side-item {
+            display: flex; align-items: center; gap: 20px; padding: 10px 12px;
+            color: white; text-decoration: none; border-radius: 10px; font-size: 14px; margin-bottom: 2px;
+        }
+        .side-item:hover { background: var(--bg-hover); }
+        .side-item.active { background: var(--bg-hover); font-weight: 500; }
 
-        /* --- 5. CONTENT --- */
-        .main-content { margin-left: 220px; margin-top: 54px; padding: 15px; min-height: 100vh; }
-        .tags-bar { position: sticky; top: 54px; background: rgba(0,0,0,0.95); z-index: 90; padding: 10px 0; margin-bottom: 15px; overflow-x: auto; white-space: nowrap; display: flex; gap: 10px; }
-        .tag { background: var(--bg-surface); color: white; border: 1px solid #333; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; transition: 0.2s; }
-        .tag.active { background: white; color: black; border-color: white; }
+        /* --- 5. MAIN AREA --- */
+        .main { margin-left: 240px; margin-top: 56px; padding: 20px; }
 
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+        /* Chips */
+        .chips {
+            position: sticky; top: 56px; background: rgba(15,15,15,0.98); z-index: 10;
+            padding: 12px 0; margin-bottom: 10px; overflow-x: auto; white-space: nowrap;
+            display: flex; gap: 10px;
+        }
+        .chip {
+            background: var(--bg-hover); color: white; border: none; padding: 6px 14px;
+            border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s;
+        }
+        .chip:hover { background: #3f3f3f; }
+        .chip.active { background: white; color: black; }
 
-        /* --- 6. CARDS --- */
+        /* Shorts Shelf */
+        .shorts-shelf {
+            display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 20px;
+            border-bottom: 4px solid #1e1e1e;
+        }
+        .short-card {
+            min-width: 140px; aspect-ratio: 9/16; background: #222; border-radius: 10px;
+            position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;
+        }
+        .short-img { width: 100%; height: 100%; object-fit: cover; }
+        .short-title {
+            position: absolute; bottom: 10px; left: 8px; right: 8px;
+            font-size: 13px; font-weight: bold; color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* Video Grid */
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px 16px;
+        }
+
+        /* --- VIDEO CARD --- */
         .card { cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
-        .thumb-box { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #222; }
-        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
-        .time-label { position: absolute; bottom: 6px; right: 6px; background: rgba(0,0,0,0.8); color: white; font-size: 11px; padding: 2px 4px; border-radius: 4px; font-weight: 700; }
-        .meta-info { display: flex; gap: 12px; }
-        .chn-avatar { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; display: grid; place-items: center; font-size: 14px; z-index: 2; border: 1px solid transparent; }
-        .text-info { display: flex; flex-direction: column; }
-        .vid-title { font-size: 14px; font-weight: 500; line-height: 1.3; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 3px; }
-        .vid-stats { font-size: 12px; color: var(--text-sec); }
-
-        /* --- 7. SHORTS --- */
-        .shorts-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1500; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .short-item { position: relative; width: 100%; height: calc(100vh - 60px); scroll-snap-align: start; background: #000; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid #111; }
-        .short-iframe { width: 100%; height: 100%; border: none; object-fit: cover; }
-        .short-actions { position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
-        .icon-circle { width: 45px; height: 45px; background: rgba(255,255,255,0.15); border-radius: 50%; display: grid; place-items: center; backdrop-filter: blur(5px); }
-        .short-overlay { position: absolute; left: 15px; bottom: 20px; width: 75%; pointer-events: none; z-index: 10; }
-        .short-user { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; pointer-events: auto; }
-        .short-sub-btn { background: white; color: black; border: none; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 12px; cursor: pointer; }
-
-        /* --- 8. CHANNEL --- */
-        .channel-page { display: none; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; padding-bottom: 70px; background: #0f0f0f; }
-        .channel-header { padding: 0 0 10px 0; border-bottom: 1px solid #333; margin-bottom: 10px; }
-        .banner { width: 100%; height: 120px; background: linear-gradient(45deg, #222, #444); }
-        .chn-profile { display: flex; align-items: flex-end; gap: 15px; padding: 0 15px; margin-top: -35px; }
-        .chn-lg-img { width: 75px; height: 75px; border-radius: 50%; background: purple; border: 4px solid #0f0f0f; display: grid; place-items: center; font-size: 28px; color: white; font-weight: bold;}
-        .back-btn { background: rgba(0,0,0,0.6); color: white; border: none; padding: 8px 15px; border-radius: 20px; margin: 10px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; position: absolute; top: 60px; left: 10px; z-index: 50; }
-
-        /* --- 9. MINI PLAYER --- */
-        .mini-player {
-            position: fixed; bottom: 65px; right: 20px; width: 300px; height: 60px;
-            background: #222; border-radius: 10px; display: none; align-items: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8); z-index: 5000; overflow: hidden;
-            border: 1px solid #333; cursor: pointer;
+        .thumb {
+            position: relative; width: 100%; aspect-ratio: 16/9;
+            border-radius: 12px; overflow: hidden; background: #000;
         }
-        .mini-vid { width: 100px; height: 100%; background: black; }
-        .mini-info { flex: 1; padding: 0 10px; display: flex; flex-direction: column; justify-content: center; }
-        .mini-title { font-size: 12px; font-weight: bold; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; color: white; }
-        .mini-chn { font-size: 10px; color: #aaa; }
-        .mini-controls { padding-right: 15px; }
-
-        /* --- 10. UPLOAD & PROFILE MODALS --- */
-        .upload-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 6000; display: none;
-            justify-content: center; align-items: center; flex-direction: column;
+        .thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .card:hover img { transform: scale(1.03); }
+        .duration {
+            position: absolute; bottom: 6px; right: 6px;
+            background: rgba(0,0,0,0.8); color: white;
+            font-size: 12px; padding: 2px 4px; border-radius: 4px; font-weight: 600;
         }
-        .upload-box { background: #1e1e1e; padding: 20px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
-        .upload-btn { background: #3ea6ff; color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .meta { display: flex; gap: 12px; }
+        .chn-ico { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; display: grid; place-items: center; }
+        .info { display: flex; flex-direction: column; }
+        .title {
+            font-size: 16px; font-weight: 600; line-height: 1.3; color: white;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px;
+        }
+        .sub-txt { font-size: 13px; color: var(--text-sec); }
 
-        /* --- 11. FULL PLAYER --- */
-        .player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 6000; flex-direction: column; overflow-y: auto; }
-        .vid-frame-box { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 100; }
-        .p-content { padding: 15px; padding-bottom: 80px; }
-        .pill-btn { background: #222; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; display: flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer; }
-
-        /* Overlays */
-        .search-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 3000; display: none; flex-direction: column; }
-        .s-head { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; gap: 10px; }
-        .s-inp { flex: 1; background: #222; border: none; padding: 10px; border-radius: 20px; color: white; outline: none; }
+        /* --- PLAYER WATCH PAGE (Full App Feel) --- */
+        .watch-page {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-body); z-index: 5000; overflow-y: auto; flex-direction: column;
+        }
+        .video-frame { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 50; }
+        .watch-content { padding: 15px; max-width: 1000px; margin: 0 auto; width: 100%; }
         
+        .wp-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+        .wp-meta { color: #aaa; font-size: 12px; margin-bottom: 15px; }
+        
+        .channel-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .chn-info { display: flex; align-items: center; gap: 10px; }
+        .chn-pic { width: 40px; height: 40px; border-radius: 50%; background: #444; display: grid; place-items: center; font-weight: bold; }
+        .sub-btn { background: white; color: black; padding: 8px 16px; border-radius: 20px; font-weight: bold; border: none; cursor: pointer; }
+
+        .action-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
+        .pill { background: #222; color: white; padding: 8px 16px; border-radius: 18px; font-size: 13px; display: flex; gap: 6px; align-items: center; border: none; white-space: nowrap; }
+
+        .recs-title { font-size: 16px; font-weight: bold; margin: 20px 0 10px; }
+        .rec-card { display: flex; gap: 10px; margin-bottom: 15px; cursor: pointer; }
+        .rec-thumb { width: 160px; height: 90px; border-radius: 8px; background: #222; flex-shrink: 0; overflow: hidden; }
+        .rec-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .close-wp {
+            position: fixed; top: 10px; right: 10px; z-index: 6000; background: rgba(0,0,0,0.6); 
+            color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer;
+        }
+
+        /* --- OVERLAYS --- */
+        .voice-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 6000; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .mic-anim {
+            width: 80px; height: 80px; background: #ff0000; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 35px; color: white;
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 100% { box-shadow: 0 0 0 30px rgba(0,0,0,0); } }
+
+        .mob-search {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); 
+            z-index: 4000; display: none; flex-direction: column;
+        }
+        .ms-head { display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #333; gap: 10px; }
+        .ms-input { flex: 1; background: #222; border: none; padding: 8px 15px; border-radius: 20px; color: white; height: 36px; outline: none; }
+
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             header { padding: 0 10px; height: 50px; }
-            .menu-btn, .search-bar, .sidebar { display: none; }
-            .main-content { margin-left: 0; margin-top: 50px; padding: 10px; }
-            .tags-bar { top: 50px; }
+            .menu-btn, .search-wrap, .sidebar { display: none; }
+            .main { margin-left: 0; margin-top: 50px; padding: 10px; }
+            .chips { top: 50px; }
             .bottom-nav { display: flex; }
-            .video-grid { grid-template-columns: 1fr; gap: 20px; }
             .mob-search-btn { display: block !important; }
-            .shorts-container { top: 50px; height: calc(100vh - 110px); }
-            .mini-player { width: 100%; right: 0; bottom: 60px; border-radius: 0; border: none; border-top: 1px solid #333; }
+            .logo-img { height: 20px; }
+            .maker-badge { font-size: 7px; margin-top: 1px; }
+            .grid { grid-template-columns: 1fr; gap: 15px; }
+            .rec-card { flex-direction: column; gap: 5px; }
+            .rec-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
         }
-        .mob-search-btn { display: none; }
+        .mob-search-btn { display: none; background: none; border: none; color: white; font-size: 18px; padding: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- HIDDEN FILE INPUT FOR PROFILE PIC -->
-    <input type="file" id="profileInp" accept="image/*" style="display:none;" onchange="handleProfileUpload()">
-
-    <!-- UPLOAD VIDEO MODAL -->
-    <div class="upload-modal" id="uploadModal">
-        <div class="upload-box">
-            <i class="fas fa-cloud-upload-alt" style="font-size:50px;color:#3ea6ff;margin-bottom:20px;"></i>
-            <h3>Upload Video</h3>
-            <p style="color:#aaa; font-size:13px; margin-bottom:20px;">Select a video file</p>
-            <input type="file" id="fileInp" style="display:none;" accept="video/*" onchange="startUpload()">
-            <button class="upload-btn" onclick="document.getElementById('fileInp').click()">Select File</button>
-            <button class="upload-btn" style="background:#333; color:white;" onclick="closeUpload()">Cancel</button>
-            <p id="uploadStatus" style="margin-top:10px; font-size:12px; color:#aaa;"></p>
-        </div>
-    </div>
-
-    <!-- MINI PLAYER -->
-    <div class="mini-player" id="miniPlayer" onclick="maximizePlayer()">
-        <div class="mini-vid"><iframe id="miniFrame" style="width:100%;height:100%;border:none;pointer-events:none;"></iframe></div>
-        <div class="mini-info"><div class="mini-title" id="miniTitle">Title</div><div class="mini-chn" id="miniChn">Channel</div></div>
-        <div class="mini-controls"><button onclick="event.stopPropagation(); closeMiniPlayer()" style="background:none;border:none;color:white;font-size:16px;"><i class="fas fa-times"></i></button></div>
-    </div>
-
     <!-- HEADER -->
-    <header id="appHeader">
-        <div class="left-sec">
-            <div class="brand-box" onclick="goHome()">
+    <header>
+        <div class="left">
+            <i class="fas fa-bars menu-btn"></i>
+            <div class="brand" onclick="location.reload()">
                 <img src="https://i.supaimg.com/f25eb9da-5856-46df-acba-182641a77cc9.png" class="logo-img" alt="Logo">
-                <div class="maker-tag">MADE BY FAIZAN AHMED</div>
+                <div class="maker-badge">MADE BY FAIZAN AHMED</div>
             </div>
         </div>
-        <div class="search-bar">
-            <div class="input-wrap"><input type="text" id="dSearch" placeholder="Search"><button style="background:none;border:none;color:#aaa;" onclick="execSearch('dSearch')"><i class="fas fa-search"></i></button></div>
-            <button class="mic-btn" onclick="openVoice()"><i class="fas fa-microphone"></i></button>
+        <div class="search-wrap">
+            <div class="search-box">
+                <input type="text" id="dSearch" placeholder="Search">
+                <button class="search-btn" onclick="execSearch('dSearch')"><i class="fas fa-search"></i></button>
+            </div>
+            <button class="mic-btn" onclick="startVoice('dSearch')"><i class="fas fa-microphone"></i></button>
         </div>
-        <div class="right-sec">
-            <button class="mob-search-btn" onclick="openSearchUI()"><i class="fas fa-search"></i></button>
-            
-            <!-- PROFILE PIC (Click to Change) -->
-            <div class="user-pic" id="headerProfile" onclick="triggerProfileUpload()">F</div>
+        <div class="right">
+            <button class="mob-search-btn" onclick="openMobSearch()"><i class="fas fa-search"></i></button>
+            <button class="icon-btn" onclick="alert('Upload')"><i class="fas fa-video"></i></button>
+            <div class="avatar">F</div>
         </div>
     </header>
 
-    <!-- NAV -->
+    <!-- BOTTOM NAV -->
     <nav class="bottom-nav">
-        <div class="nav-btn active" onclick="goHome()"><i class="fas fa-home"></i> <span>Home</span></div>
-        <div class="nav-btn" onclick="openShorts()"><i class="fas fa-bolt"></i> <span>Shorts</span></div>
-        <div class="nav-btn" onclick="openUpload()"><i class="fas fa-plus-circle" style="font-size:32px;color:white;"></i></div>
-        <div class="nav-btn" onclick="loadCat('Subscriptions', this)"><i class="fas fa-photo-video"></i> <span>Subs</span></div>
-        <div class="nav-btn" onclick="loadCat('Library', this)"><i class="fas fa-folder"></i> <span>Library</span></div>
+        <button class="nav-btn active" onclick="loadCat('Trending', this)"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-btn" onclick="loadCat('Shorts', this)"><i class="fas fa-bolt"></i><span>Shorts</span></button>
+        <button class="nav-btn" onclick="alert('Create')"><i class="fas fa-plus-circle" style="font-size:32px;"></i></button>
+        <button class="nav-btn" onclick="loadCat('Subscriptions', this)"><i class="fas fa-photo-video"></i><span>Subs</span></button>
+        <button class="nav-btn"><i class="fas fa-user"></i><span>You</span></button>
     </nav>
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="side-link active" onclick="goHome()"><i class="fas fa-home"></i> Home</div>
-        <div class="side-link" onclick="openShorts()"><i class="fas fa-bolt"></i> Shorts</div>
-        <div class="side-link" onclick="loadCat('History')"><i class="fas fa-history"></i> History</div>
+        <a href="#" class="side-item active" onclick="loadCat('Trending')"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="side-item" onclick="loadCat('Shorts')"><i class="fas fa-bolt"></i> Shorts</a>
+        <a href="#" class="side-item" onclick="loadCat('Subscriptions')"><i class="fas fa-photo-video"></i> Subscriptions</a>
+        <a href="#" class="side-item"><i class="fas fa-history"></i> History</a>
     </aside>
 
-    <!-- HOME VIEW -->
-    <div id="homeView" class="main-content">
-        <div class="tags-bar">
-            <button class="tag active" onclick="loadCat('Trending', this)">All</button>
-            <button class="tag" onclick="loadCat('Pakistani Dramas', this)">Dramas</button>
-            <button class="tag" onclick="loadCat('Music 2025', this)">Music</button>
-            <button class="tag" onclick="loadCat('Gaming', this)">Gaming</button>
-            <button class="tag" onclick="loadCat('Cricket', this)">Cricket</button>
+    <!-- MAIN CONTENT -->
+    <main class="main">
+        <div class="chips">
+            <button class="chip active" onclick="loadCat('Trending Videos', this)">All</button>
+            <button class="chip" onclick="loadCat('Pakistani Dramas', this)">Dramas</button>
+            <button class="chip" onclick="loadCat('New Songs', this)">Music</button>
+            <button class="chip" onclick="loadCat('Gaming', this)">Gaming</button>
+            <button class="chip" onclick="loadCat('News Live', this)">News</button>
+            <button class="chip" onclick="loadCat('Cricket', this)">Cricket</button>
         </div>
-        <div class="video-grid" id="grid"></div>
-    </div>
 
-    <!-- SHORTS VIEW -->
-    <div id="shortsView" class="shorts-container"></div>
-
-    <!-- CHANNEL VIEW -->
-    <div id="channelView" class="channel-page" style="margin-top: 50px;">
-        <button class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i> Home</button>
-        <div class="channel-header">
-            <div class="banner"></div>
-            <div class="chn-profile">
-                <div class="chn-lg-img" id="chnPic">C</div>
-                <div style="flex:1;"><h2 id="chnName" style="font-size:22px; margin:0;">Channel</h2><p style="color:#aaa; font-size:12px;">1.5M Subscribers</p></div>
-            </div>
+        <!-- SHORTS SHELF (Horizontal) -->
+        <div class="shorts-shelf" id="shortsShelf">
+            <!-- Shorts Injected via JS -->
         </div>
-        <div class="video-grid" id="chnGrid" style="padding:10px;"></div>
-    </div>
 
-    <!-- PLAYER -->
-    <div class="player-modal" id="playerModal">
-        <div class="vid-frame-box"><iframe id="pFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
-        <div class="p-content">
-            <div style="display:flex; justify-content:space-between;">
-                <div><div id="pTitle" style="font-size:16px; font-weight:bold; margin-bottom:5px;">Title</div><div style="font-size:12px; color:#aaa;">1.2M Views • 2 days ago</div></div>
-                <i class="fas fa-chevron-down" style="padding:10px; cursor:pointer;" onclick="minimizePlayer()"></i>
-            </div>
-            <div style="display:flex; align-items:center; gap:10px; margin:15px 0;">
-                <div id="pChnPic" style="width:36px; height:36px; background:#444; border-radius:50%; display:grid; place-items:center;">C</div>
-                <div style="font-weight:bold; font-size:14px; flex:1;" id="pChnName">Channel</div>
-                <button style="background:white; color:black; border:none; padding:6px 14px; border-radius:20px; font-weight:bold;">Subscribe</button>
-            </div>
-            <div class="p-actions" style="display:flex; gap:10px; overflow-x:auto;">
-                <button class="pill-btn"><i class="fas fa-thumbs-up"></i> Like</button>
-                <button class="pill-btn"><i class="fas fa-share"></i> Share</button>
-                <button class="pill-btn"><i class="fas fa-download"></i> Download</button>
-            </div>
-            <!-- User Comment Box -->
-            <div style="margin-top:20px; background:#181818; padding:10px; border-radius:10px;">
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <!-- User Pic in Comment Box -->
-                    <div class="user-pic comment-pic" style="width:24px; height:24px; font-size:10px;">F</div>
-                    <input type="text" placeholder="Add a comment..." style="background:transparent; border:none; color:white; width:100%; outline:none;">
+        <!-- VIDEO GRID -->
+        <div class="grid" id="grid"></div>
+    </main>
+
+    <!-- WATCH PAGE (Full Overlay) -->
+    <div class="watch-page" id="watchPage">
+        <button class="close-wp" onclick="closeWatch()">✕</button>
+        <iframe class="video-frame" id="vidFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        
+        <div class="watch-content">
+            <div class="wp-title" id="wpTitle">Video Title</div>
+            <div class="wp-meta">1.5M views • 2 days ago</div>
+
+            <div class="channel-row">
+                <div class="chn-info">
+                    <div class="chn-pic">Z</div>
+                    <div>
+                        <div style="font-weight:bold; font-size:14px;">Zootube Official</div>
+                        <div style="font-size:12px; color:#aaa;">2.4M subscribers</div>
+                    </div>
                 </div>
+                <button class="sub-btn">Subscribe</button>
+            </div>
+
+            <div class="action-row">
+                <button class="pill"><i class="fas fa-thumbs-up"></i> 52K</button>
+                <button class="pill"><i class="fas fa-share"></i> Share</button>
+                <button class="pill"><i class="fas fa-download"></i> Download</button>
+                <button class="pill"><i class="fas fa-bookmark"></i> Save</button>
+            </div>
+
+            <div class="recs-title">Up Next</div>
+            <div id="recsGrid">
+                <!-- Recommended Videos Injected Here -->
             </div>
         </div>
     </div>
 
-    <!-- SEARCH UI -->
-    <div class="search-ui" id="searchUI">
-        <div class="s-head">
-            <button onclick="closeSearchUI()" style="background:none; border:none; color:white;"><i class="fas fa-arrow-left"></i></button>
-            <input type="text" class="s-inp" id="mSearch" placeholder="Search...">
+    <!-- VOICE OVERLAY -->
+    <div class="voice-overlay" id="voiceUI">
+        <div style="color:white; font-size:24px; margin-bottom:30px;" id="vStatus">Listening...</div>
+        <div class="mic-anim"><i class="fas fa-microphone"></i></div>
+        <button onclick="stopVoice()" style="margin-top:40px; background:transparent; border:1px solid #777; color:#aaa; padding:8px 20px; border-radius:20px;">Cancel</button>
+    </div>
+
+    <!-- MOBILE SEARCH -->
+    <div class="mob-search" id="mobSearch">
+        <div class="ms-head">
+            <button class="icon-btn" onclick="closeMobSearch()"><i class="fas fa-arrow-left"></i></button>
+            <input type="text" class="ms-input" id="mSearch" placeholder="Search YouTube...">
+            <button class="icon-btn" onclick="startVoice('mSearch')"><i class="fas fa-microphone"></i></button>
         </div>
     </div>
 
     <script>
         const API = "https://api.xyro.site/search/youtube?q=";
         const grid = document.getElementById('grid');
-        const shortsBox = document.getElementById('shortsView');
-        let currentVideo = {};
+        let recognition;
 
-        /* --- INITIALIZATION --- */
-        window.onload = () => {
+        window.onload = function() {
             loadCat('Trending Videos');
-            loadProfilePic(); // Load saved picture
+            loadShorts();
         };
 
-        /* --- PROFILE PICTURE LOGIC --- */
-        function triggerProfileUpload() {
-            document.getElementById('profileInp').click();
-        }
-
-        function handleProfileUpload() {
-            const file = document.getElementById('profileInp').files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgUrl = e.target.result;
-                    // Save to local storage
-                    localStorage.setItem('userProfilePic', imgUrl);
-                    // Apply immediately
-                    applyProfilePic(imgUrl);
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function loadProfilePic() {
-            const savedPic = localStorage.getItem('userProfilePic');
-            if (savedPic) {
-                applyProfilePic(savedPic);
-            }
-        }
-
-        function applyProfilePic(url) {
-            // Update Header Icon
-            const headerPic = document.getElementById('headerProfile');
-            headerPic.style.backgroundImage = `url(${url})`;
-            headerPic.innerText = ''; // Remove "F"
-
-            // Update Comment Section Icon
-            const commentPics = document.querySelectorAll('.comment-pic');
-            commentPics.forEach(pic => {
-                pic.style.backgroundImage = `url(${url})`;
-                pic.innerText = '';
-            });
-        }
-
-        /* --- SMART AUDIO FIX (OBSERVER) --- */
-        let observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                let iframe = entry.target.querySelector('iframe');
-                let vidId = entry.target.getAttribute('data-id');
-                if (entry.isIntersecting) {
-                    if(!iframe.src) iframe.src = `https://www.youtube.com/embed/${vidId}?autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${vidId}&rel=0`;
-                } else {
-                    iframe.removeAttribute('src');
-                }
-            });
-        }, { root: shortsBox, threshold: 0.6 });
-
-        /* --- UPLOAD SIMULATION --- */
-        function openUpload() { document.getElementById('uploadModal').style.display = 'flex'; }
-        function closeUpload() { document.getElementById('uploadModal').style.display = 'none'; document.getElementById('uploadStatus').innerText = ''; }
+        // --- 1. CORE SEARCH & VOICE ---
+        function openMobSearch() { document.getElementById('mobSearch').style.display='flex'; document.getElementById('mSearch').focus(); }
+        function closeMobSearch() { document.getElementById('mobSearch').style.display='none'; }
         
-        function startUpload() {
-            const status = document.getElementById('uploadStatus');
-            status.innerText = 'Uploading... Please wait.';
-            setTimeout(() => {
-                status.innerText = 'Upload Successful!';
-                setTimeout(() => closeUpload(), 1000);
-            }, 2000);
-        }
-
-        /* --- NAVIGATION --- */
-        function hideAll() { document.querySelectorAll('.main-content, .shorts-container, .channel-page').forEach(el => el.style.display = 'none'); }
-        function goHome() {
-            hideAll();
-            document.getElementById('homeView').style.display = 'block';
-            document.getElementById('appHeader').style.display = 'flex';
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.nav-btn')[0].classList.add('active');
-            shortsBox.innerHTML = ''; // Stop shorts
-        }
-
-        /* --- LOAD VIDEOS --- */
-        async function loadCat(query, btn) {
-            goHome();
-            if(btn) {
-                document.querySelectorAll('.tag, .nav-btn').forEach(e => e.classList.remove('active'));
-                btn.classList.add('active');
+        function execSearch(id) {
+            const val = document.getElementById(id).value;
+            if(val) { 
+                if(id==='mSearch') closeMobSearch();
+                loadCat(val); 
             }
-            grid.innerHTML = '<p style="color:#aaa;padding:20px;">Loading...</p>';
+        }
+
+        function startVoice(targetId) {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("Voice Search requires Google Chrome."); return;
+            }
+            const overlay = document.getElementById('voiceUI');
+            const status = document.getElementById('vStatus');
+            overlay.style.display = 'flex';
+            status.innerText = "Listening...";
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            recognition.onresult = (e) => {
+                const text = e.results[0][0].transcript;
+                status.innerText = `Searching: "${text}"`;
+                setTimeout(() => {
+                    document.getElementById(targetId).value = text;
+                    overlay.style.display = 'none';
+                    if(targetId === 'mSearch') closeMobSearch();
+                    loadCat(text);
+                }, 800);
+            };
+            recognition.onerror = () => { status.innerText = "Try Again"; setTimeout(()=>overlay.style.display='none', 1500); };
+        }
+        function stopVoice() { if(recognition) recognition.stop(); document.getElementById('voiceUI').style.display='none'; }
+
+        // --- 2. DATA LOADING (REALISTIC) ---
+        function smartViews() {
+            return (Math.random() > 0.7) ? (Math.random()*15+1).toFixed(1)+"M views" : Math.floor(Math.random()*900+10)+"K views";
+        }
+        function smartTime() {
+            const t = ["hours", "days", "weeks", "months"];
+            return Math.floor(Math.random()*11+1)+" "+t[Math.floor(Math.random()*t.length)]+" ago";
+        }
+
+        async function loadCat(query, btn) {
+            if(btn) { document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(e=>e.classList.remove('active')); btn.classList.add('active'); }
+            
+            // Skeleton
+            grid.innerHTML = '';
+            for(let i=0; i<8; i++) grid.innerHTML += `<div class="card"><div class="thumb" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
+
             try {
                 const res = await fetch(API + encodeURIComponent(query));
                 const json = await res.json();
-                let videos = json.result || json.data || [];
-                videos = videos.sort(() => Math.random() - 0.5);
-                renderGrid(videos, grid);
-            } catch(e) { grid.innerHTML = '<p style="padding:20px;">Error.</p>'; }
+                const videos = json.result || json.data || [];
+                grid.innerHTML = '';
+
+                if(!videos.length) { grid.innerHTML = '<p style="padding:20px;">No Results.</p>'; return; }
+
+                videos.forEach(v => {
+                    let vidId = null;
+                    if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
+                    if(vidId) {
+                        const title = v.title || "Video Title";
+                        const chn = v.channel || "Channel";
+                        const thumb = v.imageUrl || `https://i.ytimg.com/vi/${vidId}/hq720.jpg`;
+                        
+                        const div = document.createElement('div');
+                        div.className = 'card';
+                        div.onclick = () => openWatch(vidId, title);
+                        div.innerHTML = `
+                            <div class="thumb">
+                                <img src="${thumb}">
+                                <div class="duration">10:25</div>
+                            </div>
+                            <div class="meta">
+                                <div class="chn-ico">${chn.charAt(0)}</div>
+                                <div class="info">
+                                    <div class="title">${title}</div>
+                                    <div class="sub-txt">${chn} • ${smartViews()} • ${smartTime()}</div>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(div);
+                    }
+                });
+            } catch(e) { grid.innerHTML = '<p>Error.</p>'; }
         }
 
-        function renderGrid(videos, container) {
-            container.innerHTML = '';
-            videos.forEach(v => {
-                let vidId = null;
-                if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
-                if(vidId) {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.onclick = () => playVideo(vidId, v.title, v.channel);
-                    card.innerHTML = `
-                        <div class="thumb-box"><img src="https://i.ytimg.com/vi/${vidId}/hq720.jpg" class="thumb-img" onload="this.classList.add('loaded')"><div class="time-label">10:00</div></div>
-                        <div class="meta-info">
-                            <div class="chn-avatar">${v.channel.charAt(0)}</div>
-                            <div class="text-info"><div class="vid-title">${v.title}</div><div class="vid-stats">${v.channel} • 500K views</div></div>
-                        </div>`;
-                    card.querySelector('.chn-avatar').onclick = (e) => { e.stopPropagation(); openChannel(v.channel); };
-                    container.appendChild(card);
-                }
-            });
-        }
-
-        /* --- CHANNEL --- */
-        async function openChannel(name) {
-            hideAll();
-            document.getElementById('channelView').style.display = 'flex';
-            document.getElementById('chnName').innerText = name;
-            document.getElementById('chnPic').innerText = name.charAt(0);
-            const cGrid = document.getElementById('chnGrid');
-            cGrid.innerHTML = '<p>Loading...</p>';
-            try {
-                const res = await fetch(API + encodeURIComponent(name));
-                const json = await res.json();
-                renderGrid(json.result || [], cGrid);
-            } catch(e) {}
-        }
-
-        /* --- SHORTS --- */
-        async function openShorts() {
-            hideAll();
-            document.getElementById('shortsView').style.display = 'block';
-            document.getElementById('appHeader').style.display = 'none';
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.nav-btn')[1].classList.add('active');
-            shortsBox.innerHTML = '<p style="color:white;text-align:center;padding-top:50%;">Loading...</p>';
-            closeMiniPlayer();
-
-            const rand = ["Viral Shorts", "Funny Shorts", "Cricket Shorts"][Math.floor(Math.random() * 3)];
-            try {
-                const res = await fetch(API + encodeURIComponent(rand));
-                const json = await res.json();
-                renderShorts(json.result || []);
-            } catch(e) {}
-        }
-
-        function renderShorts(videos) {
-            shortsBox.innerHTML = '';
-            videos.forEach(v => {
-                let vidId = v.link.split('v=')[1].split('&')[0];
-                const item = document.createElement('div');
-                item.className = 'short-item';
-                item.setAttribute('data-id', vidId);
-                item.innerHTML = `
-                    <iframe class="short-iframe" style="width:100%;height:100%;border:none;object-fit:cover;" allow="autoplay"></iframe>
-                    <div class="short-actions">
-                        <div class="icon-circle"><i class="fas fa-thumbs-up"></i></div>
-                        <div class="icon-circle"><i class="fas fa-share"></i></div>
+        // --- 3. SHORTS SHELF ---
+        function loadShorts() {
+            const shelf = document.getElementById('shortsShelf');
+            // Mock Data for Shorts
+            const shortsData = [
+                {t: "Funny Cat Meme", img: "https://i.ytimg.com/vi/1X_IAaNPW7Y/hq720.jpg"},
+                {t: "Cricket Six!", img: "https://i.ytimg.com/vi/W-S3qDkL-3E/hq720.jpg"},
+                {t: "Coding Life", img: "https://i.ytimg.com/vi/C8J2Z130K4M/hq720.jpg"},
+                {t: "Food Vlog", img: "https://i.ytimg.com/vi/8s9_w7f_y6k/hq720.jpg"},
+                {t: "Tech Unboxing", img: "https://i.ytimg.com/vi/6pW2f0z9w4w/hq720.jpg"}
+            ];
+            shortsData.forEach(s => {
+                shelf.innerHTML += `
+                    <div class="short-card">
+                        <img src="${s.img}" class="short-img">
+                        <div class="short-title">${s.t}</div>
                     </div>
-                    <div class="short-overlay">
-                        <div class="short-user"><div class="short-user-img" style="background:#fff;"></div><div class="short-username">${v.channel}</div><button class="short-sub-btn">Subscribe</button></div>
-                        <div class="short-desc">${v.title}</div>
-                    </div>`;
-                shortsBox.appendChild(item);
-                observer.observe(item);
+                `;
             });
         }
 
-        /* --- PLAYER --- */
-        function playVideo(id, title, chn) {
-            closeMiniPlayer();
-            currentVideo = {id, title, chn};
-            document.getElementById('pFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            document.getElementById('pTitle').innerText = title;
-            document.getElementById('pChnName').innerText = chn;
-            document.getElementById('pChnPic').innerText = chn.charAt(0);
-            document.getElementById('playerModal').style.display = 'flex';
+        // --- 4. WATCH PAGE LOGIC ---
+        function openWatch(id, title) {
+            const page = document.getElementById('watchPage');
+            const frame = document.getElementById('vidFrame');
+            const recs = document.getElementById('recsGrid');
+            
+            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            document.getElementById('wpTitle').innerText = title;
+            page.style.display = 'flex';
+            
+            // Populate Recommended (Simulated)
+            recs.innerHTML = '';
+            for(let i=0; i<5; i++) {
+                recs.innerHTML += `
+                    <div class="rec-card" onclick="alert('Playing next video...')">
+                        <div class="rec-thumb">
+                             <img src="https://source.unsplash.com/random/300x200?sig=${i}">
+                        </div>
+                        <div class="info" style="justify-content:center;">
+                            <div class="title" style="font-size:14px;">Recommended Video ${i+1}</div>
+                            <div class="sub-txt">Zootube • ${smartViews()}</div>
+                        </div>
+                    </div>
+                `;
+            }
         }
-        function minimizePlayer() {
-            document.getElementById('playerModal').style.display = 'none';
-            document.getElementById('pFrame').src = "";
-            document.getElementById('miniPlayer').style.display = 'flex';
-            document.getElementById('miniTitle').innerText = currentVideo.title;
-            document.getElementById('miniChn').innerText = currentVideo.chn;
-            document.getElementById('miniFrame').src = `https://www.youtube.com/embed/${currentVideo.id}?autoplay=1&controls=0`;
+        function closeWatch() {
+            document.getElementById('watchPage').style.display = 'none';
+            document.getElementById('vidFrame').src = "";
         }
-        function maximizePlayer() { playVideo(currentVideo.id, currentVideo.title, currentVideo.chn); }
-        function closeMiniPlayer() { document.getElementById('miniPlayer').style.display = 'none'; document.getElementById('miniFrame').src = ""; }
 
-        function openSearchUI() { document.getElementById('searchUI').style.display = 'flex'; document.getElementById('mSearch').focus(); }
-        function closeSearchUI() { document.getElementById('searchUI').style.display = 'none'; }
-        function execSearch(id) { const val = document.getElementById(id).value; if(val) { if(id==='mSearch') closeSearchUI(); loadCat(val); } }
+        // Enter Keys
         document.getElementById('dSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('dSearch')});
         document.getElementById('mSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('mSearch')});
     </script>
