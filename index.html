@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Ultra Shorts</title>
+    <title>Zootube | Smart Audio Fix</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* --- 1. VARIABLES --- */
         :root {
-            --bg-body: #000; /* Shorts ke liye Black background better hai */
+            --bg-body: #000;
             --bg-surface: #1e1e1e;
             --primary: #ff0000;
             --gold: #FFD700;
@@ -19,9 +19,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-body); color: var(--text-main); overflow: hidden; /* Prevent body scroll */ }
+        body { background: var(--bg-body); color: var(--text-main); overflow: hidden; /* Prevent body scroll for app feel */ }
         
-        /* Scrollbar Hide */
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
         /* --- 2. HEADER --- */
@@ -32,7 +31,6 @@
             padding: 0 16px; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .left-sec { display: flex; align-items: center; gap: 10px; }
-        .menu-btn { font-size: 20px; color: white; display: none; } /* Mobile mein hide */
         .brand-box { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
         .logo-img { height: 20px; width: auto; object-fit: contain; }
         .maker-tag { font-size: 7px; color: var(--gold); font-weight: 900; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 1px; }
@@ -55,16 +53,17 @@
 
         /* --- 4. MAIN CONTENT AREAS --- */
         .main-content {
-            margin-top: 50px; /* Header Height */
-            height: calc(100vh - 110px); /* 100vh - Header(50) - BottomNav(60) */
+            margin-top: 50px;
+            height: calc(100vh - 110px);
             overflow-y: auto;
             position: relative;
+            background: #0f0f0f;
         }
 
         /* --- 5. HOME VIEW STYLES --- */
         #homeView { padding: 10px; }
         .tags-bar {
-            position: sticky; top: 0; background: #000; z-index: 10;
+            position: sticky; top: 0; background: #0f0f0f; z-index: 10;
             padding: 5px 0 15px 0; overflow-x: auto; white-space: nowrap; display: flex; gap: 10px;
         }
         .tag { background: #222; color: white; border: 1px solid #333; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; }
@@ -82,96 +81,86 @@
         .vid-title { font-size: 14px; font-weight: 500; line-height: 1.3; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 3px; }
         .vid-stats { font-size: 12px; color: #aaa; }
 
-        /* --- 6. SHORTS CONTAINER (UPDATED) --- */
+        /* --- 6. SHORTS CONTAINER (TIKTOK STYLE) --- */
         .shorts-container {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed; top: 0; left: 0; 
-            width: 100%; height: 100%; /* Full screen overlay */
+            width: 100%; height: 100%; 
             background: #000;
-            z-index: 1500; /* Above header */
+            z-index: 1500;
             overflow-y: scroll;
-            scroll-snap-type: y mandatory;
+            scroll-snap-type: y mandatory; /* Snap Scrolling */
+            scroll-behavior: smooth;
         }
         
-        /* The Short Item */
         .short-item {
             position: relative;
             width: 100%; 
-            height: calc(100vh - 60px); /* Leave space for bottom nav */
+            height: calc(100vh - 60px); /* Adjust for nav bar */
             scroll-snap-align: start;
             background: #000;
             border-bottom: 1px solid #111;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .short-iframe {
             width: 100%; height: 100%; border: none; object-fit: cover;
+            pointer-events: none; /* Prevents clicking inside iframe to mess up scroll */
+        }
+        
+        /* Placeholder when video is stopped */
+        .short-placeholder {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: #000; display: flex; justify-content: center; align-items: center;
+            color: #555; font-size: 20px; z-index: -1;
         }
 
-        /* RIGHT SIDEBAR ACTIONS */
+        /* ACTIONS & OVERLAY */
         .short-actions {
-            position: absolute; right: 10px; bottom: 80px; /* Thoda upar taaki nav se na takraye */
+            position: absolute; right: 10px; bottom: 100px;
             display: flex; flex-direction: column; gap: 20px; align-items: center;
             z-index: 10;
         }
-        .action-btn {
-            display: flex; flex-direction: column; align-items: center; gap: 4px; color: white; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-        }
-        .icon-circle {
-            width: 45px; height: 45px; background: rgba(255,255,255,0.15); 
-            border-radius: 50%; display: grid; place-items: center; backdrop-filter: blur(5px);
-            transition: 0.2s;
-        }
-        .icon-circle:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
-        .action-btn i { font-size: 22px; }
-        .action-btn span { font-size: 12px; font-weight: 600; }
-
-        /* ROTATING MUSIC DISC */
-        .music-disc {
-            width: 45px; height: 45px; background: #222; border-radius: 50%; border: 3px solid #222;
-            overflow: hidden; display: grid; place-items: center; margin-top: 10px;
-            animation: spin 5s linear infinite;
-        }
+        .action-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; color: white; cursor: pointer; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .icon-circle { width: 45px; height: 45px; background: rgba(255,255,255,0.15); border-radius: 50%; display: grid; place-items: center; backdrop-filter: blur(5px); }
+        .music-disc { width: 45px; height: 45px; background: #222; border-radius: 50%; border: 3px solid #222; overflow: hidden; display: grid; place-items: center; margin-top: 10px; animation: spin 5s linear infinite; }
         .music-disc img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* BOTTOM INFO OVERLAY */
-        .short-overlay {
-            position: absolute; left: 15px; bottom: 20px;
-            width: 75%; color: white; z-index: 10; pointer-events: none;
-        }
+        .short-overlay { position: absolute; left: 15px; bottom: 20px; width: 75%; color: white; z-index: 10; pointer-events: none; }
         .short-user { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; pointer-events: auto; }
-        .short-user-img { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 1px solid transparent; }
+        .short-user-img { width: 34px; height: 34px; border-radius: 50%; background: #fff; }
         .short-username { font-weight: 700; font-size: 14px; }
         .short-sub-btn { background: white; color: black; border: none; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 12px; cursor: pointer; }
         .short-desc { font-size: 13px; line-height: 1.3; font-weight: 400; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
-        /* --- 7. CHANNEL PAGE --- */
-        .channel-page { display: none; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; padding-bottom: 70px;}
+        /* --- 7. CHANNEL & OTHER UI --- */
+        .channel-page { display: none; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; padding-bottom: 70px; background: #0f0f0f; }
         .channel-header { padding: 10px; border-bottom: 1px solid #333; margin-bottom: 10px; }
         .banner { width: 100%; height: 80px; background: linear-gradient(45deg, #333, #555); border-radius: 8px; margin-bottom: -30px; }
         .chn-profile { display: flex; align-items: flex-end; gap: 10px; padding: 0 10px; }
         .chn-lg-img { width: 70px; height: 70px; border-radius: 50%; background: purple; border: 3px solid #000; display: grid; place-items: center; font-size: 24px; }
         .back-btn { background: #222; color: white; border: none; padding: 5px 15px; border-radius: 20px; margin: 10px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
 
-        /* OVERLAYS */
-        .voice-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; justify-content: center; align-items: center; }
-        .mic-pulse { width: 80px; height: 80px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; color: white; animation: pulse-red 1.5s infinite; cursor: pointer; }
-        @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
-
         .search-ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 3000; display: none; flex-direction: column; }
         .s-head { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #333; gap: 10px; }
         .s-inp { flex: 1; background: #222; border: none; padding: 10px; border-radius: 20px; color: white; outline: none; }
 
-        /* PLAYER */
         .player-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0f0f; z-index: 4000; flex-direction: column; overflow-y: auto; }
         .vid-frame { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 100; }
         .p-content { padding: 15px; }
         .close-btn-float { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; border: 1px solid #555; z-index: 5000; }
+        
+        /* Voice Overlay */
+        .voice-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; flex-direction: column; justify-content: center; align-items: center; }
+        .mic-pulse { width: 80px; height: 80px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; color: white; animation: pulse-red 1.5s infinite; cursor: pointer; }
+        @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
+
     </style>
 </head>
 <body>
 
-    <!-- HEADER (Visible on Home & Channel) -->
+    <!-- HEADER -->
     <header id="appHeader">
         <div class="left-sec">
             <div class="brand-box" onclick="goHome()">
@@ -206,9 +195,9 @@
         <div class="video-grid" id="grid"></div>
     </div>
 
-    <!-- 2. SHORTS VIEW (FULL SCREEN) -->
+    <!-- 2. SHORTS VIEW -->
     <div id="shortsView" class="shorts-container">
-        <!-- Shorts injected here -->
+        <!-- Shorts will load here -->
     </div>
 
     <!-- 3. CHANNEL VIEW -->
@@ -228,12 +217,6 @@
     </div>
 
     <!-- OVERLAYS -->
-    <div class="voice-overlay" id="voiceUI">
-        <div style="font-size:24px; color:white; margin-bottom:30px;" id="voiceMsg">Listening...</div>
-        <div class="mic-pulse"><i class="fas fa-microphone"></i></div>
-        <button onclick="closeVoice()" style="margin-top:40px; background:transparent; border:1px solid #777; color:#aaa; padding:8px 20px; border-radius:20px;">Cancel</button>
-    </div>
-
     <div class="search-ui" id="searchUI">
         <div class="s-head">
             <button onclick="closeSearchUI()" style="background:none; border:none; color:white;"><i class="fas fa-arrow-left"></i></button>
@@ -242,13 +225,18 @@
         </div>
     </div>
 
+    <div class="voice-overlay" id="voiceUI">
+        <div style="font-size:24px; color:white; margin-bottom:30px;" id="voiceMsg">Listening...</div>
+        <div class="mic-pulse"><i class="fas fa-microphone"></i></div>
+        <button onclick="closeVoice()" style="margin-top:40px; background:transparent; border:1px solid #777; color:#aaa; padding:8px 20px; border-radius:20px;">Cancel</button>
+    </div>
+
     <div class="player-modal" id="playerUI">
         <div class="vid-frame">
             <iframe id="pFrame" src="" style="width:100%; height:100%; border:none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         <div class="p-content">
             <div id="pTitle" style="font-size:16px; font-weight:bold; margin-bottom:5px;">Title</div>
-            <div style="font-size:12px; color:#aaa;">1M Views • 2 days ago</div>
             <div style="display:flex; align-items:center; gap:10px; margin-top:15px;">
                 <div id="pChnPic" style="width:36px; height:36px; background:#444; border-radius:50%; display:grid; place-items:center;">C</div>
                 <div style="font-weight:bold; font-size:14px;" id="pChnName">Channel</div>
@@ -263,6 +251,33 @@
         const grid = document.getElementById('grid');
         const shortsBox = document.getElementById('shortsView');
         let recognition;
+        
+        /* --- SMART OBSERVER FOR AUDIO FIX --- */
+        // This observer detects which video is on screen.
+        // It plays the visible one and STOPS all others.
+        let observerOptions = {
+            root: shortsBox,
+            threshold: 0.6 // Trigger when 60% of the video is visible
+        };
+
+        let observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                let iframe = entry.target.querySelector('iframe');
+                let vidId = entry.target.getAttribute('data-id');
+                
+                if (entry.isIntersecting) {
+                    // Video is on screen -> PLAY
+                    // Re-assign src to start playing
+                    if(!iframe.src) {
+                        iframe.src = `https://www.youtube.com/embed/${vidId}?autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${vidId}&rel=0`;
+                    }
+                } else {
+                    // Video is OFF screen -> STOP
+                    // Clear src to kill audio instantly
+                    iframe.removeAttribute('src');
+                }
+            });
+        }, observerOptions);
 
         window.onload = () => loadCat('Trending Videos');
 
@@ -271,25 +286,27 @@
             document.getElementById('homeView').style.display = 'block';
             document.getElementById('shortsView').style.display = 'none';
             document.getElementById('channelView').style.display = 'none';
-            document.getElementById('appHeader').style.display = 'flex'; // Show Header
+            document.getElementById('appHeader').style.display = 'flex';
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.nav-btn')[0].classList.add('active');
+            
+            // Stop Shorts Audio if leaving
+            shortsBox.innerHTML = ''; 
         }
 
-        /* --- SHORTS LOGIC (THE FIX) --- */
+        /* --- SHORTS LOGIC --- */
         async function openShorts() {
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('channelView').style.display = 'none';
             document.getElementById('shortsView').style.display = 'block';
-            document.getElementById('appHeader').style.display = 'none'; // Hide Header for Full Screen
+            document.getElementById('appHeader').style.display = 'none';
             
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.nav-btn')[1].classList.add('active');
 
-            shortsBox.innerHTML = '<p style="color:white; text-align:center; margin-top:50%;">Loading Shorts...</p>';
+            shortsBox.innerHTML = '<p style="color:white;text-align:center;padding-top:50%;">Loading Shorts...</p>';
 
             try {
-                // Fetch vertical videos
                 const res = await fetch(API + encodeURIComponent('Youtube Shorts Viral Funny'));
                 const json = await res.json();
                 const videos = json.result || json.data || [];
@@ -299,50 +316,44 @@
 
         function renderShorts(videos) {
             shortsBox.innerHTML = '';
+            
             videos.forEach(v => {
                 let vidId = null;
                 if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
 
                 if(vidId) {
-                    const title = v.title || "Shorts Video";
-                    const chn = v.channel || "Channel";
+                    const title = v.title || "Shorts";
+                    const chn = v.channel || "User";
+                    
                     const item = document.createElement('div');
                     item.className = 'short-item';
-
-                    // Using parameters to make embed look cleaner
-                    const embed = `https://www.youtube.com/embed/${vidId}?autoplay=1&controls=0&modestbranding=1&loop=1&playlist=${vidId}&rel=0`;
+                    item.setAttribute('data-id', vidId); // Store ID for observer
 
                     item.innerHTML = `
-                        <iframe class="short-iframe" src="${embed}" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        <!-- Placeholder div while video is stopped -->
+                        <div class="short-placeholder">Loading...</div>
+                        
+                        <!-- Iframe (Source is initially empty) -->
+                        <iframe class="short-iframe" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                         
                         <div class="short-actions">
-                            <div class="action-btn">
-                                <div class="icon-circle"><i class="fas fa-thumbs-up"></i></div>
-                                <span>Like</span>
-                            </div>
-                            <div class="action-btn">
-                                <div class="icon-circle"><i class="fas fa-comment-dots"></i></div>
-                                <span>1.2K</span>
-                            </div>
-                            <div class="action-btn">
-                                <div class="icon-circle"><i class="fas fa-share"></i></div>
-                                <span>Share</span>
-                            </div>
-                            <div class="music-disc">
-                                <img src="https://i.ytimg.com/vi/${vidId}/hqdefault.jpg">
-                            </div>
+                            <div class="action-btn"><div class="icon-circle"><i class="fas fa-thumbs-up"></i></div><span>Like</span></div>
+                            <div class="action-btn"><div class="icon-circle"><i class="fas fa-comment-dots"></i></div><span>1.2K</span></div>
+                            <div class="action-btn"><div class="icon-circle"><i class="fas fa-share"></i></div><span>Share</span></div>
+                            <div class="music-disc"><img src="https://i.ytimg.com/vi/${vidId}/hqdefault.jpg"></div>
                         </div>
-
                         <div class="short-overlay">
                             <div class="short-user">
-                                <div class="short-user-img"></div>
-                                <div class="short-username">${chn}</div>
+                                <div class="short-user-img"></div><div class="short-username">${chn}</div>
                                 <button class="short-sub-btn">Subscribe</button>
                             </div>
                             <div class="short-desc">${title}</div>
                         </div>
                     `;
                     shortsBox.appendChild(item);
+                    
+                    // Attach Observer to this item
+                    observer.observe(item);
                 }
             });
         }
@@ -378,19 +389,17 @@
                     card.onclick = () => playVideo(vidId, title, chn);
                     
                     card.innerHTML = `
-                        <div class="thumb-box">
-                            <img src="${thumb}" class="thumb-img">
-                            <div class="time-label">12:30</div>
-                        </div>
+                        <div class="thumb-box"><img src="${thumb}" class="thumb-img"><div class="time-label">12:30</div></div>
                         <div class="meta-info">
                             <div class="chn-avatar">${chn.charAt(0)}</div>
                             <div class="text-info">
                                 <div class="vid-title">${title}</div>
-                                <div class="vid-stats">${chn} • 500K views</div>
+                                <div class="vid-stats"><span class="chn-name-link">${chn}</span> • 500K views</div>
                             </div>
                         </div>
                     `;
                     card.querySelector('.chn-avatar').onclick = (e) => { e.stopPropagation(); openChannel(chn); };
+                    card.querySelector('.chn-name-link').onclick = (e) => { e.stopPropagation(); openChannel(chn); };
                     grid.appendChild(card);
                 }
             });
@@ -402,17 +411,15 @@
             document.getElementById('channelView').style.display = 'flex';
             document.getElementById('chnName').innerText = name;
             document.getElementById('chnPic').innerText = name.charAt(0);
-            document.getElementById('chnGrid').innerHTML = '<p style="color:#aaa;">Loading Videos...</p>';
             
+            const cGrid = document.getElementById('chnGrid');
+            cGrid.innerHTML = '<p style="padding:20px; color:#aaa;">Loading...</p>';
             try {
                 const res = await fetch(API + encodeURIComponent(name));
                 const json = await res.json();
                 const videos = json.result || json.data || [];
-                
-                const cGrid = document.getElementById('chnGrid');
                 cGrid.innerHTML = '';
                 videos.forEach(v => {
-                    // Reuse card logic logic simplified
                     let vidId = v.link.split('v=')[1].split('&')[0];
                     let card = document.createElement('div');
                     card.className = 'card';
@@ -444,7 +451,6 @@
             if (!('webkitSpeechRecognition' in window)) { alert("Voice not supported"); return; }
             document.getElementById('voiceUI').style.display = 'flex';
             document.getElementById('voiceMsg').innerText = "Listening...";
-            
             recognition = new webkitSpeechRecognition();
             recognition.lang = 'en-US';
             recognition.start();
@@ -457,7 +463,7 @@
             };
         }
         function closeVoice() { document.getElementById('voiceUI').style.display = 'none'; }
-
+        
         document.getElementById('mSearch').addEventListener('keypress', (e)=>{
             if(e.key==='Enter') { closeSearchUI(); loadCat(e.target.value); }
         });
