@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Ultimate Pro</title>
+    <title>Zootube | Working Shorts</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,6 @@
         :root {
             --bg-body: #0f0f0f;
             --bg-surface: #1e1e1e;
-            --bg-hover: #2a2a2a;
             --primary: #3ea6ff;
             --gold: linear-gradient(45deg, #FFD700, #FFAA00);
             --text-main: #fff;
@@ -122,6 +121,7 @@
         .short-card {
             min-width: 140px; aspect-ratio: 9/16; background: #222; border-radius: 10px;
             position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;
+            border: 1px solid #333;
         }
         .short-img { width: 100%; height: 100%; object-fit: cover; }
         .short-title {
@@ -156,6 +156,42 @@
         }
         .sub-txt { font-size: 13px; color: var(--text-sec); }
 
+        /* --- REAL SHORTS PLAYER (9:16 Full Screen) --- */
+        .shorts-modal {
+            display: none; position: fixed; inset: 0; background: #000; z-index: 7000;
+            justify-content: center; align-items: center;
+        }
+        .shorts-container {
+            width: 100%; height: 100%; max-width: 480px; position: relative;
+            background: #000; display: flex; justify-content: center; align-items: center;
+        }
+        .shorts-frame { width: 100%; height: 100%; border: none; object-fit: cover; }
+        
+        /* Floating Overlay for Shorts */
+        .shorts-overlay {
+            position: absolute; bottom: 20px; left: 15px; right: 60px; pointer-events: none;
+        }
+        .st-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 1px 2px black; }
+        .st-channel { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
+        .st-avatar { width: 32px; height: 32px; background: #555; border-radius: 50%; text-align: center; line-height: 32px; }
+
+        /* Right Side Buttons */
+        .shorts-actions {
+            position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center;
+        }
+        .s-act-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer;
+        }
+        .s-circle {
+            width: 45px; height: 45px; background: rgba(0,0,0,0.4); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; color: white;
+        }
+        .s-text { font-size: 12px; font-weight: bold; }
+
+        .close-shorts {
+            position: absolute; top: 20px; left: 20px; color: white; font-size: 24px; cursor: pointer; z-index: 10;
+        }
+
         /* --- WATCH PAGE --- */
         .watch-page {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -176,8 +212,6 @@
         .pill { background: #222; color: white; padding: 8px 16px; border-radius: 18px; font-size: 13px; display: flex; gap: 6px; align-items: center; border: none; white-space: nowrap; }
 
         .recs-title { font-size: 16px; font-weight: bold; margin: 20px 0 10px; }
-        
-        /* UPDATED RECOMMENDED CARD */
         .rec-card { display: flex; gap: 10px; margin-bottom: 15px; cursor: pointer; }
         .rec-thumb { width: 160px; height: 90px; border-radius: 8px; background: #222; flex-shrink: 0; overflow: hidden; position: relative; }
         .rec-thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -282,7 +316,40 @@
         <div class="grid" id="grid"></div>
     </main>
 
-    <!-- WATCH PAGE -->
+    <!-- REAL SHORTS PLAYER MODAL (VERTICAL) -->
+    <div class="shorts-modal" id="shortsModal">
+        <div class="close-shorts" onclick="closeShorts()"><i class="fas fa-arrow-left"></i></div>
+        <div class="shorts-container">
+            <!-- Playlist param enables loop -->
+            <iframe id="shortsFrame" class="shorts-frame" src="" allow="autoplay; encrypted-media; loop"></iframe>
+            
+            <div class="shorts-actions">
+                <div class="s-act-btn">
+                    <div class="s-circle"><i class="fas fa-thumbs-up"></i></div>
+                    <div class="s-text">Like</div>
+                </div>
+                <div class="s-act-btn">
+                    <div class="s-circle"><i class="fas fa-comment"></i></div>
+                    <div class="s-text">1.5K</div>
+                </div>
+                <div class="s-act-btn">
+                    <div class="s-circle"><i class="fas fa-share"></i></div>
+                    <div class="s-text">Share</div>
+                </div>
+            </div>
+
+            <div class="shorts-overlay">
+                <div class="st-channel">
+                    <div class="st-avatar">Z</div>
+                    <span>Zootube Shorts</span>
+                    <button style="margin-left:10px; background:white; color:black; border:none; padding:4px 10px; border-radius:15px; font-weight:bold; font-size:12px;">Subscribe</button>
+                </div>
+                <div class="st-title" id="stTitle">Shorts Title</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WATCH PAGE (LANDSCAPE VIDEOS) -->
     <div class="watch-page" id="watchPage">
         <button class="close-wp" onclick="closeWatch()">✕</button>
         <iframe class="video-frame" id="vidFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -346,7 +413,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const avatars = document.querySelectorAll('.avatar, .chn-pic');
+                    const avatars = document.querySelectorAll('.avatar, .chn-pic, .st-avatar');
                     avatars.forEach(av => {
                         av.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                         av.style.background = 'none';
@@ -362,7 +429,10 @@
         
         function execSearch(id) {
             const val = document.getElementById(id).value;
-            if(val) { if(id==='mSearch') closeMobSearch(); loadCat(val); }
+            if(val) { 
+                if(id==='mSearch') closeMobSearch();
+                loadCat(val); 
+            }
         }
 
         function startVoice(targetId) {
@@ -446,21 +516,21 @@
             } catch(e) { grid.innerHTML = '<p>Error.</p>'; }
         }
 
-        // --- 4. SHORTS SHELF ---
+        // --- 4. REAL SHORTS LOGIC ---
         function loadShorts() {
             const shelf = document.getElementById('shortsShelf');
-            // Mock Data WITH IDs
+            // USING REAL SHORTS IDs (Vertical Videos)
             const shortsData = [
-                {id: "1X_IAaNPW7Y", t: "Funny Cat Meme", img: "https://i.ytimg.com/vi/1X_IAaNPW7Y/hq720.jpg"},
-                {id: "W-S3qDkL-3E", t: "Cricket Six!", img: "https://i.ytimg.com/vi/W-S3qDkL-3E/hq720.jpg"},
-                {id: "C8J2Z130K4M", t: "Coding Life", img: "https://i.ytimg.com/vi/C8J2Z130K4M/hq720.jpg"},
-                {id: "8s9_w7f_y6k", t: "Food Vlog", img: "https://i.ytimg.com/vi/8s9_w7f_y6k/hq720.jpg"},
-                {id: "6pW2f0z9w4w", t: "Tech Unboxing", img: "https://i.ytimg.com/vi/6pW2f0z9w4w/hq720.jpg"}
+                {id: "p5jEni8QYhY", t: "Oddly Satisfying", img: "https://i.ytimg.com/vi/p5jEni8QYhY/hq720.jpg"},
+                {id: "5qap5aO4i9A", t: "Lofi Vibes", img: "https://i.ytimg.com/vi/5qap5aO4i9A/hq720.jpg"},
+                {id: "t_jHrUE5IOk", t: "Pasuri", img: "https://i.ytimg.com/vi/t_jHrUE5IOk/hq720.jpg"},
+                {id: "ShortsID3", t: "Funny Clip", img: "https://source.unsplash.com/random/200x350?sig=1"},
+                {id: "ShortsID4", t: "Gaming Moment", img: "https://source.unsplash.com/random/200x350?sig=2"}
             ];
             shelf.innerHTML = '';
             shortsData.forEach(s => {
                 shelf.innerHTML += `
-                    <div class="short-card" onclick="openWatch('${s.id}', '${s.t}')">
+                    <div class="short-card" onclick="openShorts('${s.id}', '${s.t}')">
                         <img src="${s.img}" class="short-img">
                         <div class="short-title">${s.t}</div>
                     </div>
@@ -468,28 +538,38 @@
             });
         }
 
-        // --- 5. WATCH PAGE (FIXED IMAGES & SUBTITLES) ---
+        function openShorts(id, title) {
+            const modal = document.getElementById('shortsModal');
+            const frame = document.getElementById('shortsFrame');
+            // Autoplay + Loop enabled
+            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&playsinline=1`; 
+            document.getElementById('stTitle').innerText = title;
+            modal.style.display = 'flex';
+        }
+
+        function closeShorts() {
+            document.getElementById('shortsModal').style.display = 'none';
+            document.getElementById('shortsFrame').src = "";
+        }
+
+        // --- 5. WATCH PAGE (Landscape) ---
         function openWatch(id, title) {
             const page = document.getElementById('watchPage');
             const frame = document.getElementById('vidFrame');
             const recs = document.getElementById('recsGrid');
             
-            // ADDED: &cc_load_policy=1 for Subtitles
             frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&cc_load_policy=1&cc_lang_pref=en`;
             document.getElementById('wpTitle').innerText = title;
             page.style.display = 'flex';
             
-            // FIXED RECOMMENDED IMAGES (Using Real Video IDs)
             recs.innerHTML = '';
-            // List of specific video IDs for recommendations to ensure valid thumbnails
+            // Real IDs for Recommendations
             const recVideos = [
-                {id: "t_jHrUE5IOk", title: "Coke Studio | Pasuri"},
                 {id: "7tqT68L9wH8", title: "Funny Zoo Vlog"},
-                {id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito"},
-                {id: "JGwWNGJdvx8", title: "Ed Sheeran - Shape of You"},
-                {id: "OPf0YbXqDm0", title: "Mark Ronson - Uptown Funk"}
+                {id: "kJQP7kiw5Fk", title: "Despacito"},
+                {id: "JGwWNGJdvx8", title: "Shape of You"},
+                {id: "OPf0YbXqDm0", title: "Uptown Funk"}
             ];
-
             recVideos.forEach(v => {
                 const imgUrl = `https://i.ytimg.com/vi/${v.id}/hq720.jpg`;
                 recs.innerHTML += `
@@ -506,13 +586,11 @@
                 `;
             });
         }
-        
         function closeWatch() {
             document.getElementById('watchPage').style.display = 'none';
             document.getElementById('vidFrame').src = "";
         }
 
-        // Enter Keys
         document.getElementById('dSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('dSearch')});
         document.getElementById('mSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('mSearch')});
     </script>
