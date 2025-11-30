@@ -3,292 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zootube | Home & Music</title>
-    <!-- Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Zootube | Enhanced</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- 1. ZOOTUBE DARK THEME --- */
+        /* --- VARIABLES --- */
         :root {
-            --bg-body: #0f0f0f;
-            --bg-header: #0f0f0f;
-            --bg-chip: #272727;
-            --bg-chip-hover: #3f3f3f;
-            --bg-active: #f1f1f1;
-            --text-active: #000;
-            --text-main: #fff;
-            --text-gray: #aaa;
+            --bg-color: #0f0f0f;
+            --bg-secondary: #1f1f1f;
+            --header-bg: #0f0f0f;
+            --search-bg: #121212;
+            --border-color: #303030;
+            --text-main: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent-color: #3ea6ff;
+            --card-hover: #1e1e1e;
         }
 
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: Roboto, Arial, sans-serif;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', Arial, sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
 
-        /* --- 2. HEADER --- */
+        /* SCROLLBAR CUSTOMIZATION */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #717171; }
+
+        /* --- HEADER --- */
         header {
-            position: sticky; top: 0; z-index: 100;
-            background: var(--bg-header);
-            padding: 10px 20px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 56px;
+            background: var(--header-bg);
             display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid #222;
+            padding: 0 16px; z-index: 1000;
         }
 
-        /* LOGO STYLE */
-        .logo { 
-            display: flex; 
-            align-items: center; 
-            cursor: pointer; 
+        .start-section { display: flex; align-items: center; gap: 15px; }
+        .menu-icon { 
+            font-size: 20px; padding: 10px; border-radius: 50%; cursor: pointer; color: white;
         }
+        .menu-icon:hover { background: #272727; }
+
+        .logo { display: flex; align-items: center; cursor: pointer; }
+        .logo img { height: 42px; width: auto; object-fit: contain; }
+
+        /* SEARCH BAR */
+        .search-container { 
+            display: flex; align-items: center; flex: 0 1 600px; margin-left: 40px; 
+        }
+        .search-box {
+            display: flex; width: 100%;
+        }
+        .search-box input {
+            width: 100%; padding: 0 16px; height: 40px;
+            background: var(--search-bg); border: 1px solid var(--border-color);
+            border-right: none; border-radius: 40px 0 0 40px;
+            color: white; font-size: 16px; outline: none;
+        }
+        .search-box input:focus { border-color: #1c62b9; }
         
-        .logo img {
-            height: 45px; /* Logo size adjust karne ke liye */
-            width: auto;
-            object-fit: contain;
+        .search-btn {
+            height: 40px; width: 64px;
+            background: #222; border: 1px solid var(--border-color);
+            border-radius: 0 40px 40px 0; color: white; cursor: pointer;
+            display: grid; place-items: center;
+        }
+        .search-btn:hover { background: #2f2f2f; }
+
+        .mic-icon {
+            width: 40px; height: 40px; border-radius: 50%; background: #181818;
+            border: none; color: white; margin-left: 10px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .mic-icon:hover { background: #303030; }
+
+        .end-section { display: flex; gap: 15px; align-items: center; }
+        .icon-btn { font-size: 20px; padding: 8px; cursor: pointer; color: white; }
+        .user-avatar { 
+            width: 32px; height: 32px; background: purple; border-radius: 50%; 
+            color: white; display: grid; place-items: center; font-weight: bold; cursor: pointer;
         }
 
-        .search-bar { display: flex; flex: 1; max-width: 600px; margin: 0 20px; }
-        input {
-            width: 100%; padding: 10px 15px;
-            background: #121212; border: 1px solid #333;
-            color: #fff; border-radius: 20px 0 0 20px; outline: none; font-size: 16px;
-        }
-        button.search-btn {
-            background: #222; border: 1px solid #333; border-left: none;
-            padding: 0 20px; border-radius: 0 20px 20px 0; color: #fff; cursor: pointer;
+        /* --- LAYOUT GRID (Sidebar + Main) --- */
+        .container {
+            display: flex; margin-top: 56px; height: calc(100vh - 56px);
         }
 
-        /* --- 3. CATEGORY PILLS --- */
-        .tags-container {
-            position: sticky; top: 60px; z-index: 90;
-            background: var(--bg-body);
-            padding: 10px 20px;
-            display: flex; gap: 10px;
-            overflow-x: auto;
-            border-bottom: 1px solid #222;
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 240px; background: var(--bg-color);
+            overflow-y: auto; padding: 12px; flex-shrink: 0;
+            transition: transform 0.2s;
         }
-        
-        .tags-container::-webkit-scrollbar { height: 0px; } /* Hide Scrollbar */
+        /* Mobile: Sidebar hidden initially */
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: 0; top: 56px; height: 100%; z-index: 999; transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .overlay-bg {
+                display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 900;
+            }
+            .overlay-bg.active { display: block; }
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 20px;
+            padding: 10px 12px; border-radius: 10px; cursor: pointer; color: white;
+            text-decoration: none; font-size: 14px;
+        }
+        .nav-item:hover { background: #272727; }
+        .nav-item.active { background: #272727; font-weight: bold; }
+        .nav-item i { font-size: 18px; width: 24px; text-align: center; }
+
+        .separator { height: 1px; background: #3f3f3f; margin: 10px 0; }
+        .section-title { font-size: 14px; font-weight: bold; padding: 8px 12px; color: var(--text-main); }
+
+        /* --- MAIN CONTENT --- */
+        .content {
+            flex: 1; padding: 20px; overflow-y: auto; position: relative;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px;
+            position: sticky; top: 0; background: var(--bg-color); z-index: 10;
+            padding-top: 5px;
+        }
+        .categories::-webkit-scrollbar { display: none; }
 
         .chip {
-            background: var(--bg-chip);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: 0.2s;
-            border: none;
+            background: #272727; color: white; padding: 6px 15px;
+            border-radius: 8px; font-size: 14px; cursor: pointer; border: none;
+            white-space: nowrap; transition: 0.3s; font-weight: 500;
+        }
+        .chip:hover { background: #3f3f3f; }
+        .chip.active { background: white; color: black; }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px; margin-top: 20px;
         }
 
-        .chip:hover { background: var(--bg-chip-hover); }
-
-        /* Active State */
-        .chip.active {
-            background: var(--bg-active);
-            color: var(--text-active);
+        /* Video Card */
+        .card { cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
+        .thumbnail {
+            width: 100%; aspect-ratio: 16/9; background: #222;
+            border-radius: 12px; overflow: hidden; position: relative;
         }
+        .thumbnail img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .card:hover img { transform: scale(1.05); }
 
-        /* --- 4. VIDEO GRID --- */
-        .main-content { padding: 20px; }
-        
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        /* --- 5. VIDEO CARD --- */
-        .card {
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .card:hover { transform: scale(1.02); }
-
-        .thumbnail-box {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .duration {
+        .duration-badge {
             position: absolute; bottom: 8px; right: 8px;
-            background: rgba(0,0,0,0.8); color: #fff;
-            font-size: 12px; padding: 2px 5px; border-radius: 4px; font-weight: bold;
+            background: rgba(0,0,0,0.8); color: white;
+            font-size: 12px; font-weight: bold; padding: 3px 6px; border-radius: 4px;
         }
 
-        .details { display: flex; gap: 10px; margin-top: 10px; }
+        .video-info { display: flex; gap: 12px; align-items: flex-start; }
+        .channel-icon {
+            width: 36px; height: 36px; border-radius: 50%; background: #444;
+            display: grid; place-items: center; font-size: 14px; font-weight: bold; flex-shrink: 0;
+        }
         
-        .avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: #333; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        .meta-text { display: flex; flex-direction: column; }
+        .video-title {
+            font-size: 16px; font-weight: 600; line-height: 1.4; color: white;
+            margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
         }
+        .channel-name, .views-time { font-size: 14px; color: var(--text-secondary); }
+        .channel-name:hover { color: white; }
 
-        .meta { display: flex; flex-direction: column; }
-        
-        .title {
-            font-size: 16px; font-weight: 600; line-height: 1.3;
-            color: #fff; margin-bottom: 4px;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        /* SKELETON LOADING */
+        .skeleton { animation: skeleton-loading 1s linear infinite alternate; }
+        @keyframes skeleton-loading {
+            0% { background-color: #1e1e1e; }
+            100% { background-color: #2a2a2a; }
         }
+        .sk-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; margin-bottom: 10px; }
+        .sk-row { display: flex; gap: 10px; }
+        .sk-avatar { width: 36px; height: 36px; border-radius: 50%; }
+        .sk-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .sk-line { height: 14px; border-radius: 4px; width: 100%; }
+        .sk-line.short { width: 60%; }
 
-        .channel-name { font-size: 13px; color: var(--text-gray); }
-
-        /* --- 6. PLAYER OVERLAY --- */
+        /* PLAYER OVERLAY */
         .overlay {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 2000;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 2000;
             justify-content: center; align-items: center; flex-direction: column;
         }
-        .player-wrapper { width: 90%; max-width: 900px; aspect-ratio: 16/9; background: #000; }
+        .player-box { width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: black; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
         iframe { width: 100%; height: 100%; border: none; }
-        .close-btn {
-            margin-top: 15px; padding: 10px 20px;
-            background: #272727; color: white; border: none;
-            border-radius: 20px; cursor: pointer; font-weight: bold;
+        .close-player {
+            margin-top: 15px; padding: 10px 25px; background: #272727; color: white;
+            border: none; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 16px;
         }
-        .close-btn:hover { background: #3f3f3f; }
+        .close-player:hover { background: #3f3f3f; }
 
-        /* Loading */
-        #loader { text-align: center; width: 100%; margin-top: 50px; display: none; }
-
+        /* Mobile Adjustments */
+        @media(max-width: 600px) {
+            .search-container { display: none; } /* Hide search on very small screens for cleanliness */
+            .end-section { display: none; }
+            .content { padding: 10px; }
+        }
     </style>
 </head>
 <body>
 
     <!-- Header -->
     <header>
-        <!-- NEW LOGO ADDED HERE -->
-        <div class="logo" onclick="loadCategory('Home', this)">
-            <img src="https://i.supaimg.com/913d801b-4b84-42f2-80b9-d21530bdb099.png" alt="Zootube Logo">
+        <div class="start-section">
+            <i class="fas fa-bars menu-icon" onclick="toggleSidebar()"></i>
+            <div class="logo" onclick="loadCategory('Home', null)">
+                <img src="https://i.supaimg.com/913d801b-4b84-42f2-80b9-d21530bdb099.png" alt="Zootube">
+            </div>
         </div>
-        
-        <div class="search-bar">
-            <input type="text" id="searchInp" placeholder="Search">
-            <button class="search-btn" onclick="manualSearch()"><i class="fas fa-search"></i></button>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search">
+                <button class="search-btn" onclick="manualSearch()">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <button class="mic-icon"><i class="fas fa-microphone"></i></button>
         </div>
-        <div style="width: 40px;"></div> <!-- Spacer -->
+
+        <div class="end-section">
+            <i class="fas fa-video icon-btn"></i>
+            <i class="fas fa-bell icon-btn"></i>
+            <div class="user-avatar">Z</div>
+        </div>
     </header>
 
-    <!-- Category Section -->
-    <div class="tags-container">
-        <button class="chip active" onclick="loadCategory('Trending Videos', this)">All</button>
-        <button class="chip" onclick="loadCategory('Latest Music 2024', this)">Music</button>
-        <button class="chip" onclick="loadCategory('Gaming Highlights', this)">Gaming</button>
-        <button class="chip" onclick="loadCategory('News Pakistan', this)">News</button>
-        <button class="chip" onclick="loadCategory('Cricket Live', this)">Sports</button>
-        <button class="chip" onclick="loadCategory('Coding Tutorials', this)">Coding</button>
-        <button class="chip" onclick="loadCategory('Funny Vines', this)">Comedy</button>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="overlay-bg" onclick="toggleSidebar()"></div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <a href="#" class="nav-item active" onclick="loadCategory('Trending', this)">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="#" class="nav-item" onclick="loadCategory('Youtube Shorts', this)">
+                <i class="fas fa-bolt"></i> Shorts
+            </a>
+            <a href="#" class="nav-item" onclick="loadCategory('Subscriptions', this)">
+                <i class="fas fa-photo-video"></i> Subscriptions
+            </a>
+            <div class="separator"></div>
+            <a href="#" class="nav-item">
+                <i class="fas fa-history"></i> History
+            </a>
+            <a href="#" class="nav-item" onclick="loadCategory('My Music', this)">
+                <i class="fas fa-music"></i> Music
+            </a>
+            <a href="#" class="nav-item" onclick="loadCategory('Gaming', this)">
+                <i class="fas fa-gamepad"></i> Gaming
+            </a>
+            <div class="separator"></div>
+            <div class="section-title">EXPLORE</div>
+            <a href="#" class="nav-item" onclick="loadCategory('News Live', this)">
+                <i class="fas fa-newspaper"></i> News
+            </a>
+            <a href="#" class="nav-item" onclick="loadCategory('Sports Highlights', this)">
+                <i class="fas fa-trophy"></i> Sports
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Filter Chips -->
+            <div class="categories">
+                <button class="chip active" onclick="loadCategory('Trending Videos', this)">All</button>
+                <button class="chip" onclick="loadCategory('New Music 2024', this)">Music</button>
+                <button class="chip" onclick="loadCategory('Gaming', this)">Gaming</button>
+                <button class="chip" onclick="loadCategory('Live News', this)">News</button>
+                <button class="chip" onclick="loadCategory('Cricket', this)">Cricket</button>
+                <button class="chip" onclick="loadCategory('Coding', this)">Programming</button>
+                <button class="chip" onclick="loadCategory('SpaceX', this)">Sci-Fi</button>
+                <button class="chip" onclick="loadCategory('Funny Memes', this)">Comedy</button>
+                <button class="chip" onclick="loadCategory('Movies', this)">Movies</button>
+            </div>
+
+            <!-- Video Grid -->
+            <div class="video-grid" id="videoGrid">
+                <!-- Javascript will inject videos here -->
+            </div>
+        </main>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h3 id="statusMsg" style="color:white; margin-bottom:15px;">Home</h3>
-        <div id="loader" style="color:#aaa;">Loading...</div>
-        <div class="grid" id="videoGrid"></div>
-    </div>
-
-    <!-- Player -->
+    <!-- Video Player Modal -->
     <div class="overlay" id="vidModal">
-        <div class="player-wrapper">
+        <div class="player-box">
             <iframe id="playerFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <button class="close-btn" onclick="closeVideo()">Close Player</button>
+        <button class="close-player" onclick="closeVideo()">Close Player</button>
     </div>
 
     <script>
         const API_URL = "https://api.xyro.site/search/youtube?q=";
-
-        // Start
+        const grid = document.getElementById('videoGrid');
+        
+        // --- INITIALIZATION ---
         window.onload = function() {
-            loadCategory("Trending Videos", document.querySelector('.chip'));
+            renderSkeletons();
+            fetchData("Trending Videos");
         };
 
-        // Switch Category
-        function loadCategory(query, btnElement) {
-            if(btnElement) {
-                document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
-                btnElement.classList.add('active');
+        // --- SIDEBAR TOGGLE ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.overlay-bg');
+            
+            // Logic for mobile vs desktop
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            } else {
+                // For desktop, maybe collapse (optional, simple hide for now)
+                // sidebar.style.display = sidebar.style.display === 'none' ? 'block' : 'none';
             }
-            const displayTitle = (query === 'Trending Videos') ? 'Home' : query.replace('Latest', '').replace('2024', '');
-            document.getElementById('statusMsg').innerText = displayTitle;
+        }
+
+        // --- CATEGORY & SEARCH LOGIC ---
+        function loadCategory(query, btn) {
+            // Update Chip UI
+            if(btn && btn.classList.contains('chip')) {
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            // Update Sidebar UI
+            if(btn && btn.classList.contains('nav-item')) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                btn.classList.add('active');
+                // Close sidebar on mobile after click
+                if(window.innerWidth <= 768) toggleSidebar();
+            }
+
             fetchData(query);
         }
 
-        // Search
         function manualSearch() {
-            const val = document.getElementById('searchInp').value;
-            if(val) {
-                document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
-                document.getElementById('statusMsg').innerText = "Search: " + val;
-                fetchData(val);
+            const query = document.getElementById('searchInput').value;
+            if(query) {
+                loadCategory(query, null);
+            }
+        }
+        
+        // Allow Enter key in search
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') manualSearch();
+        });
+
+        // --- SKELETON LOADER (Visual Effect) ---
+        function renderSkeletons() {
+            grid.innerHTML = '';
+            for(let i=0; i<8; i++) {
+                grid.innerHTML += `
+                    <div class="card">
+                        <div class="skeleton sk-thumb"></div>
+                        <div class="sk-row">
+                            <div class="skeleton sk-avatar"></div>
+                            <div class="sk-lines">
+                                <div class="skeleton sk-line"></div>
+                                <div class="skeleton sk-line short"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }
         }
 
-        // Fetch Data
+        // --- DATA FETCHING ---
         async function fetchData(query) {
-            const grid = document.getElementById('videoGrid');
-            const loader = document.getElementById('loader');
-
-            grid.innerHTML = '';
-            loader.style.display = 'block';
+            renderSkeletons(); // Show loading first
 
             try {
                 const res = await fetch(API_URL + encodeURIComponent(query));
                 const json = await res.json();
-
-                loader.style.display = 'none';
-
+                
                 let videos = [];
                 if(json.result) videos = json.result;
                 else if(json.data) videos = json.data;
                 else if(Array.isArray(json)) videos = json;
 
+                grid.innerHTML = ''; // Clear skeletons
+
                 if(videos.length === 0) {
-                    grid.innerHTML = '<p>No content found.</p>';
+                    grid.innerHTML = '<h3 style="padding:20px; color:#aaa;">No results found.</h3>';
                     return;
                 }
 
                 videos.forEach(vid => {
-                    let videoId = null;
-                    if(vid.link) {
-                        const parts = vid.link.split('v=');
-                        if(parts.length > 1) videoId = parts[1].split('&')[0];
-                    }
-
+                    let videoId = extractVideoID(vid.link);
+                    
                     if(videoId) {
-                        const title = vid.title || "Untitled";
+                        const title = vid.title || "Untitled Video";
+                        const channel = vid.channel || "Zootube Channel";
                         const thumb = vid.imageUrl || `https://i.ytimg.com/vi/${videoId}/hq720.jpg`;
-                        const channel = vid.channel || "Channel";
-                        const duration = vid.duration || "";
+                        const duration = vid.duration || generateRandomTime();
+                        const views = generateRandomViews(); // API often lacks views, so fake it for UI
+                        const avatar = channel.charAt(0).toUpperCase();
 
                         const card = document.createElement('div');
                         card.className = 'card';
-                        card.onclick = function() { playVideo(videoId); };
-
-                        const avatarChar = channel.charAt(0).toUpperCase();
+                        card.onclick = () => playVideo(videoId);
 
                         card.innerHTML = `
-                            <div class="thumbnail-box">
-                                <img src="${thumb}" class="thumb-img">
-                                ${duration ? `<div class="duration">${duration}</div>` : ''}
+                            <div class="thumbnail">
+                                <img src="${thumb}" loading="lazy" alt="thumb">
+                                <div class="duration-badge">${duration}</div>
                             </div>
-                            <div class="details">
-                                <div class="avatar">${avatarChar}</div>
-                                <div class="meta">
-                                    <div class="title">${title}</div>
-                                    <div class="channel-name">${channel}</div>
+                            <div class="video-info">
+                                <div class="channel-icon">${avatar}</div>
+                                <div class="meta-text">
+                                    <div class="video-title">${title}</div>
+                                    <div class="channel-name">${channel} <i class="fas fa-check-circle" style="font-size:10px; color:#aaa;"></i></div>
+                                    <div class="views-time">${views} views • 2 days ago</div>
                                 </div>
                             </div>
                         `;
@@ -298,12 +431,29 @@
 
             } catch (err) {
                 console.error(err);
-                loader.style.display = 'none';
-                grid.innerHTML = '<p>Error loading videos.</p>';
+                grid.innerHTML = '<h3 style="padding:20px; color:red;">Error loading content. Try again.</h3>';
             }
         }
 
-        // Player
+        // --- UTILITIES ---
+        function extractVideoID(link) {
+            if(!link) return null;
+            const parts = link.split('v=');
+            return parts.length > 1 ? parts[1].split('&')[0] : null;
+        }
+
+        function generateRandomViews() {
+            const num = Math.floor(Math.random() * 900) + 10;
+            return num + "K";
+        }
+
+        function generateRandomTime() {
+            const min = Math.floor(Math.random() * 15) + 2;
+            const sec = Math.floor(Math.random() * 59);
+            return `${min}:${sec < 10 ? '0'+sec : sec}`;
+        }
+
+        // --- PLAYER FUNCTIONS ---
         function playVideo(id) {
             const embedLink = `https://www.youtube.com/embed/${id}?autoplay=1`;
             document.getElementById('playerFrame').src = embedLink;
