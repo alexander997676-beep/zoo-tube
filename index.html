@@ -36,7 +36,7 @@
             border-bottom: 1px solid #222;
         }
 
-        /* LOGO STYLE UPDATE */
+        /* LOGO STYLE */
         .logo { 
             display: flex; 
             align-items: center; 
@@ -44,7 +44,7 @@
         }
         
         .logo img {
-            height: 45px; /* Logo ki height set ki hai */
+            height: 45px; /* Logo size adjust karne ke liye */
             width: auto;
             object-fit: contain;
         }
@@ -60,7 +60,7 @@
             padding: 0 20px; border-radius: 0 20px 20px 0; color: #fff; cursor: pointer;
         }
 
-        /* --- 3. CATEGORY PILLS (Home, Music, etc.) --- */
+        /* --- 3. CATEGORY PILLS --- */
         .tags-container {
             position: sticky; top: 60px; z-index: 90;
             background: var(--bg-body);
@@ -87,7 +87,7 @@
 
         .chip:hover { background: var(--bg-chip-hover); }
 
-        /* Active State (White button) */
+        /* Active State */
         .chip.active {
             background: var(--bg-active);
             color: var(--text-active);
@@ -169,9 +169,9 @@
 
     <!-- Header -->
     <header>
-        <!-- IMAGE LOGO ADDED HERE -->
+        <!-- NEW LOGO ADDED HERE -->
         <div class="logo" onclick="loadCategory('Home', this)">
-            <img src="https://i.supaimg.com/d3bb1a7c-cd5a-4d53-b9a7-db9e753a0aa6.jpg" alt="Zootube Logo">
+            <img src="https://i.supaimg.com/913d801b-4b84-42f2-80b9-d21530bdb099.png" alt="Zootube Logo">
         </div>
         
         <div class="search-bar">
@@ -181,7 +181,7 @@
         <div style="width: 40px;"></div> <!-- Spacer -->
     </header>
 
-    <!-- Category Section (Home, Music, etc) -->
+    <!-- Category Section -->
     <div class="tags-container">
         <button class="chip active" onclick="loadCategory('Trending Videos', this)">All</button>
         <button class="chip" onclick="loadCategory('Latest Music 2024', this)">Music</button>
@@ -210,38 +210,33 @@
     <script>
         const API_URL = "https://api.xyro.site/search/youtube?q=";
 
-        // Start par "Home" load karega
+        // Start
         window.onload = function() {
             loadCategory("Trending Videos", document.querySelector('.chip'));
         };
 
-        // --- 1. CATEGORY SWITCH LOGIC ---
+        // Switch Category
         function loadCategory(query, btnElement) {
-            // Update Active Button Style
             if(btnElement) {
                 document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
                 btnElement.classList.add('active');
             }
-
-            // Update Heading
             const displayTitle = (query === 'Trending Videos') ? 'Home' : query.replace('Latest', '').replace('2024', '');
             document.getElementById('statusMsg').innerText = displayTitle;
-
-            // Call API
             fetchData(query);
         }
 
-        // --- 2. MANUAL SEARCH ---
+        // Search
         function manualSearch() {
             const val = document.getElementById('searchInp').value;
             if(val) {
-                document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active')); // Remove active tag
+                document.querySelectorAll('.chip').forEach(btn => btn.classList.remove('active'));
                 document.getElementById('statusMsg').innerText = "Search: " + val;
                 fetchData(val);
             }
         }
 
-        // --- 3. FETCH & RENDER LOGIC ---
+        // Fetch Data
         async function fetchData(query) {
             const grid = document.getElementById('videoGrid');
             const loader = document.getElementById('loader');
@@ -250,15 +245,13 @@
             loader.style.display = 'block';
 
             try {
-                // Fetch from API
                 const res = await fetch(API_URL + encodeURIComponent(query));
                 const json = await res.json();
 
                 loader.style.display = 'none';
 
-                // Check Data Structure (Based on your Imran Khan example)
                 let videos = [];
-                if(json.result) videos = json.result; // For xyro.site API
+                if(json.result) videos = json.result;
                 else if(json.data) videos = json.data;
                 else if(Array.isArray(json)) videos = json;
 
@@ -267,9 +260,7 @@
                     return;
                 }
 
-                // Loop through videos
                 videos.forEach(vid => {
-                    // ID Extraction from Link
                     let videoId = null;
                     if(vid.link) {
                         const parts = vid.link.split('v=');
@@ -282,8 +273,6 @@
                         const channel = vid.channel || "Channel";
                         const duration = vid.duration || "";
 
-                        // Create Card HTML
-                        // NOTICE: onclick="playVideo(ID)" is on the whole card
                         const card = document.createElement('div');
                         card.className = 'card';
                         card.onclick = function() { playVideo(videoId); };
@@ -314,9 +303,8 @@
             }
         }
 
-        // --- 4. PLAYER FUNCTIONS ---
+        // Player
         function playVideo(id) {
-            // Embed Link with Autoplay
             const embedLink = `https://www.youtube.com/embed/${id}?autoplay=1`;
             document.getElementById('playerFrame').src = embedLink;
             document.getElementById('vidModal').style.display = 'flex';
@@ -326,7 +314,6 @@
             document.getElementById('vidModal').style.display = 'none';
             document.getElementById('playerFrame').src = "";
         }
-
     </script>
 </body>
 </html>
