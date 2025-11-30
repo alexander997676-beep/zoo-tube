@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Mobile Fit Shorts</title>
+    <title>Zootube | Refresh Update</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -37,7 +37,10 @@
         .left { display: flex; align-items: center; gap: 15px; }
         .menu-btn { font-size: 18px; color: white; cursor: pointer; }
 
-        .brand { display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
+        /* ADDED CLICK EFFECT FOR REFRESH */
+        .brand { display: flex; flex-direction: column; justify-content: center; cursor: pointer; user-select: none; }
+        .brand:active { opacity: 0.7; transform: scale(0.98); }
+        
         .logo-img { height: 22px; width: auto; object-fit: contain; }
         .maker-badge {
             font-size: 8px; font-weight: 900; letter-spacing: 0.5px;
@@ -113,24 +116,39 @@
         .chip:hover { background: #3f3f3f; }
         .chip.active { background: white; color: black; }
 
-        /* SHORTS SHELF (DESKTOP DEFAULT) */
+        /* --- SHORTS SHELF (Optimized) --- */
+        .shorts-container-home {
+            margin-bottom: 20px; border-bottom: 4px solid #1e1e1e; padding-bottom: 15px;
+        }
+        .shorts-head { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; font-weight: bold; font-size: 20px; }
+        .shorts-logo-icon { color: #ff0000; font-size: 22px; }
+
         .shorts-shelf {
-            display: flex; gap: 15px; overflow-x: auto; padding-bottom: 20px; margin-bottom: 20px;
-            border-bottom: 4px solid #1e1e1e;
+            display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;
+            scroll-snap-type: x mandatory;
         }
         .short-card {
-            min-width: 150px; aspect-ratio: 9/16; background: #222; border-radius: 10px;
+            min-width: 160px; aspect-ratio: 9/16; background: #222; border-radius: 12px;
             position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;
-            border: 1px solid #333; transition: transform 0.2s;
+            scroll-snap-align: start; transition: transform 0.2s;
         }
         .short-card:hover { transform: scale(1.02); }
         .short-img { width: 100%; height: 100%; object-fit: cover; }
+        .short-overlay-grad {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); pointer-events: none;
+        }
         .short-title {
-            position: absolute; bottom: 10px; left: 8px; right: 8px;
-            font-size: 13px; font-weight: bold; color: white;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8); line-height: 1.2;
+            position: absolute; bottom: 12px; left: 10px; right: 10px;
+            font-size: 14px; font-weight: 600; color: white;
+            line-height: 1.3; text-shadow: 0 1px 2px black;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .views-cnt {
+            position: absolute; bottom: 50px; left: 10px; font-size: 11px; font-weight: bold; color: #ddd;
         }
 
+        /* --- VIDEO GRID --- */
         .grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px 16px;
         }
@@ -157,38 +175,54 @@
         }
         .sub-txt { font-size: 13px; color: var(--text-sec); }
 
-        /* --- REAL SHORTS PLAYER --- */
+        /* --- FULL SCREEN SHORTS PLAYER (MOBILE FIT) --- */
         .shorts-modal {
             display: none; position: fixed; inset: 0; background: #000; z-index: 7000;
             justify-content: center; align-items: center;
         }
         .shorts-container {
             width: 100%; height: 100%; max-width: 480px; position: relative;
-            background: #000; display: flex; justify-content: center; align-items: center;
+            background: #000; display: flex; flex-direction: column;
         }
+        /* Iframe takes full height */
         .shorts-frame { width: 100%; height: 100%; border: none; object-fit: cover; }
         
-        .shorts-overlay {
-            position: absolute; bottom: 20px; left: 15px; right: 60px; pointer-events: none;
+        .shorts-ui-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Let clicks pass to iframe for pause */
         }
-        .st-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; text-shadow: 0 1px 2px black; }
-        .st-channel { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; }
-        .st-avatar { width: 32px; height: 32px; background: #555; border-radius: 50%; text-align: center; line-height: 32px; }
+
+        .shorts-overlay {
+            position: absolute; bottom: 20px; left: 15px; right: 70px; pointer-events: auto;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .st-channel-row { display: flex; align-items: center; gap: 8px; }
+        .st-avatar { width: 34px; height: 34px; background: #555; border-radius: 50%; text-align: center; line-height: 34px; border: 1px solid white; }
+        .st-chn-name { font-weight: bold; font-size: 14px; }
+        .st-sub-btn { 
+            background: white; color: black; border: none; padding: 5px 12px; 
+            border-radius: 18px; font-weight: bold; font-size: 12px; cursor: pointer; 
+        }
+        .st-title { font-size: 15px; font-weight: 400; line-height: 1.3; text-shadow: 0 1px 2px black; }
 
         .shorts-actions {
-            position: absolute; right: 10px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center;
+            position: absolute; right: 10px; bottom: 120px; display: flex; flex-direction: column; gap: 20px; align-items: center; pointer-events: auto;
         }
         .s-act-btn {
             display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer;
         }
         .s-circle {
-            width: 45px; height: 45px; background: rgba(0,0,0,0.4); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 20px; color: white;
+            width: 45px; height: 45px; background: rgba(255,255,255,0.15); backdrop-filter: blur(5px);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white;
+            transition: 0.2s;
         }
-        .s-text { font-size: 12px; font-weight: bold; }
+        .s-circle:active { transform: scale(0.9); background: rgba(255,255,255,0.3); }
+        .s-text { font-size: 11px; font-weight: bold; }
 
         .close-shorts {
-            position: absolute; top: 20px; left: 20px; color: white; font-size: 24px; cursor: pointer; z-index: 10;
+            position: absolute; top: 15px; left: 15px; width: 40px; height: 40px; 
+            background: rgba(0,0,0,0.3); border-radius: 50%; display: grid; place-items: center;
+            color: white; font-size: 20px; cursor: pointer; z-index: 10; pointer-events: auto;
         }
 
         /* --- WATCH PAGE --- */
@@ -254,22 +288,23 @@
             .rec-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
 
             /* --- SHORTS SHELF MOBILE FIX --- */
-            .shorts-shelf {
-                gap: 10px; /* Tighter gap */
-                padding-bottom: 10px;
-                margin-bottom: 10px;
-            }
-            .shorts-shelf::-webkit-scrollbar { display: none; } /* Hide Scrollbar */
+            .shorts-shelf { gap: 10px; padding-bottom: 5px; }
+            .shorts-shelf::-webkit-scrollbar { display: none; }
             
             .short-card {
-                min-width: 110px; /* Smaller width for mobile */
-                border-radius: 8px;
+                min-width: 140px; /* Optimal for mobile swipe */
+                width: 40vw; 
+                aspect-ratio: 9/16;
+                border-radius: 10px;
             }
-            .short-title {
-                font-size: 11px; /* Smaller text */
-                bottom: 8px; left: 5px; right: 5px;
-                line-height: 1.2;
-            }
+            .short-title { font-size: 13px; bottom: 8px; left: 8px; right: 8px; }
+            .views-cnt { bottom: 45px; left: 8px; font-size: 10px; }
+
+            /* --- SHORTS PLAYER FIX --- */
+            .shorts-container { max-width: 100%; }
+            .shorts-actions { bottom: 120px; right: 8px; gap: 25px; }
+            .s-circle { width: 40px; height: 40px; font-size: 18px; }
+            .shorts-overlay { left: 10px; bottom: 30px; right: 60px; }
         }
         .mob-search-btn { display: none; background: none; border: none; color: white; font-size: 18px; padding: 5px; }
     </style>
@@ -278,11 +313,11 @@
 
     <input type="file" id="fileUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
 
-    <!-- HEADER -->
+    <!-- HEADER: Click Brand to Full Refresh -->
     <header>
         <div class="left">
             <i class="fas fa-bars menu-btn"></i>
-            <div class="brand" onclick="location.reload()">
+            <div class="brand" onclick="location.reload()" title="Click to Refresh Everything">
                 <img src="https://i.supaimg.com/f25eb9da-5856-46df-acba-182641a77cc9.png" class="logo-img" alt="Logo">
                 <div class="maker-badge">MADE BY FAIZAN AHMED</div>
             </div>
@@ -301,7 +336,7 @@
         </div>
     </header>
 
-    <!-- BOTTOM NAV -->
+    <!-- BOTTOM NAV: Home Button Now Resets View -->
     <nav class="bottom-nav">
         <button class="nav-btn active" onclick="loadCat('Trending', this)"><i class="fas fa-home"></i><span>Home</span></button>
         <button class="nav-btn" onclick="loadCat('Shorts', this)"><i class="fas fa-bolt"></i><span>Shorts</span></button>
@@ -329,38 +364,51 @@
             <button class="chip" onclick="loadCat('Cricket', this)">Cricket</button>
         </div>
 
-        <div class="shorts-shelf" id="shortsShelf"></div>
+        <!-- SHORTS SHELF -->
+        <div class="shorts-container-home">
+            <div class="shorts-head">
+                <i class="fas fa-bolt shorts-logo-icon"></i> Shorts
+            </div>
+            <div class="shorts-shelf" id="shortsShelf"></div>
+        </div>
+
         <div class="grid" id="grid"></div>
     </main>
 
     <!-- REAL SHORTS PLAYER MODAL -->
     <div class="shorts-modal" id="shortsModal">
-        <div class="close-shorts" onclick="closeShorts()"><i class="fas fa-arrow-left"></i></div>
         <div class="shorts-container">
             <iframe id="shortsFrame" class="shorts-frame" src="" allow="autoplay; encrypted-media; loop"></iframe>
             
-            <div class="shorts-actions">
-                <div class="s-act-btn">
-                    <div class="s-circle"><i class="fas fa-thumbs-up"></i></div>
-                    <div class="s-text">Like</div>
-                </div>
-                <div class="s-act-btn">
-                    <div class="s-circle"><i class="fas fa-comment"></i></div>
-                    <div class="s-text">1.2K</div>
-                </div>
-                <div class="s-act-btn">
-                    <div class="s-circle"><i class="fas fa-share"></i></div>
-                    <div class="s-text">Share</div>
-                </div>
-            </div>
+            <div class="shorts-ui-layer">
+                <div class="close-shorts" onclick="closeShorts()"><i class="fas fa-arrow-left"></i></div>
 
-            <div class="shorts-overlay">
-                <div class="st-channel">
-                    <div class="st-avatar">Z</div>
-                    <span>Zootube Shorts</span>
-                    <button style="margin-left:10px; background:white; color:black; border:none; padding:4px 10px; border-radius:15px; font-weight:bold; font-size:12px;">Subscribe</button>
+                <div class="shorts-actions">
+                    <div class="s-act-btn" onclick="this.querySelector('div').style.color='#ff0000'">
+                        <div class="s-circle"><i class="fas fa-thumbs-up"></i></div>
+                        <div class="s-text">Like</div>
+                    </div>
+                    <div class="s-act-btn">
+                        <div class="s-circle"><i class="fas fa-comment-dots"></i></div>
+                        <div class="s-text">452</div>
+                    </div>
+                    <div class="s-act-btn">
+                        <div class="s-circle"><i class="fas fa-share"></i></div>
+                        <div class="s-text">Share</div>
+                    </div>
+                    <div class="s-act-btn">
+                        <div class="st-avatar" style="border:none; width:35px; height:35px; font-size:10px;">Music</div>
+                    </div>
                 </div>
-                <div class="st-title" id="stTitle">Shorts Title</div>
+
+                <div class="shorts-overlay">
+                    <div class="st-channel-row">
+                        <div class="st-avatar">Z</div>
+                        <span class="st-chn-name">@zootube_creator</span>
+                        <button class="st-sub-btn">Subscribe</button>
+                    </div>
+                    <div class="st-title" id="stTitle">Shorts Video Title Goes Here...</div>
+                </div>
             </div>
         </div>
     </div>
@@ -479,7 +527,7 @@
         }
         function stopVoice() { if(recognition) recognition.stop(); document.getElementById('voiceUI').style.display='none'; }
 
-        // --- 3. DATA LOADING ---
+        // --- 3. DATA LOADING (UPDATED TO RESET VIEW) ---
         function smartViews() {
             return (Math.random() > 0.7) ? (Math.random()*15+1).toFixed(1)+"M views" : Math.floor(Math.random()*900+10)+"K views";
         }
@@ -489,13 +537,30 @@
         }
 
         async function loadCat(query, btn) {
+            // === RESET LOGIC STARTS HERE ===
+            // This ensures clicking Home or loading a category closes any open video player
+            document.getElementById('shortsModal').style.display = 'none';
+            document.getElementById('shortsFrame').src = ""; // Stop audio
+            document.getElementById('watchPage').style.display = 'none';
+            document.getElementById('vidFrame').src = ""; // Stop audio
+            document.getElementById('mobSearch').style.display = 'none';
+            
+            // Scroll to top
+            window.scrollTo(0,0);
+            // === RESET LOGIC ENDS HERE ===
+
             if(btn) { document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(e=>e.classList.remove('active')); btn.classList.add('active'); }
             
             grid.innerHTML = '';
+            // Show Skeleton Loader
             for(let i=0; i<8; i++) grid.innerHTML += `<div class="card"><div class="thumb" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
 
             try {
-                const res = await fetch(API + encodeURIComponent(query));
+                // If it's specific "Trending", use general query
+                let q = (query === 'Trending') ? 'Trending Videos' : query;
+                if(query === 'Shorts') return; // Shorts handled separately or just close grid
+
+                const res = await fetch(API + encodeURIComponent(q));
                 const json = await res.json();
                 const videos = json.result || json.data || [];
                 grid.innerHTML = '';
@@ -529,25 +594,28 @@
                         grid.appendChild(div);
                     }
                 });
-            } catch(e) { grid.innerHTML = '<p>Error.</p>'; }
+            } catch(e) { grid.innerHTML = '<p>Error loading videos.</p>'; }
         }
 
-        // --- 4. SHORTS SHELF (FIXED IDs & MOBILE FIT) ---
+        // --- 4. SHORTS SHELF ---
         function loadShorts() {
             const shelf = document.getElementById('shortsShelf');
-            // Valid Video IDs
+            // Popular Shorts IDs
             const shortsData = [
-                {id: "KBtk5FUeJbk", t: "Amazing Art", img: "https://i.ytimg.com/vi/KBtk5FUeJbk/hq720.jpg"},
-                {id: "Z6aJZ0J1qgQ", t: "Funny Clip", img: "https://i.ytimg.com/vi/Z6aJZ0J1qgQ/hq720.jpg"},
-                {id: "t_jHrUE5IOk", t: "Pasuri", img: "https://i.ytimg.com/vi/t_jHrUE5IOk/hq720.jpg"},
-                {id: "PrpLsuF8jMw", t: "Cute Cat", img: "https://i.ytimg.com/vi/PrpLsuF8jMw/hq720.jpg"},
-                {id: "8_pM9_t8j0k", t: "Cricket Six", img: "https://i.ytimg.com/vi/8_pM9_t8j0k/hq720.jpg"}
+                {id: "KBtk5FUeJbk", t: "Amazing Art Skills 🔥", img: "https://i.ytimg.com/vi/KBtk5FUeJbk/hq720.jpg"},
+                {id: "Z6aJZ0J1qgQ", t: "Funny Clip 😂", img: "https://i.ytimg.com/vi/Z6aJZ0J1qgQ/hq720.jpg"},
+                {id: "t_jHrUE5IOk", t: "Coke Studio Pasuri", img: "https://i.ytimg.com/vi/t_jHrUE5IOk/hq720.jpg"},
+                {id: "PrpLsuF8jMw", t: "Cute Cat Moments", img: "https://i.ytimg.com/vi/PrpLsuF8jMw/hq720.jpg"},
+                {id: "8_pM9_t8j0k", t: "Cricket Best Six!", img: "https://i.ytimg.com/vi/8_pM9_t8j0k/hq720.jpg"},
+                {id: "WdGk8S-gG-0", t: "Satisfying Video", img: "https://i.ytimg.com/vi/WdGk8S-gG-0/hq720.jpg"}
             ];
             shelf.innerHTML = '';
             shortsData.forEach(s => {
                 shelf.innerHTML += `
                     <div class="short-card" onclick="openShorts('${s.id}', '${s.t}')">
                         <img src="${s.img}" class="short-img">
+                        <div class="short-overlay-grad"></div>
+                        <div class="views-cnt">${smartViews()}</div>
                         <div class="short-title">${s.t}</div>
                     </div>
                 `;
@@ -557,8 +625,8 @@
         function openShorts(id, title) {
             const modal = document.getElementById('shortsModal');
             const frame = document.getElementById('shortsFrame');
-            // Added loop & playlist for looping
-            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0`; 
+            // Fullscreen embed parameters
+            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&fs=0`; 
             document.getElementById('stTitle').innerText = title;
             modal.style.display = 'flex';
         }
