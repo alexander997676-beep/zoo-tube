@@ -3,484 +3,699 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zootube | Video Only Ver.</title>
+    <title>Zootube Premium | Faizan Ahmed</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         /* --- 1. VARIABLES & RESET --- */
         :root {
             --bg-body: #0f0f0f;
-            --bg-surface: #1e1e1e;
+            --bg-nav: rgba(15, 15, 15, 0.98);
+            --bg-card: #0f0f0f;
+            --bg-hover: #272727;
+            --bg-search: #121212;
+            --border-search: #303030;
             --primary: #3ea6ff;
-            --gold: linear-gradient(45deg, #FFD700, #FFAA00);
-            --text-main: #fff;
-            --text-sec: #aaa;
-            --border: rgba(255,255,255,0.1);
+            --accent-red: #ff0000;
+            --text-main: #f1f1f1;
+            --text-sec: #aaaaaa;
+            --card-radius: 12px;
+            --btn-radius: 20px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
         body { background: var(--bg-body); color: var(--text-main); overflow-x: hidden; padding-bottom: 60px; }
-
         html { scroll-behavior: smooth; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-
-        /* --- 2. HEADER --- */
-        header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 56px;
-            background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 16px; z-index: 1000; border-bottom: 1px solid var(--border);
-        }
-
-        .left { display: flex; align-items: center; gap: 15px; }
-        .menu-btn { font-size: 18px; color: white; cursor: pointer; }
-
-        .brand { display: flex; flex-direction: column; justify-content: center; cursor: pointer; user-select: none; }
-        .brand:active { opacity: 0.7; transform: scale(0.98); }
         
-        .logo-img { height: 22px; width: auto; object-fit: contain; }
-        .maker-badge {
-            font-size: 8px; font-weight: 900; letter-spacing: 0.5px;
-            text-transform: uppercase; margin-top: 2px;
-            background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb:hover { background: #888; }
+
+        /* --- 2. TOP LOADING BAR --- */
+        #loadingBar {
+            position: fixed; top: 0; left: 0; height: 2px; background: var(--accent-red); z-index: 9999;
+            width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--accent-red);
         }
 
-        .search-wrap { flex: 1; max-width: 600px; margin: 0 20px; display: flex; align-items: center; gap: 10px; }
-        .search-box { 
-            display: flex; width: 100%; background: #121212; border: 1px solid #303030; 
-            border-radius: 40px; overflow: hidden; height: 40px; align-items: center;
+        /* --- 3. HEADER --- */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px; /* Slight height increase */
+            background: var(--bg-nav); backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 16px; z-index: 1000;
         }
-        .search-box input {
-            flex: 1; background: transparent; border: none; color: white; padding: 0 16px; font-size: 16px; outline: none;
+
+        .left { display: flex; align-items: center; gap: 16px; }
+        .menu-btn { font-size: 18px; color: white; cursor: pointer; padding: 8px; border-radius: 50%; transition: 0.2s; }
+        .menu-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* --- BRANDING (UPDATED) --- */
+        .brand { 
+            display: flex; flex-direction: column; justify-content: center; 
+            cursor: pointer; user-select: none; 
+        }
+        .brand-top { display: flex; align-items: center; gap: 4px; }
+        .logo-icon { font-size: 24px; color: var(--accent-red); }
+        .brand-text { font-weight: 700; font-size: 18px; letter-spacing: -0.5px; position: relative; line-height: 1; }
+        .brand-text::after { content: 'PK'; font-size: 9px; position: absolute; top: -2px; right: -12px; color: var(--text-sec); }
+        
+        /* FAIZAN AHMED TEXT STYLE */
+        .maker-badge {
+            color: #FFD700; /* Yellow Color */
+            font-size: 8px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-left: 28px; /* Align under text */
+            margin-top: 2px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+        }
+
+        /* Search Bar */
+        .search-wrap { flex: 0 1 600px; margin: 0 40px; display: flex; align-items: center; gap: 12px; }
+        .search-container { 
+            display: flex; width: 100%; background: var(--bg-search); border: 1px solid var(--border-search); 
+            border-radius: 40px; overflow: hidden; height: 40px; align-items: center; position: relative;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+        .search-container:focus-within { border-color: #1c62b9; box-shadow: 0 0 5px rgba(28,98,185,0.5); }
+        
+        .search-container input {
+            flex: 1; background: transparent; border: none; color: white; padding: 0 16px; font-size: 16px;
         }
         .search-btn {
-            width: 60px; height: 100%; background: #222; border: none; border-left: 1px solid #303030; color: #aaa; cursor: pointer;
+            width: 64px; height: 100%; background: #222; border: none; border-left: 1px solid var(--border-search); 
+            color: var(--text-sec); cursor: pointer; transition: 0.2s;
         }
+        .search-btn:hover { background: #333; color: white; }
+        
         .mic-btn {
             width: 40px; height: 40px; background: #181818; border-radius: 50%; border: none; 
             color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
         }
+        .mic-btn:hover { background: #333; }
 
-        .right { display: flex; align-items: center; gap: 15px; }
-        .icon-btn { font-size: 20px; color: white; background: none; border: none; cursor: pointer; }
+        .right { display: flex; align-items: center; gap: 12px; }
+        .icon-btn { 
+            font-size: 18px; color: white; background: none; border: none; cursor: pointer; 
+            width: 40px; height: 40px; border-radius: 50%; transition: 0.2s;
+        }
+        .icon-btn:hover { background: rgba(255,255,255,0.1); }
         
         .avatar { 
             width: 32px; height: 32px; border-radius: 50%; 
-            background: linear-gradient(135deg, #FF512F, #DD2476); 
+            background: linear-gradient(135deg, #00C6FF, #0072FF); 
             color: white; display: grid; place-items: center; 
             font-weight: bold; font-size:14px; cursor: pointer; overflow: hidden;
+            border: 1px solid transparent; transition: 0.2s;
         }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar:hover { border-color: white; }
 
-        /* --- 3. MOBILE NAV --- */
+        /* --- 4. NAVIGATION --- */
+        .sidebar {
+            width: 240px; position: fixed; top: 60px; left: 0; bottom: 0;
+            background: var(--bg-body); overflow-y: auto; padding: 12px;
+            z-index: 900;
+        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        
+        .side-item {
+            display: flex; align-items: center; gap: 24px; padding: 10px 12px;
+            color: white; text-decoration: none; border-radius: 10px; font-size: 14px; margin-bottom: 2px;
+            transition: background 0.1s;
+        }
+        .side-item i { width: 20px; font-size: 18px; text-align: center; }
+        .side-item:hover { background: var(--bg-hover); }
+        .side-item.active { background: var(--bg-hover); font-weight: 500; }
+        .side-item.active i { color: white; }
+
+        .sep { height: 1px; background: var(--border-search); margin: 10px 0; }
+        .section-title { font-size: 14px; font-weight: bold; color: var(--text-sec); padding: 8px 12px; }
+
+        /* Bottom Nav (Mobile) */
         .bottom-nav {
             display: none; position: fixed; bottom: 0; left: 0; width: 100%; height: 55px;
-            background: var(--bg-body); border-top: 1px solid var(--border);
+            background: var(--bg-nav); border-top: 1px solid rgba(255,255,255,0.1);
             z-index: 999; justify-content: space-around; align-items: center;
+            backdrop-filter: blur(10px);
         }
         .nav-btn {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
             color: var(--text-sec); background: none; border: none; width: 100%; padding: 5px;
         }
         .nav-btn.active { color: white; }
-        .nav-btn i { font-size: 20px; }
-        .nav-btn span { font-size: 10px; }
 
-        /* --- 4. SIDEBAR --- */
-        .sidebar {
-            width: 240px; position: fixed; top: 56px; left: 0; bottom: 0;
-            background: var(--bg-body); overflow-y: auto; padding: 12px;
-        }
-        .side-item {
-            display: flex; align-items: center; gap: 20px; padding: 10px 12px;
-            color: white; text-decoration: none; border-radius: 10px; font-size: 14px; margin-bottom: 2px;
-        }
-        .side-item:hover { background: var(--bg-hover); }
-        .side-item.active { background: var(--bg-hover); font-weight: 500; }
+        /* --- 5. MAIN CONTENT --- */
+        .main { margin-left: 240px; margin-top: 60px; padding: 24px; transition: 0.2s; }
 
-        /* --- 5. MAIN AREA --- */
-        .main { margin-left: 240px; margin-top: 56px; padding: 20px; }
-
-        .chips {
-            position: sticky; top: 56px; background: rgba(15,15,15,0.98); z-index: 10;
-            padding: 12px 0; margin-bottom: 20px; overflow-x: auto; white-space: nowrap;
-            display: flex; gap: 10px;
+        .chips-wrapper {
+            position: sticky; top: 60px; background: rgba(15,15,15,0.98); z-index: 50;
+            padding: 12px 0; margin: -24px -24px 20px -24px; padding-left: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
+        .chips { display: flex; gap: 12px; overflow-x: auto; scroll-behavior: smooth; }
+        .chips::-webkit-scrollbar { display: none; }
+        
         .chip {
-            background: var(--bg-hover); color: white; border: none; padding: 6px 14px;
-            border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: 0.2s;
+            background: rgba(255,255,255,0.1); color: white; border: none; padding: 6px 14px;
+            border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; 
+            transition: 0.2s; flex-shrink: 0; user-select: none;
         }
-        .chip:hover { background: #3f3f3f; }
+        .chip:hover { background: rgba(255,255,255,0.2); }
         .chip.active { background: white; color: black; }
 
-        /* --- VIDEO GRID --- */
+        /* GRID SYSTEM */
         .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px 16px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px 16px;
         }
 
-        /* --- VIDEO CARD --- */
-        .card { cursor: pointer; display: flex; flex-direction: column; gap: 10px; }
-        .thumb {
-            position: relative; width: 100%; aspect-ratio: 16/9;
-            border-radius: 12px; overflow: hidden; background: #000;
+        /* --- 6. ENHANCED VIDEO CARD --- */
+        .card { 
+            cursor: pointer; display: flex; flex-direction: column; gap: 12px; group 
         }
-        .thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .card:hover img { transform: scale(1.03); }
+        
+        .thumb-wrapper {
+            position: relative; width: 100%; aspect-ratio: 16/9;
+            border-radius: var(--card-radius); overflow: hidden; background: #222;
+        }
+        .thumb-img { 
+            width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; 
+        }
+        
+        /* Hover Overlay Logic */
+        .card:hover .thumb-img { transform: scale(1.05); }
+        .hover-actions {
+            position: absolute; top: 6px; right: 6px; display: flex; flex-direction: column; gap: 6px;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .card:hover .hover-actions { opacity: 1; }
+        
+        .action-mini-btn {
+            width: 28px; height: 28px; background: rgba(0,0,0,0.8); color: white;
+            border-radius: 4px; display: grid; place-items: center; font-size: 12px;
+        }
+        
         .duration {
             position: absolute; bottom: 6px; right: 6px;
-            background: rgba(0,0,0,0.8); color: white;
-            font-size: 12px; padding: 2px 4px; border-radius: 4px; font-weight: 600;
+            background: rgba(0,0,0,0.85); color: white;
+            font-size: 12px; padding: 3px 5px; border-radius: 4px; font-weight: 600;
         }
-        .meta { display: flex; gap: 12px; }
-        .chn-ico { width: 36px; height: 36px; border-radius: 50%; background: #333; flex-shrink: 0; display: grid; place-items: center; }
+
+        .meta { display: flex; gap: 12px; align-items: flex-start; }
+        .chn-ico { 
+            width: 36px; height: 36px; border-radius: 50%; background: #333; 
+            flex-shrink: 0; display: grid; place-items: center; overflow: hidden; 
+        }
+        .chn-ico img { width: 100%; height: 100%; object-fit: cover; }
+        
         .info { display: flex; flex-direction: column; }
         .title {
-            font-size: 16px; font-weight: 600; line-height: 1.3; color: white;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px;
+            font-size: 16px; font-weight: 600; line-height: 1.4; color: white; margin-bottom: 4px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .sub-txt { font-size: 13px; color: var(--text-sec); }
+        .chn-name { 
+            font-size: 14px; color: var(--text-sec); display: flex; align-items: center; gap: 4px; 
+            transition: color 0.2s;
+        }
+        .chn-name:hover { color: white; }
+        .stats { font-size: 14px; color: var(--text-sec); }
 
-        /* --- WATCH PAGE --- */
+        /* --- 7. WATCH PAGE --- */
         .watch-page {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-body); z-index: 5000; overflow-y: auto; flex-direction: column;
+            display: none; position: fixed; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+            background: var(--bg-body); z-index: 5000; overflow-y: auto;
         }
-        .video-frame { width: 100%; aspect-ratio: 16/9; background: black; position: sticky; top: 0; z-index: 50; }
-        .watch-content { padding: 15px; max-width: 1000px; margin: 0 auto; width: 100%; }
+        .wp-container {
+            max-width: 1600px; margin: 0 auto; display: flex; padding: 24px; gap: 24px;
+        }
+        .wp-primary { flex: 1; min-width: 0; }
+        .wp-secondary { width: 380px; flex-shrink: 0; }
+
+        .player-wrapper {
+            width: 100%; aspect-ratio: 16/9; background: black; border-radius: 0px; 
+            overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .wp-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
         
-        .wp-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
-        .wp-meta { color: #aaa; font-size: 12px; margin-bottom: 15px; }
+        .wp-controls {
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; margin-bottom: 16px;
+        }
         
-        .channel-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .chn-info { display: flex; align-items: center; gap: 10px; }
-        .chn-pic { width: 40px; height: 40px; border-radius: 50%; background: #444; display: grid; place-items: center; font-weight: bold; }
-        .sub-btn { background: white; color: black; padding: 8px 16px; border-radius: 20px; font-weight: bold; border: none; cursor: pointer; }
+        .wp-chn-row { display: flex; align-items: center; gap: 12px; }
+        .sub-btn-big {
+            background: white; color: black; padding: 10px 20px; border-radius: 20px;
+            font-weight: 600; border: none; cursor: pointer; transition: 0.2s; margin-left: 12px;
+        }
+        .sub-btn-big:hover { opacity: 0.9; }
 
-        .action-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
-        .pill { background: #222; color: white; padding: 8px 16px; border-radius: 18px; font-size: 13px; display: flex; gap: 6px; align-items: center; border: none; white-space: nowrap; }
+        .wp-actions { display: flex; gap: 8px; }
+        .pill-btn {
+            background: rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 18px;
+            font-size: 14px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            font-weight: 500; transition: background 0.2s;
+        }
+        .pill-btn:hover { background: rgba(255,255,255,0.2); }
 
-        .recs-title { font-size: 16px; font-weight: bold; margin: 20px 0 10px; }
-        .rec-card { display: flex; gap: 10px; margin-bottom: 15px; cursor: pointer; }
-        .rec-thumb { width: 160px; height: 90px; border-radius: 8px; background: #222; flex-shrink: 0; overflow: hidden; position: relative; }
-        .rec-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .close-wp {
-            position: fixed; top: 10px; right: 10px; z-index: 6000; background: rgba(0,0,0,0.6); 
-            color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer;
+        .desc-box {
+            background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; 
+            font-size: 14px; line-height: 1.4; color: white; cursor: pointer;
+        }
+        .desc-box:hover { background: rgba(255,255,255,0.1); }
+        .desc-meta { font-weight: bold; margin-bottom: 8px; font-size: 13px; }
+
+        /* Comments Section */
+        .comments-sec { margin-top: 24px; }
+        .comm-count { margin-bottom: 20px; font-size: 18px; }
+        .my-comm { display: flex; gap: 12px; margin-bottom: 20px; }
+        .comm-input { 
+            flex: 1; border-bottom: 1px solid #333; padding-bottom: 4px; color: white; font-size: 14px;
         }
 
-        /* --- VOICE & SEARCH OVERLAYS --- */
-        .voice-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 6000; flex-direction: column; justify-content: center; align-items: center;
+        .rec-card { display: flex; gap: 8px; margin-bottom: 12px; cursor: pointer; }
+        .rec-thumb { 
+            width: 168px; height: 94px; border-radius: 8px; background: #222; 
+            flex-shrink: 0; overflow: hidden; position: relative; 
         }
-        .mic-anim {
-            width: 80px; height: 80px; background: #ff0000; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 35px; color: white;
-            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); } 100% { box-shadow: 0 0 0 30px rgba(0,0,0,0); } }
+        .rec-info .title { font-size: 14px; -webkit-line-clamp: 2; margin-bottom: 4px; }
+        .rec-info .chn { font-size: 12px; color: #aaa; }
 
-        .mob-search {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-body); 
-            z-index: 4000; display: none; flex-direction: column;
+        /* --- 8. MOBILE RESPONSIVE --- */
+        @media (max-width: 1000px) {
+            .wp-container { flex-direction: column; padding: 0; }
+            .wp-secondary { width: 100%; padding: 0 16px; }
+            .wp-primary { padding: 0 16px; }
+            .player-wrapper { margin-left: -16px; margin-right: -16px; width: calc(100% + 32px); border-radius: 0; }
         }
-        .ms-head { display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #333; gap: 10px; }
-        .ms-input { flex: 1; background: #222; border: none; padding: 8px 15px; border-radius: 20px; color: white; height: 36px; outline: none; }
 
-        /* --- RESPONSIVE OPTIMIZATION --- */
         @media (max-width: 768px) {
-            header { padding: 0 10px; height: 50px; }
-            .menu-btn, .search-wrap, .sidebar { display: none; }
-            .main { margin-left: 0; margin-top: 50px; padding: 10px; }
-            .chips { top: 50px; }
+            header { padding: 0 12px; }
+            .search-wrap, .sidebar { display: none; }
+            .menu-btn { display: none; }
+            .main { margin-left: 0; padding: 12px; margin-top: 60px; }
             .bottom-nav { display: flex; }
+            .chips-wrapper { margin-left: -12px; width: 100vw; padding-left: 12px; top: 60px; }
+            
+            .wp-actions { overflow-x: auto; padding-bottom: 5px; }
+            .wp-controls { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .wp-chn-row { width: 100%; justify-content: space-between; }
+            
+            .grid { grid-template-columns: 1fr; gap: 24px; }
             .mob-search-btn { display: block !important; }
-            .logo-img { height: 20px; }
-            .maker-badge { font-size: 7px; margin-top: 1px; }
-            .grid { grid-template-columns: 1fr; gap: 15px; }
-            .rec-card { flex-direction: column; gap: 5px; }
-            .rec-thumb { width: 100%; height: auto; aspect-ratio: 16/9; }
         }
-        .mob-search-btn { display: none; background: none; border: none; color: white; font-size: 18px; padding: 5px; }
+        .mob-search-btn { display: none; }
+
+        /* --- 9. MOBILE SEARCH OVERLAY --- */
+        .mob-search {
+            position: fixed; inset: 0; background: var(--bg-body); z-index: 2000;
+            display: none; flex-direction: column; animation: slideIn 0.2s ease-out;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* --- 10. LOADING SKELETON --- */
+        .skeleton { background: #1f1f1f; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
     </style>
 </head>
 <body>
 
     <input type="file" id="fileUpload" accept="image/*" style="display: none;" onchange="previewImage(event)">
 
-    <!-- HEADER -->
+    <!-- Loading Strip -->
+    <div id="loadingBar"></div>
+
+    <!-- Header -->
     <header>
         <div class="left">
             <i class="fas fa-bars menu-btn"></i>
-            <div class="brand" onclick="location.reload()" title="Click to Refresh Everything">
-                <img src="https://i.supaimg.com/f25eb9da-5856-46df-acba-182641a77cc9.png" class="logo-img" alt="Logo">
+            
+            <!-- MODIFIED BRAND SECTION -->
+            <div class="brand" onclick="location.reload()">
+                <div class="brand-top">
+                    <i class="fab fa-youtube logo-icon"></i>
+                    <span class="brand-text">Zootube</span>
+                </div>
+                <!-- YELLOW TEXT -->
                 <div class="maker-badge">MADE BY FAIZAN AHMED</div>
             </div>
+        
         </div>
+        
         <div class="search-wrap">
-            <div class="search-box">
-                <input type="text" id="dSearch" placeholder="Search">
+            <div class="search-container">
+                <input type="text" id="dSearch" placeholder="Search" autocomplete="off">
                 <button class="search-btn" onclick="execSearch('dSearch')"><i class="fas fa-search"></i></button>
             </div>
             <button class="mic-btn" onclick="startVoice('dSearch')"><i class="fas fa-microphone"></i></button>
         </div>
+
         <div class="right">
-            <button class="mob-search-btn" onclick="openMobSearch()"><i class="fas fa-search"></i></button>
-            <button class="icon-btn" onclick="alert('Upload')"><i class="fas fa-video"></i></button>
+            <button class="icon-btn mob-search-btn" onclick="toggleMobSearch(true)"><i class="fas fa-search"></i></button>
+            <button class="icon-btn" title="Create" onclick="alert('Create feature coming soon!')"><i class="fas fa-video"></i></button>
+            <button class="icon-btn" title="Notifications"><i class="far fa-bell"></i></button>
             <div class="avatar" onclick="triggerUpload()">F</div>
         </div>
     </header>
 
-    <!-- BOTTOM NAV: Removed Shorts Button -->
-    <nav class="bottom-nav">
-        <button class="nav-btn active" onclick="loadCat('Trending', this)"><i class="fas fa-home"></i><span>Home</span></button>
-        <button class="nav-btn" onclick="alert('Create')"><i class="fas fa-plus-circle" style="font-size:32px;"></i></button>
-        <button class="nav-btn" onclick="loadCat('Subscriptions', this)"><i class="fas fa-photo-video"></i><span>Subs</span></button>
-        <button class="nav-btn" onclick="triggerUpload()"><i class="fas fa-user"></i><span>You</span></button>
-    </nav>
-
-    <!-- SIDEBAR: Removed Shorts Link -->
+    <!-- Sidebar (Desktop) -->
     <aside class="sidebar">
         <a href="#" class="side-item active" onclick="loadCat('Trending')"><i class="fas fa-home"></i> Home</a>
-        <a href="#" class="side-item" onclick="loadCat('Subscriptions')"><i class="fas fa-photo-video"></i> Subscriptions</a>
+        <a href="#" class="side-item"><i class="fas fa-compass"></i> Explore</a>
+        <a href="#" class="side-item" onclick="loadCat('Subscriptions')"><i class="fas fa-play-circle"></i> Subscriptions</a>
+        <div class="sep"></div>
         <a href="#" class="side-item"><i class="fas fa-history"></i> History</a>
+        <a href="#" class="side-item"><i class="fas fa-clock"></i> Watch Later</a>
+        <div class="sep"></div>
+        <div class="section-title">SUBSCRIPTIONS</div>
+        <a href="#" class="side-item"><i class="fas fa-user-circle"></i> MrBeast</a>
+        <a href="#" class="side-item"><i class="fas fa-user-circle"></i> T-Series</a>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- Main Grid -->
     <main class="main">
-        <div class="chips">
-            <button class="chip active" onclick="loadCat('Trending Videos', this)">All</button>
-            <button class="chip" onclick="loadCat('Pakistani Dramas', this)">Dramas</button>
-            <button class="chip" onclick="loadCat('New Songs', this)">Music</button>
-            <button class="chip" onclick="loadCat('Gaming', this)">Gaming</button>
-            <button class="chip" onclick="loadCat('News Live', this)">News</button>
-            <button class="chip" onclick="loadCat('Cricket', this)">Cricket</button>
+        <div class="chips-wrapper">
+            <div class="chips">
+                <button class="chip active" onclick="loadCat('Trending Videos', this)">All</button>
+                <button class="chip" onclick="loadCat('Pakistani Dramas', this)">Dramas</button>
+                <button class="chip" onclick="loadCat('Coke Studio', this)">Music</button>
+                <button class="chip" onclick="loadCat('Gaming', this)">Gaming</button>
+                <button class="chip" onclick="loadCat('Tech Review', this)">Tech</button>
+                <button class="chip" onclick="loadCat('Cricket Highlights', this)">Cricket</button>
+                <button class="chip" onclick="loadCat('News Live', this)">News</button>
+            </div>
         </div>
-
-        <!-- Shorts Shelf REMOVED -->
-
+        
         <div class="grid" id="grid"></div>
     </main>
 
-    <!-- WATCH PAGE -->
+    <!-- Watch Page -->
     <div class="watch-page" id="watchPage">
-        <button class="close-wp" onclick="closeWatch()">✕</button>
-        <iframe class="video-frame" id="vidFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        
-        <div class="watch-content">
-            <div class="wp-title" id="wpTitle">Video Title</div>
-            <div class="wp-meta">1.5M views • 2 days ago</div>
-
-            <div class="channel-row">
-                <div class="chn-info">
-                    <div class="chn-pic">Z</div>
-                    <div>
-                        <div style="font-weight:bold; font-size:14px;">Zootube Official</div>
-                        <div style="font-size:12px; color:#aaa;">2.4M subscribers</div>
+        <div class="wp-container">
+            <!-- Left: Player & Info -->
+            <div class="wp-primary">
+                <div class="player-wrapper">
+                    <iframe id="vidFrame" style="width:100%; height:100%; border:none;" allowfullscreen allow="autoplay"></iframe>
+                </div>
+                
+                <div class="wp-title" id="wpTitle">Loading Video Title...</div>
+                
+                <div class="wp-controls">
+                    <div class="wp-chn-row">
+                        <div class="chn-ico" id="wpChnImg"><img src="https://via.placeholder.com/40"></div>
+                        <div>
+                            <div style="font-weight: bold; font-size:16px;" id="wpChnName">Channel Name</div>
+                            <div style="font-size:12px; color:#aaa;" id="wpSubCount">1.2M subscribers</div>
+                        </div>
+                        <button class="sub-btn-big">Subscribe</button>
+                    </div>
+                    
+                    <div class="wp-actions">
+                        <button class="pill-btn"><i class="fas fa-thumbs-up"></i> <span id="wpLikes">12K</span></button>
+                        <button class="pill-btn"><i class="fas fa-share"></i> Share</button>
+                        <button class="pill-btn"><i class="fas fa-download"></i> Download</button>
                     </div>
                 </div>
-                <button class="sub-btn">Subscribe</button>
+
+                <div class="desc-box">
+                    <div class="desc-meta" id="wpMeta">250K views • 5 hours ago</div>
+                    <p id="wpDesc">This is a description of the video. It contains tags, links, and improved metadata display to mimic the real platform experience.</p>
+                </div>
+
+                <!-- Comments Simulation -->
+                <div class="comments-sec">
+                    <div class="comm-count">452 Comments</div>
+                    <div class="my-comm">
+                        <div class="avatar" style="width:40px; height:40px; font-size:16px;">F</div>
+                        <div style="flex:1;">
+                            <div class="comm-input">Add a comment...</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="action-row">
-                <button class="pill"><i class="fas fa-thumbs-up"></i> 52K</button>
-                <button class="pill"><i class="fas fa-share"></i> Share</button>
-                <button class="pill"><i class="fas fa-download"></i> Download</button>
+            <!-- Right: Up Next -->
+            <div class="wp-secondary">
+                <div class="recs-title" style="margin-top:0;">Up Next</div>
+                <div id="recsGrid"></div>
             </div>
-
-            <div class="recs-title">Up Next</div>
-            <div id="recsGrid"></div>
         </div>
     </div>
 
-    <!-- VOICE OVERLAY -->
-    <div class="voice-overlay" id="voiceUI">
-        <div style="color:white; font-size:24px; margin-bottom:30px;" id="vStatus">Listening...</div>
-        <div class="mic-anim"><i class="fas fa-microphone"></i></div>
-        <button onclick="stopVoice()" style="margin-top:40px; background:transparent; border:1px solid #777; color:#aaa; padding:8px 20px; border-radius:20px;">Cancel</button>
-    </div>
+    <!-- Mobile Bottom Nav -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="loadCat('Trending', this)"><i class="fas fa-home"></i><span>Home</span></button>
+        <button class="nav-btn" onclick="alert('Feature coming soon')"><i class="fas fa-plus-circle" style="font-size:28px;"></i></button>
+        <button class="nav-btn" onclick="loadCat('Subscriptions', this)"><i class="fas fa-play-circle"></i><span>Subs</span></button>
+        <button class="nav-btn" onclick="triggerUpload()"><i class="fas fa-user"></i><span>You</span></button>
+    </nav>
 
-    <!-- MOBILE SEARCH -->
+    <!-- Mobile Search Overlay -->
     <div class="mob-search" id="mobSearch">
-        <div class="ms-head">
-            <button class="icon-btn" onclick="closeMobSearch()"><i class="fas fa-arrow-left"></i></button>
-            <input type="text" class="ms-input" id="mSearch" placeholder="Search YouTube...">
-            <button class="icon-btn" onclick="startVoice('mSearch')"><i class="fas fa-microphone"></i></button>
+        <div style="display:flex; align-items:center; padding:10px; border-bottom:1px solid #333; gap:10px;">
+            <button class="icon-btn" onclick="toggleMobSearch(false)"><i class="fas fa-arrow-left"></i></button>
+            <div class="search-container" style="background:#222; margin:0;">
+                <input type="text" id="mSearch" placeholder="Search YouTube..." style="font-size:16px;">
+            </div>
+            <button class="icon-btn" style="background:#222;" onclick="startVoice('mSearch')"><i class="fas fa-microphone"></i></button>
         </div>
     </div>
 
     <script>
-        const API = "https://api.xyro.site/search/youtube?q=";
+        const API_URL = "https://api.xyro.site/search/youtube?q=";
         const grid = document.getElementById('grid');
-        let recognition;
-
-        window.onload = function() {
+        const loadingBar = document.getElementById('loadingBar');
+        
+        // --- 1. INITIALIZATION ---
+        window.onload = () => {
             loadCat('Trending Videos');
-            // Removed loadShorts() call
         };
 
-        // --- 1. IMAGE UPLOAD ---
+        // --- 2. DATA FETCHING LOGIC ---
+        async function loadCat(query, btn) {
+            // UI Reset
+            if(btn) { 
+                document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(e => e.classList.remove('active')); 
+                btn.classList.add('active'); 
+            }
+            closeWatchPage();
+            window.scrollTo(0, 0);
+            
+            // Loading Animation
+            loadingBar.style.width = "70%";
+            grid.innerHTML = generateSkeleton(12);
+
+            try {
+                // Fetch Data
+                let q = (query === 'Trending') ? 'Trending Videos' : query;
+                const response = await fetch(API_URL + encodeURIComponent(q));
+                const data = await response.json();
+                
+                loadingBar.style.width = "100%";
+                setTimeout(() => { loadingBar.style.width = "0%"; }, 300);
+
+                const videos = data.result || data.data || [];
+                
+                // Fallback if API returns empty
+                if (!videos.length) throw new Error("No Data");
+
+                renderVideos(videos);
+
+            } catch (error) {
+                console.warn("API Error, loading fallback data", error);
+                loadingBar.style.width = "100%";
+                setTimeout(() => { loadingBar.style.width = "0%"; }, 300);
+                loadFallbackData(query);
+            }
+        }
+
+        // --- 3. RENDERING ---
+        function renderVideos(videos) {
+            grid.innerHTML = '';
+            videos.forEach(v => {
+                let vidId = null;
+                // Extract Video ID logic
+                if (v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
+                else if (v.id) vidId = v.id;
+
+                if (vidId) {
+                    const title = v.title || "Untitled Video";
+                    const chn = v.channel || "Unknown Channel";
+                    const thumb = `https://i.ytimg.com/vi/${vidId}/hq720.jpg`; // High Quality Thumb
+                    const avatar = `https://ui-avatars.com/api/?name=${chn}&background=random&color=fff`;
+                    const views = v.views || smartViews();
+                    const time = v.uploaded || smartTime();
+
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.onclick = () => openWatchPage(vidId, title, chn, views, time);
+                    card.innerHTML = `
+                        <div class="thumb-wrapper">
+                            <img src="${thumb}" class="thumb-img" loading="lazy">
+                            <div class="duration">12:34</div>
+                            <div class="hover-actions">
+                                <div class="action-mini-btn"><i class="fas fa-clock"></i></div>
+                                <div class="action-mini-btn"><i class="fas fa-list"></i></div>
+                            </div>
+                        </div>
+                        <div class="meta">
+                            <div class="chn-ico"><img src="${avatar}"></div>
+                            <div class="info">
+                                <div class="title">${title}</div>
+                                <div class="chn-name">${chn} <i class="fas fa-check-circle" style="font-size:10px; margin-left:4px;"></i></div>
+                                <div class="stats">${views} • ${time}</div>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function generateSkeleton(count) {
+            let html = '';
+            for(let i=0; i<count; i++) {
+                html += `
+                <div class="card" style="pointer-events:none;">
+                    <div class="thumb-wrapper skeleton"></div>
+                    <div class="meta">
+                        <div class="chn-ico skeleton"></div>
+                        <div class="info" style="width:100%">
+                            <div class="skeleton" style="height:14px; width:90%; margin-bottom:6px; border-radius:4px;"></div>
+                            <div class="skeleton" style="height:12px; width:60%; border-radius:4px;"></div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+            return html;
+        }
+
+        // --- 4. FALLBACK DATA (Offline Mode) ---
+        function loadFallbackData(query) {
+            const fallbackVideos = [
+                { id: "kJQP7kiw5Fk", title: "Luis Fonsi - Despacito ft. Daddy Yankee", channel: "Luis Fonsi" },
+                { id: "JGwWNGJdvx8", title: "Ed Sheeran - Shape of You (Official Music Video)", channel: "Ed Sheeran" },
+                { id: "9bZkp7q19f0", title: "PSY - GANGNAM STYLE(강남스타일) M/V", channel: "officialpsy" },
+                { id: "See58pG_CjY", title: "Adele - Easy On Me (Official Video)", channel: "Adele" },
+                { id: "lTRiuFIWV54", title: "Pharrell Williams - Happy (Video)", channel: "Pharrell Williams" },
+                { id: "axC2bJ8J538", title: "Coke Studio | Season 14 | Pasuri", channel: "Coke Studio" }
+            ];
+            renderVideos(fallbackVideos);
+        }
+
+        // --- 5. UTILITIES ---
+        function smartViews() {
+            return (Math.random() > 0.6 ? (Math.random() * 20 + 1).toFixed(1) + "M views" : Math.floor(Math.random() * 900 + 50) + "K views");
+        }
+        function smartTime() {
+            const t = ["2 hours", "5 days", "3 weeks", "2 months", "1 year"];
+            return t[Math.floor(Math.random() * t.length)] + " ago";
+        }
+
+        // --- 6. SEARCH & WATCH ---
+        function toggleMobSearch(show) {
+            const el = document.getElementById('mobSearch');
+            el.style.display = show ? 'flex' : 'none';
+            if(show) document.getElementById('mSearch').focus();
+        }
+
+        function execSearch(id) {
+            const val = document.getElementById(id).value;
+            if(val) {
+                if(id === 'mSearch') toggleMobSearch(false);
+                loadCat(val);
+            }
+        }
+        
+        // Handle Enter Keys
+        document.getElementById('dSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') execSearch('dSearch') });
+        document.getElementById('mSearch').addEventListener('keypress', (e) => { if(e.key==='Enter') execSearch('mSearch') });
+
+        function openWatchPage(id, title, chn, views, time) {
+            const wp = document.getElementById('watchPage');
+            wp.style.display = 'block';
+            
+            // Set Player
+            document.getElementById('vidFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+            
+            // Set Meta
+            document.getElementById('wpTitle').innerText = title;
+            document.getElementById('wpChnName').innerText = chn;
+            document.getElementById('wpChnImg').innerHTML = `<img src="https://ui-avatars.com/api/?name=${chn}&background=random&color=fff">`;
+            document.getElementById('wpMeta').innerText = `${views} • ${time}`;
+            document.getElementById('wpSubCount').innerText = (Math.random()*5+0.1).toFixed(1) + "M subscribers";
+            document.getElementById('wpLikes').innerText = Math.floor(Math.random()*200+10) + "K";
+
+            // Generate "Up Next"
+            loadRecs();
+        }
+
+        function loadRecs() {
+            const recs = document.getElementById('recsGrid');
+            recs.innerHTML = '';
+            // Static Recommendation List
+            const list = [
+                {id: "K4DyBUG242c", t: "Cartoon - On & On (feat. Daniel Levi)", c: "NCS"},
+                {id: "OpQFFLBMEPI", t: "Pink - Just Give Me A Reason", c: "PinkVEVO"},
+                {id: "09R8_2nJtjg", t: "Maroon 5 - Sugar (Official Music Video)", c: "Maroon 5"},
+                {id: "fRh_vgS2dFE", t: "Justin Bieber - Sorry (PURPOSE : The Movement)", c: "Justin Bieber"}
+            ];
+            
+            list.forEach(v => {
+                 recs.innerHTML += `
+                    <div class="rec-card" onclick="openWatchPage('${v.id}','${v.t}','${v.c}','1M views','1 year ago')">
+                        <div class="rec-thumb"><img src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;"></div>
+                        <div class="rec-info">
+                            <div class="title">${v.t}</div>
+                            <div class="chn">${v.c}</div>
+                            <div class="chn">1M views</div>
+                        </div>
+                    </div>
+                 `;
+            });
+        }
+
+        function closeWatchPage() {
+            document.getElementById('watchPage').style.display = 'none';
+            document.getElementById('vidFrame').src = "";
+        }
+
+        // --- 7. MISC FEATURES ---
         function triggerUpload() { document.getElementById('fileUpload').click(); }
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const avatars = document.querySelectorAll('.avatar, .chn-pic');
-                    avatars.forEach(av => {
-                        av.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-                        av.style.background = 'none';
+                    document.querySelectorAll('.avatar').forEach(a => {
+                        a.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                     });
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // --- 2. SEARCH & VOICE ---
-        function openMobSearch() { document.getElementById('mobSearch').style.display='flex'; document.getElementById('mSearch').focus(); }
-        function closeMobSearch() { document.getElementById('mobSearch').style.display='none'; }
-        
-        function execSearch(id) {
-            const val = document.getElementById(id).value;
-            if(val) { 
-                if(id==='mSearch') closeMobSearch();
-                loadCat(val); 
-            }
-        }
-
+        // Voice Search (Chrome Only)
         function startVoice(targetId) {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("Voice Search requires Google Chrome."); return;
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Voice Search not supported in this browser."); return;
             }
-            const overlay = document.getElementById('voiceUI');
-            const status = document.getElementById('vStatus');
-            overlay.style.display = 'flex';
-            status.innerText = "Listening...";
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
+            const SpeechRecognition = window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
             recognition.lang = 'en-US';
+            
+            document.getElementById(targetId).placeholder = "Listening...";
             recognition.start();
 
             recognition.onresult = (e) => {
                 const text = e.results[0][0].transcript;
-                status.innerText = `Searching: "${text}"`;
-                setTimeout(() => {
-                    document.getElementById(targetId).value = text;
-                    overlay.style.display = 'none';
-                    if(targetId === 'mSearch') closeMobSearch();
-                    loadCat(text);
-                }, 800);
+                document.getElementById(targetId).value = text;
+                execSearch(targetId);
             };
-            recognition.onerror = () => { status.innerText = "Try Again"; setTimeout(()=>overlay.style.display='none', 1500); };
         }
-        function stopVoice() { if(recognition) recognition.stop(); document.getElementById('voiceUI').style.display='none'; }
-
-        // --- 3. DATA LOADING ---
-        function smartViews() {
-            return (Math.random() > 0.7) ? (Math.random()*15+1).toFixed(1)+"M views" : Math.floor(Math.random()*900+10)+"K views";
-        }
-        function smartTime() {
-            const t = ["hours", "days", "weeks", "months"];
-            return Math.floor(Math.random()*11+1)+" "+t[Math.floor(Math.random()*t.length)]+" ago";
-        }
-
-        async function loadCat(query, btn) {
-            // Reset logic
-            document.getElementById('watchPage').style.display = 'none';
-            document.getElementById('vidFrame').src = ""; 
-            document.getElementById('mobSearch').style.display = 'none';
-            
-            window.scrollTo(0,0);
-            if(btn) { document.querySelectorAll('.chip, .nav-btn, .side-item').forEach(e=>e.classList.remove('active')); btn.classList.add('active'); }
-            
-            grid.innerHTML = '';
-            // Skeleton Loader
-            for(let i=0; i<8; i++) grid.innerHTML += `<div class="card"><div class="thumb" style="background:#222;"></div><div style="height:40px; background:#222; margin-top:10px;"></div></div>`;
-
-            try {
-                let q = (query === 'Trending') ? 'Trending Videos' : query;
-                
-                const res = await fetch(API + encodeURIComponent(q));
-                const json = await res.json();
-                const videos = json.result || json.data || [];
-                grid.innerHTML = '';
-
-                if(!videos.length) { grid.innerHTML = '<p style="padding:20px;">No Results.</p>'; return; }
-
-                videos.forEach(v => {
-                    let vidId = null;
-                    if(v.link && v.link.includes('v=')) vidId = v.link.split('v=')[1].split('&')[0];
-                    if(vidId) {
-                        const title = v.title || "Video Title";
-                        const chn = v.channel || "Channel";
-                        const thumb = v.imageUrl || `https://i.ytimg.com/vi/${vidId}/hq720.jpg`;
-                        
-                        const div = document.createElement('div');
-                        div.className = 'card';
-                        div.onclick = () => openWatch(vidId, title);
-                        div.innerHTML = `
-                            <div class="thumb">
-                                <img src="${thumb}">
-                                <div class="duration">10:25</div>
-                            </div>
-                            <div class="meta">
-                                <div class="chn-ico">${chn.charAt(0)}</div>
-                                <div class="info">
-                                    <div class="title">${title}</div>
-                                    <div class="sub-txt">${chn} • ${smartViews()} • ${smartTime()}</div>
-                                </div>
-                            </div>
-                        `;
-                        grid.appendChild(div);
-                    }
-                });
-            } catch(e) { grid.innerHTML = '<p>Error loading videos.</p>'; }
-        }
-
-        // --- 4. WATCH PAGE ---
-        function openWatch(id, title) {
-            const page = document.getElementById('watchPage');
-            const frame = document.getElementById('vidFrame');
-            const recs = document.getElementById('recsGrid');
-            
-            frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&cc_load_policy=1&cc_lang_pref=en`;
-            document.getElementById('wpTitle').innerText = title;
-            page.style.display = 'flex';
-            
-            recs.innerHTML = '';
-            const recVideos = [
-                {id: "7tqT68L9wH8", title: "Funny Zoo Vlog"},
-                {id: "kJQP7kiw5Fk", title: "Despacito"},
-                {id: "JGwWNGJdvx8", title: "Shape of You"},
-                {id: "OPf0YbXqDm0", title: "Uptown Funk"}
-            ];
-            recVideos.forEach(v => {
-                const imgUrl = `https://i.ytimg.com/vi/${v.id}/hq720.jpg`;
-                recs.innerHTML += `
-                    <div class="rec-card" onclick="openWatch('${v.id}', '${v.title}')">
-                        <div class="rec-thumb">
-                             <img src="${imgUrl}">
-                             <div class="duration">04:30</div>
-                        </div>
-                        <div class="info" style="justify-content:center;">
-                            <div class="title" style="font-size:14px;">${v.title}</div>
-                            <div class="sub-txt">Zootube • ${smartViews()}</div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-        function closeWatch() {
-            document.getElementById('watchPage').style.display = 'none';
-            document.getElementById('vidFrame').src = "";
-        }
-
-        document.getElementById('dSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('dSearch')});
-        document.getElementById('mSearch').addEventListener('keypress', (e)=>{if(e.key==='Enter') execSearch('mSearch')});
     </script>
 </body>
 </html>
